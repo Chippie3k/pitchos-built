@@ -32,6 +32,9 @@
   dialog{border:1px solid var(--line);background:var(--bg);padding:8px;max-width:min(1280px,94vw)}
   dialog::backdrop{background:rgba(0,0,0,.82)}
   dialog img{width:100%;display:block}
+  .divide{grid-column:1/-1;margin-top:26px;padding-top:26px;border-top:1px solid var(--line)}
+  .divide h2{font-size:30px}
+  .divide p{color:var(--dim);font-size:14px;margin-top:6px;max-width:70ch}
   .foot{margin-top:52px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:18px;max-width:70ch}
   .foot b{color:var(--ink);font-weight:600}
 </style>
@@ -40,7 +43,7 @@
 <div class="wrap">
   <div class="crumb">Pitchos · build review</div>
   <h1>What's built</h1>
-  <p class="sub">Six pieces, all complete. The first two are fully interactive — click in and use them. The rest are real running code, shown as captures from the live build.</p>
+  <p class="sub">The coach side first, then the student side below. The first two pieces are fully interactive — click in and use them. Everything else is real running code, shown as captures from the live build.</p>
   <span class="stamp">AUGUST 12, 2026 · ALL ITEMS DONE</span>
 
   <div class="grid">
@@ -87,6 +90,58 @@
       <div class="k"><span class="n">06 · Staged</span><span class="done">DONE</span></div>
       <h2>Database package</h2>
       <p>The full coach-roster database layer — roles, policies, resume storage, audit trail — written, audited across three review rounds, and packaged with an operator runbook. One scheduled execution hour turns everything above on.</p>
+    </div>
+
+    <div class="divide">
+      <h2>The student side</h2>
+      <p>Everything above is the coach's view. This is the app the student lives in every day — the Hunt (pipeline and interviews) and the Craft (answers, story, resume) — all running today.</p>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">07 · The Hunt</span><span class="done">DONE</span></div>
+      <h2>My Pipeline + outreach queue</h2>
+      <p>The book of targets: every company as a dossier — role, comp band, "why this company," stakeholders, live posting status. Above it, the outreach queue tells the student exactly who to contact right now and why, each row a five-minute action with a one-click log.</p>
+      <div class="shots">
+        <a href="#" data-img="shots/student-pipeline.png"><img src="shots/student-pipeline.png" alt="My Pipeline with outreach queue" loading="lazy"><div class="cap">Pipeline + the queue firing</div></a>
+        <a href="#" data-img="shots/student-target.png"><img src="shots/student-target.png" alt="Target dossier" loading="lazy"><div class="cap">A target's dossier</div></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">08 · The Hunt</span><span class="done">DONE</span></div>
+      <h2>Show Day</h2>
+      <p>One cheat sheet per interview, on a calendar. The first draft generates itself from everything the student has already written — their answers, their story, the target's dossier — and they sharpen it from there.</p>
+      <div class="shots">
+        <a href="#" data-img="shots/student-showday.png"><img src="shots/student-showday.png" alt="Show Day cheat sheets" loading="lazy"><div class="cap">Cheat sheets on the calendar</div></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">09 · The Craft</span><span class="done">DONE</span></div>
+      <h2>The Bank</h2>
+      <p>A 68-question answer library with coverage bands — Grand Slams, Behaviorals, Role, Advanced AE, Objections — so the student always knows what's showtime-ready and what's still blank. This is the same bank the coach sees from the other side.</p>
+      <div class="shots">
+        <a href="#" data-img="shots/student-bank.png"><img src="shots/student-bank.png" alt="The Bank answer library" loading="lazy"><div class="cap">The answer library</div></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">10 · The Craft</span><span class="done">DONE</span></div>
+      <h2>My Notebook</h2>
+      <p>Eleven raw-material prompts — the odds stacked against you, the pivotal moment, the greatest close — answered once, then promoted to the Deck to power every polished answer.</p>
+      <div class="shots">
+        <a href="#" data-img="shots/student-notebook.png"><img src="shots/student-notebook.png" alt="My Notebook prompts" loading="lazy"><div class="cap">Raw material → the Deck</div></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">11 · The Craft</span><span class="done">DONE</span></div>
+      <h2>The Resume + About You</h2>
+      <p>Paste text or drop a PDF and Claude parses the work history into raw material for every answer. About You then generates the through-line — one narrative spine drawn from the notebook, the answers, and the resume, tailorable per target.</p>
+      <div class="shots">
+        <a href="#" data-img="shots/student-resume.png"><img src="shots/student-resume.png" alt="Resume intake" loading="lazy"><div class="cap">Resume intake, parsed by Claude</div></a>
+        <a href="#" data-img="shots/student-about.png"><img src="shots/student-about.png" alt="About You through-line" loading="lazy"><div class="cap">The through-line generator</div></a>
+      </div>
     </div>
   </div>
 
