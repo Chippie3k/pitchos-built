@@ -6,11 +6,14 @@
 <title>Student File + the Door + World View — Pitch comp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Geist:wght@300..600&family=Geist+Mono:wght@300..500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Geist:wght@300..600&family=Geist+Mono:wght@300..500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    TOKENS — pinned first. No inline magic numbers below.
    Ground + text + brass lifted from pitchos DESIGN.md section 3.
+   Revamp 2026-08-12 (chapman-pinned contract): the Students-tab
+   room language carried one student deep — his line, his door,
+   the whisper voice, ceremonies, the rail back to the hub.
    ============================================================ */
 :root{
   /* ground (LIT surfaces) */
@@ -47,7 +50,8 @@
   --page: 1120px;
   --gutter: clamp(20px, 5vw, 64px);
 
-  /* motion — one curve, one duration class, nothing autonomous */
+  /* motion — one curve, one duration class, nothing autonomous
+     except what the tab ruled alive: drift, breath, ember, spill */
   --expo: cubic-bezier(0.16, 1, 0.3, 1);
   --dur: 280ms;
 }
@@ -67,13 +71,10 @@ body{
 h1,h2,h3,p{ margin:0; }
 a{ color:inherit; text-decoration:none; }
 
-/* ---- atmosphere: static aurora dyad + paper grain (no animation) ---- */
-.atmos{ position:fixed; inset:0; pointer-events:none; z-index:0; }
-/* Shipped Chrome.jsx aurora, coach re-theme, frozen mid-drift (comp = no
-   animation): the app's two 60vmax blobs — blob-brass reads through the act
-   cyan under [data-role=coach]; blob-plum keeps the app's literal one-off hue.
-   Effective center alphas = shipped 0.6/0.5 x the 0.35 layer opacity; the
-   blur(80px) is emulated by the gradient falloff. */
+/* ---- atmosphere: the aurora dyad, alive barely. Grain REMOVED
+   (chapman-ruled 2026-08-12: aurora stays, texture goes — the File
+   now matches the tab's clean-wash ruling). ---- */
+.atmos{ position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
 .atmos::before{
   content:''; position:absolute; inset:-15%;
   background:
@@ -81,12 +82,24 @@ a{ color:inherit; text-decoration:none; }
     radial-gradient(60vmax 60vmax at 85% 94%, oklch(0.55 0.12 320 / 0.5), transparent 70%);
   filter: blur(80px);          /* the shipped smoothness lives HERE, not in the falloff */
   opacity: 0.35;               /* shipped layer opacity */
+  animation: drift 90s ease-in-out infinite alternate;
 }
+@keyframes drift{ to{ transform: rotate(3deg) scale(1.07) translateY(-1.5%); } }
+/* PURPOSEFUL MOTION (chapman-directed 2026-08-12):
+   1. approach — his door is the room's light source. Scrolling toward
+      the Cross Over raises brass light from below (--approach 0..1,
+      rAF-throttled scroll, opacity only).
+   2. exhale — the sign-off ceremony reaches the sky: the acting-cyan
+      bloom softens for a breath while the work is cleared. */
 .atmos::after{
-  content:''; position:absolute; inset:0; opacity:0.55; mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.38'/%3E%3C/svg%3E");
-  background-size:160px 160px;
+  content:''; position:absolute; inset:-15%;
+  background: radial-gradient(70vmax 55vmax at 50% 108%, oklch(var(--brass) / 0.55), transparent 72%);
+  filter: blur(80px);
+  opacity: calc(var(--approach, 0) * 0.38);
+  transition: opacity 600ms ease;
 }
+.atmos.exhale::before{ opacity:0.22; }
+.atmos::before{ transition: opacity 2000ms ease; }
 
 .page{ position:relative; z-index:1; }
 .wrap{ max-width:var(--page); margin:0 auto; padding-inline:var(--gutter); }
@@ -103,12 +116,13 @@ a{ color:inherit; text-decoration:none; }
   color: oklch(var(--faint) / 0.8);
   padding-block: var(--s4) 0;
   display:flex; align-items:center; gap:10px;
+  padding-left:46px;  /* the blob mark holds the corner */
 }
 .crumb .sep{ color: oklch(var(--obs) / 0.7); }
 .crumb a{ transition: color var(--dur) var(--expo); }
 .crumb a:hover{ color: oklch(var(--text)); }
 
-.masthead{ padding-block: var(--s5) var(--s6); position:relative; }
+.masthead{ padding-block: var(--s5) var(--s4); position:relative; }
 .masthead h1{
   font-family:var(--display); font-weight:500;
   font-size: clamp(52px, 10.5vw, 108px);
@@ -125,6 +139,125 @@ a{ color:inherit; text-decoration:none; }
 .vitals .watch{ color: oklch(var(--obs) / 0.95); }      /* PLUM: what Chris is watching */
 .vitals .tier{ color: oklch(var(--brass-bri) / 0.92); } /* BRASS: readiness tier ONLY — his achievement, his metal (chapman-ruled 2026-08-12); never counts/chips */
 
+/* ============================================================
+   1a. HIS LINE — the tab's line-bar instrument, one student deep.
+   Five segments = the journey; the ones behind him carry the
+   temperature he earned; HIS slab stands lit on the current
+   stage; HIS door waits at the end, ajar, light spilling toward
+   him. The whisper speaks under it in the band's own voice.
+   ============================================================ */
+.his-line{
+  border: 1px solid oklch(1 0 0 / 0.09); border-radius:18px;
+  background:
+    radial-gradient(130% 160% at 10% -10%, oklch(var(--act) / 0.05), transparent 58%),
+    linear-gradient(180deg, oklch(1 0 0 / 0.028), oklch(1 0 0 / 0.008));
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.05) inset, 0 14px 34px -22px oklch(0 0 0 / 0.7);
+  padding: 18px 22px 8px; overflow:hidden;
+  margin-bottom: var(--s6);
+}
+.hl-head{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.2em; text-transform:uppercase;
+  color: oklch(var(--faint)); padding-bottom:14px;
+}
+.hl-head .lens{ color: oklch(var(--obs) / 0.9); }
+.segs{ display:flex; gap:3px; align-items:stretch; height:34px; margin-top:30px; padding-right:4px; }
+.seg{
+  position:relative; flex:1 1 0; border-radius:5px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase;
+  color: oklch(var(--text) / 0.6);
+  border:1px solid oklch(1 0 0 / 0.1);
+  animation: arrive 480ms var(--expo) both; animation-delay: var(--sd, 200ms);
+}
+/* temperature along HIS journey — the stages he already crossed */
+.seg.past:nth-child(1){ background: oklch(var(--obs) / 0.22); }
+.seg.past:nth-child(2){ background: oklch(var(--obs) / 0.16); }
+.seg.past:nth-child(3){ background: oklch(0.6 0.06 40 / 0.22); }
+.seg.past:nth-child(4){ background: oklch(var(--brass) / 0.2); }
+.seg.here{
+  background: oklch(var(--brass) / 0.22);
+  border-color: oklch(var(--brass-bri) / 0.55);
+  color: oklch(var(--text) / 0.9);
+  box-shadow: 0 0 14px -4px oklch(var(--brass) / 0.5);
+}
+/* his slab, standing on the current stage */
+.seg .me{
+  position:absolute; top:-27px; left:50%; transform:translateX(-50%);
+  min-width:40px; height:24px; padding:0 9px; border-radius:2.5px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:10px; letter-spacing:0.04em;
+  color: oklch(var(--text));
+  background: linear-gradient(180deg, oklch(var(--act) / 0.34), oklch(var(--act) / 0.16));
+  border:1px solid oklch(var(--brass-bri) / 0.7);
+  box-shadow: 0 0 16px -3px oklch(var(--brass) / 0.6), 0 0 14px -4px oklch(var(--act) / 0.4);
+  animation: slab-in 380ms var(--expo) both, breathe 5.2s ease-in-out 2.2s infinite;
+  animation-delay: 900ms, 2.2s;
+}
+.seg .me::after{                                /* a session TODAY — underlined by the day */
+  content:''; position:absolute; left:3px; right:3px; bottom:-5px; height:2px;
+  border-radius:2px; background: oklch(var(--act) / 0.9);
+}
+@keyframes slab-in{ from{ opacity:0; transform:translate(-50%,8px);} to{ opacity:1; transform:translate(-50%,0);} }
+@keyframes breathe{  /* he is WAITING on Chris — the pulse is the fact */
+  0%,100%{ box-shadow: 0 0 16px -3px oklch(var(--brass) / 0.5), 0 0 14px -4px oklch(var(--act) / 0.35); }
+  50%{ box-shadow: 0 0 22px -2px oklch(var(--brass) / 0.75), 0 0 20px -3px oklch(var(--act) / 0.6); }
+}
+/* HIS door at the end of HIS line — ajar; the light knows him */
+.hl-seat{
+  width:22px; height:36px; align-self:center; margin-left:16px; margin-right:4px; flex:none;
+  border-radius:11px 11px 2px 2px;
+  border:1.5px solid oklch(var(--brass-bri) / 0.85);
+  border-left-color: oklch(var(--brass-bri) / 0.4);
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.55), oklch(var(--brass) / 0.16) 70%);
+  box-shadow: 0 0 20px -3px oklch(var(--brass) / 0.55);
+  animation: ember 7s ease-in-out 3s infinite;
+  position:relative; z-index:0;   /* own stacking context: the spill rides above the band ground */
+}
+@keyframes ember{
+  0%,100%{ box-shadow: 0 0 20px -3px oklch(var(--brass) / 0.5); }
+  50%{ box-shadow: 0 0 30px -2px oklch(var(--brass) / 0.8); }
+}
+.hl-seat::before{                                /* the spill reaches back toward him */
+  content:''; position:absolute; right:18px; top:2px; width:58px; height:30px;
+  z-index:-1;
+  background: linear-gradient(270deg, oklch(var(--brass) / 0.22), transparent 82%);
+  clip-path: polygon(100% 0, 100% 100%, 0 60%, 0 40%);
+  pointer-events:none;
+  animation: spill 7s ease-in-out 3s infinite;
+}
+@keyframes spill{ 0%,100%{ opacity:0.55; } 50%{ opacity:0.9; } }
+.whisper-line{
+  position:relative; padding:20px 2px 8px; min-height:46px;
+  border-top:1px solid oklch(1 0 0 / 0.05); margin-top:18px;
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--s3);
+}
+#whisper{
+  font-family:var(--hand); font-style:italic; font-size:17px;
+  letter-spacing:0.015em; line-height:1.5;
+  color: oklch(var(--muted) / 0.95);
+  transition: opacity 900ms ease;
+}
+#whisper .sep{ display:inline-block; padding:0 14px; color: oklch(var(--faint) / 0.6); font-style:normal; }
+.hand{
+  font-family:var(--hand); font-style:italic; font-size:19px; line-height:1;
+  letter-spacing:0.01em;
+  color: oklch(var(--faint) / 0.85);
+  transform: rotate(-2.5deg); white-space:nowrap; flex:none;
+}
+/* the undo: visible, quiet, a slight rise in — never a modal, never a toast pile */
+.undo-chip{
+  position:absolute; right:118px; top:18px;   /* rides the whisper row, clear of the hand note and his door */
+  font-family:var(--mono); font-size:10px; letter-spacing:0.08em;
+  color:oklch(var(--brass-bri) / 0.9); background:oklch(var(--brass) / 0.09);
+  border:1px solid oklch(var(--brass) / 0.35); border-radius:999px;
+  padding:6px 13px; cursor:pointer;
+  opacity:0; transform:translateY(5px); pointer-events:none;
+  transition:opacity 240ms var(--expo), transform 240ms var(--expo);
+}
+.undo-chip.on{ opacity:1; transform:none; pointer-events:auto; }
+.undo-chip:hover{ background:oklch(var(--brass) / 0.16); }
+
 /* ---- THE WORK ---- */
 .sec-head{
   display:flex; align-items:baseline; justify-content:space-between; gap:var(--s3);
@@ -139,7 +272,7 @@ a{ color:inherit; text-decoration:none; }
   grid-template-columns: minmax(0,1fr) auto; align-items:center;
   min-height: var(--row-min); padding: 22px 18px 22px 26px;
   border-top: var(--rule);
-  transition: background var(--dur) var(--expo);
+  transition: background var(--dur) var(--expo), opacity 480ms var(--expo);
 }
 .row:hover{ background: linear-gradient(90deg, oklch(1 0 0 / 0.05), transparent 68%); }
 /* the live row is LIT from its mark, not boxed — the wash decays to nothing */
@@ -149,6 +282,12 @@ a{ color:inherit; text-decoration:none; }
   content:''; position:absolute; inset-block:0; left:0; width:1px;
   background: oklch(var(--act));
 }
+/* arrived since Chris last looked — a brass afterglow that decays to cyan truth */
+@keyframes row-afterglow{
+  from{ box-shadow: inset 3px 0 14px -8px oklch(var(--brass) / 0.8); }
+  to{ box-shadow: inset 0 0 0 oklch(var(--brass) / 0); }
+}
+.row.fresh{ animation: row-afterglow 3s ease-out 800ms both; }
 .row .q{
   font-family:var(--display); font-weight:400;
   font-size: clamp(21px, 2.9vw, 30px); line-height:1.12; letter-spacing:-0.02em;
@@ -158,6 +297,44 @@ a{ color:inherit; text-decoration:none; }
   margin-top:6px; letter-spacing:0.01em;
 }
 .row .meta em{ font-style:normal; color: oklch(var(--muted)); }
+/* ---- THE GLANCE LADDER (chapman-directed 2026-08-12): the row tells
+   more, faster. Level 0: teaser line + pass dots, always visible.
+   Level 1: hover/focus blossoms the row in place — answer opening,
+   Chris's last note, what changed. Level 2: click = the drill-in. ---- */
+.teaser{
+  font-size:14px; color: oklch(var(--muted) / 0.75);
+  margin-top:8px; max-width:64ch;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  transition: opacity var(--dur) var(--expo);
+}
+.passes{ display:inline-flex; gap:4px; margin-left:10px; vertical-align:1px; }
+.passes i{
+  width:5px; height:5px; border-radius:999px;
+  background: oklch(var(--text) / 0.16);
+}
+.passes i.done{ background: oklch(var(--act) / 0.7); }
+.glance{
+  grid-column: 1 / -1;
+  display:grid; grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms var(--expo);
+}
+.glance > div{ overflow:hidden; min-height:0; }
+.row:hover .glance, .row:focus-within .glance, .row:focus .glance{ grid-template-rows: 1fr; }
+.row:hover .teaser, .row:focus .teaser{ opacity:0; }   /* the teaser yields to the real thing */
+.glance .g-inner{ padding: 14px 0 6px; max-width:70ch; }
+.glance .excerpt{
+  font-size:15.5px; line-height:1.65; color: oklch(var(--text) / 0.88);
+  border-left: 2px solid oklch(var(--act) / 0.35); padding-left:16px;
+}
+.glance .you-said{
+  font-family:var(--mono); font-size:12px; color: oklch(var(--obs) / 0.95);  /* PLUM: your last watching-note */
+  margin-top:12px;
+}
+.glance .changed{
+  font-family:var(--mono); font-size:12px; color: oklch(var(--faint));
+  margin-top:6px;
+}
+.glance .changed b{ font-weight:500; color: oklch(var(--brass-bri) / 0.85); }  /* BRASS: his movement */
 .act{
   display:flex; align-items:center; gap:14px; justify-self:end;
   font-family:var(--mono); font-size:12px; letter-spacing:0.05em;
@@ -170,25 +347,25 @@ a{ color:inherit; text-decoration:none; }
   background: oklch(var(--act)); flex:none;
 }
 .mark.hollow{ background:transparent; box-shadow: inset 0 0 0 1.5px oklch(var(--act) / 0.72); }
-
-/* the plum whisper + the one hand note */
-.whisper{
-  display:flex; align-items:baseline; justify-content:space-between; gap:var(--s3);
-  padding: var(--s3) 18px 0 26px;
-  font-family:var(--mono); font-size:12.5px;
-  color: oklch(var(--obs) / 0.92);                        /* PLUM: quiet / stall observation */
+/* the waiting marks BREATHE — same fact, same pulse as the tab's slabs */
+@keyframes mark-breathe{
+  0%,100%{ box-shadow: 0 0 4px -1px oklch(var(--act) / 0.4); }
+  50%{ box-shadow: 0 0 12px 0 oklch(var(--act) / 0.8); }
 }
-.hand{
-  font-family:var(--hand); font-style:italic; font-size:19px; line-height:1;
-  letter-spacing:0.01em;
-  color: oklch(var(--faint) / 0.85);
-  transform: rotate(-2.5deg); white-space:nowrap;
-}
+.row.is-live .mark{ animation: mark-breathe 5.2s ease-in-out 2.2s infinite; }
+/* the sign-off ceremony: the row settles into earned calm */
+.row.signed{ opacity:0.45; }
+.row.signed .q{ color: oklch(var(--muted)); }
+.row.signed::before{ background: oklch(var(--brass) / 0.6); }
+.row.signed{ background: linear-gradient(90deg, oklch(var(--brass) / 0.05), transparent 60%); }
+.row.signed .act{ color: oklch(var(--brass-bri) / 0.85); }
+.row.signed .mark{ background: oklch(var(--brass-bri)); animation:none; }
 
 /* ============================================================
-   2. THE DOOR — the signature moment
+   2. THE DOOR — the signature moment. Now it IS a door: his
+   glyph stands in the threshold, ember-warm, light spilling
+   toward the crossing.
    ============================================================ */
-/* whisper->Door on the ladder: clean 112 (s7) above, 32 (s4) kept below */
 .door-shell{ margin-top: var(--s7); padding-top: 0; padding-bottom: var(--s4); }
 .door{
   display:block; position:relative; width:100%; isolation:isolate;
@@ -207,7 +384,24 @@ a{ color:inherit; text-decoration:none; }
   content:''; position:absolute; inset-inline:0; bottom:0; height:2px; z-index:-1;
   background: linear-gradient(90deg, transparent, oklch(var(--brass-bri) / 0.5) 22%, oklch(var(--brass-bri) / 0.5) 78%, transparent);
 }
-.door-inner{ max-width:var(--page); margin:0 auto; }
+.door-inner{ max-width:var(--page); margin:0 auto; display:flex; align-items:center; gap: clamp(24px, 4vw, 48px); }
+.door-glyph{
+  flex:none; width:34px; height:58px; border-radius:16px 16px 3px 3px;
+  border:1.5px solid oklch(var(--brass-bri) / 0.85);
+  border-left-color: oklch(var(--brass-bri) / 0.4);
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.5), oklch(var(--brass) / 0.1) 60%);
+  box-shadow: 0 0 24px -4px oklch(var(--brass) / 0.6);
+  animation: ember 7s ease-in-out 3s infinite;
+  position:relative;
+  transition: transform var(--dur) var(--expo);
+}
+.door-glyph::before{                                       /* the light through the gap */
+  content:''; position:absolute; left:100%; top:6px; width:74px; height:44px; z-index:-1;
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.26), transparent 82%);
+  clip-path: polygon(0 40%, 0 60%, 100% 100%, 100% 0);
+  animation: spill 7s ease-in-out 3s infinite;
+}
+.door:hover .door-glyph{ transform: rotate(-3deg); }       /* it opens a little further */
 .door .eyebrow{
   font-family:var(--mono); font-size:11px; letter-spacing:0.32em; text-transform:uppercase;
   color: oklch(var(--obs) / 0.9); margin-bottom: var(--s2);
@@ -234,12 +428,14 @@ a{ color:inherit; text-decoration:none; }
    ============================================================ */
 /* past the door the whole ground warms — you are standing in his register now.
    Marcus's sky is the shipped student aurora VERBATIM in geometry: gold blob
-   high-left, plum blob low-right (the exact dyad students live under), frozen. */
+   high-left, plum blob low-right (the exact dyad students live under). */
 .world{
   position:relative; overflow:hidden; padding-bottom: var(--s7);
   background:
     linear-gradient(180deg, oklch(var(--brass) / 0.055), oklch(var(--brass) / 0.028) 52%, oklch(var(--brass) / 0.012));
 }
+/* past the door his sky returns: the shipped student aurora dyad —
+   gold high-left, plum low-right — alive barely, no grain */
 .world::before{
   content:''; position:absolute; inset:-15%; pointer-events:none; z-index:0;
   background:
@@ -247,6 +443,7 @@ a{ color:inherit; text-decoration:none; }
     radial-gradient(60vmax 60vmax at 88% 98%, oklch(0.55 0.12 320 / 0.5), transparent 70%);
   filter: blur(80px);
   opacity: 0.35;
+  animation: drift 90s ease-in-out infinite alternate;
 }
 .world > *{ position:relative; z-index:1; }
 
@@ -325,13 +522,22 @@ a{ color:inherit; text-decoration:none; }
 .streak i.today{ background: oklch(var(--brass) / 0.8); }
 .habit .tally{ font-family:var(--mono); font-size:11.5px; color: oklch(var(--faint)); }
 
-.bankline{
-  margin-top: var(--s4); padding: 22px 18px 22px 26px; border-top: var(--rule);
-  display:flex; flex-wrap:wrap; align-items:baseline; gap: 0 14px;
-  font-family:var(--mono); font-size:13.5px; color: oklch(var(--muted));
+/* the Bank: his numbers get their true weight — the Line's odometer
+   register, in HIS metal. Still a record; the size is the fact. */
+.bank-stats{
+  margin-top: var(--s4); padding: 26px 18px 22px 26px; border-top: var(--rule);
+  display:flex; flex-wrap:wrap; gap: var(--s3) var(--s5);
 }
-.bankline b{ font-weight:500; color: oklch(var(--brass-bri)); }
-.bankline .sep{ color: oklch(var(--text) / 0.22); }
+.stat{ display:flex; flex-direction:column; gap:6px; }
+.stat .n{
+  font-family:var(--display); font-weight:430; font-size:34px; line-height:1;
+  color: oklch(var(--brass-bri) / 0.95); font-variant-numeric:tabular-nums;
+}
+.stat.mutered .n{ color: oklch(var(--muted)); }
+.stat .k{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase;
+  color: oklch(var(--faint));
+}
 
 .inert{
   margin-top: var(--s4); display:flex; flex-wrap:wrap; align-items:center; gap:14px;
@@ -350,31 +556,223 @@ a{ color:inherit; text-decoration:none; }
   color: oklch(var(--text) / 0.3);
 }
 
+/* ============================================================
+   4. THE RAIL — the hub, one keystroke away. The tab's blob +
+   drawer transplanted whole: the Line is always in the corner.
+   ============================================================ */
+.blob{
+  position:fixed; left:20px; top:20px; z-index:40;
+  width:38px; height:38px; border-radius:999px; border:1px solid oklch(var(--act) / 0.4);
+  background: radial-gradient(120% 120% at 30% 25%, oklch(var(--act) / 0.28), oklch(var(--obs) / 0.16) 70%, oklch(var(--surface) ) 100%);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition: transform var(--dur) var(--expo);
+  animation: blob-breath 6s ease-in-out infinite;
+}
+@keyframes blob-breath{ 0%,100%{ box-shadow:0 0 14px -5px oklch(var(--act) / 0.4);} 50%{ box-shadow:0 0 24px -4px oklch(var(--act) / 0.7);} }
+.blob:hover{ transform:scale(1.08); }
+.blob .blob-mark{ display:flex; flex-direction:column; gap:3px; align-items:center; }
+.blob .blob-mark i{ display:block; height:3px; border-radius:2px; }
+.blob .blob-mark .m-act{ width:16px; background:oklch(var(--act) / 0.9); }
+.blob .blob-mark .m-many{ width:11px; background:oklch(var(--text) / 0.5); }
+.blob .blob-mark .m-obs{ width:7px; background:oklch(var(--obs) / 0.85); }
+.blob .blob-n{
+  position:absolute; right:-8px; bottom:-5px;
+  font-family:var(--mono); font-size:8.5px; color:oklch(var(--muted));
+  padding:2px 6px; border-radius:999px;
+  background:oklch(var(--surface-rise)); border:1px solid oklch(1 0 0 / 0.18);
+  font-variant-numeric:tabular-nums;
+}
+.drawer{
+  position:fixed; left:18px; top:70px; bottom:18px; width:320px; z-index:39;
+  overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding:10px 12px 12px;
+  border-radius:16px; border:1px solid oklch(1 0 0 / 0.12);
+  background: linear-gradient(180deg, oklch(var(--surface-rise) / 0.98), oklch(var(--surface) / 0.98));
+  box-shadow: 0 28px 70px -26px oklch(0 0 0 / 0.95);
+  opacity:0; transform: translateY(-8px) scale(0.985); transform-origin: top left;
+  pointer-events:none;
+  transition: opacity 260ms var(--expo), transform 300ms var(--expo);
+  scrollbar-width:thin; scrollbar-color: oklch(1 0 0 / 0.15) transparent;
+}
+.drawer::-webkit-scrollbar{ width:5px; }
+.drawer::-webkit-scrollbar-thumb{ background:oklch(1 0 0 / 0.14); border-radius:3px; }
+.drawer.open{ opacity:1; transform:none; pointer-events:auto;
+  box-shadow: 0 0 0 100vmax oklch(0 0 0 / 0.45), 0 28px 70px -26px oklch(0 0 0 / 0.95);
+}
+.dr-sec{ opacity:0; transform:translateY(6px); transition: opacity 260ms var(--expo), transform 280ms var(--expo); transition-delay: calc(var(--ds, 0ms) / 2); }
+.drawer.open .dr-sec{ opacity:1; transform:none; }
+/* the way home: the Line itself, first thing in the drawer */
+.dr-home{
+  display:flex; align-items:center; gap:11px; padding:12px 11px; margin:2px 0 8px;
+  border-radius:11px; border:1px solid oklch(var(--brass) / 0.28);
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.07), transparent 70%);
+  transition: background var(--dur) var(--expo), transform var(--dur) var(--expo);
+}
+.dr-home:hover{ background: linear-gradient(90deg, oklch(var(--brass) / 0.13), transparent 75%); transform:translateX(3px); }
+.dr-home .hl{ display:flex; gap:2px; align-items:flex-end; height:16px; flex:none; }
+.dr-home .hl i{ display:block; width:4px; border-radius:1px; background:oklch(var(--text) / 0.4); }
+.dr-home .hl i:nth-child(1){ height:6px; } .dr-home .hl i:nth-child(2){ height:13px; }
+.dr-home .hl i:nth-child(3){ height:9px; } .dr-home .hl i:nth-child(4){ height:7px; }
+.dr-home .hl i:nth-child(5){ height:7px; background:oklch(var(--brass-bri) / 0.8); }
+.dr-home span{ font-size:13px; color:oklch(var(--text) / 0.94); }
+.dr-home span small{ display:block; font-family:var(--mono); font-size:8.5px; letter-spacing:0.05em; color:oklch(var(--faint)); }
+.dr-head{
+  display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+  padding:12px 13px 8px; cursor:pointer; border-radius:8px;
+  font-family:var(--mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
+  color:oklch(var(--faint));
+}
+.dr-head:hover{ background:oklch(1 0 0 / 0.03); color:oklch(var(--muted)); }
+.dr-head b{ font-weight:400; color:oklch(var(--muted)); font-variant-numeric:tabular-nums; }
+.dr-head b::after{
+  content:'\25be'; display:inline-block; margin-left:8px; font-size:8px;
+  color:oklch(var(--faint) / 0.7); transform:rotate(-90deg); transition:transform 240ms var(--expo);
+}
+.dr-head.is-open b::after{ transform:none; }
+.dr-head .h-act{ color:oklch(var(--act) / 0.9); }
+.dr-head .h-obs{ color:oklch(var(--obs) / 0.9); }
+.dr-head .h-all{ color:oklch(var(--muted)); }
+.dr-list{ display:grid; grid-template-rows:0fr; visibility:hidden;
+  transition:grid-template-rows 240ms var(--expo), visibility 0s 240ms; padding:0 2px; }
+.dr-list.open{ grid-template-rows:1fr; visibility:visible;
+  transition:grid-template-rows 240ms var(--expo); padding-bottom:6px; }
+.dr-inner{ overflow:hidden; min-height:0; }
+.dr-sec.sec-raised{
+  border:1px solid oklch(var(--act) / 0.18); border-radius:11px; margin:2px 0 8px;
+  background:linear-gradient(180deg, oklch(1 0 0 / 0.035), oklch(1 0 0 / 0.01));
+}
+.dr-sec.sec-flush{ position:relative; margin:0 0 8px; padding-left:6px; }
+.dr-sec.sec-flush::before{
+  content:''; position:absolute; left:0; top:10px; bottom:8px; width:2px; border-radius:2px;
+  background:linear-gradient(180deg, oklch(var(--obs) / 0.55), oklch(var(--obs) / 0.12));
+}
+.dr-sec.sec-plain{ border-top:1px solid oklch(1 0 0 / 0.055); }
+.dr-sec.sec-deep{
+  border:1px solid oklch(0 0 0 / 0.4); border-radius:11px; margin-top:8px;
+  background:oklch(var(--surface-deep)); box-shadow:0 2px 8px -3px oklch(0 0 0 / 0.5) inset;
+}
+.dr-row{
+  display:flex; align-items:center; gap:11px; padding:7px 9px; border-radius:8px;
+  text-decoration:none; position:relative;
+  transition: background var(--dur) var(--expo), transform var(--dur) var(--expo);
+}
+.dr-row:hover{ background:oklch(1 0 0 / 0.045); transform:translateX(3px); }
+.dr-row i{
+  flex:none; width:28px; height:28px; border-radius:999px; font-style:normal;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:9.5px; color:oklch(var(--text) / 0.85);
+  background:oklch(var(--surface-rise)); border:1px solid oklch(1 0 0 / 0.16);
+}
+.dr-row.r-act i{ border-color:oklch(var(--act) / 0.6); }
+.dr-row.r-obs i{ border-color:oklch(var(--obs) / 0.6); }
+.dr-row.r-here i{ border-color:oklch(var(--brass-bri) / 0.75); box-shadow:0 0 10px -3px oklch(var(--brass) / 0.6); }
+.dr-row span{ font-size:13px; color:oklch(var(--text) / 0.92); line-height:1.2; }
+.dr-row span small{ display:block; font-family:var(--mono); font-size:8.5px; letter-spacing:0.05em; color:oklch(var(--faint)); }
+.dr-row .s-brass{ color:oklch(var(--brass-bri) / 0.9); }
+.dr-row .s-obs2{ color:oklch(var(--obs) / 0.9); }
+.more-row span, .more-row i{ color:oklch(var(--faint)); }
+.dr-foot{
+  display:flex; flex-wrap:wrap; gap:8px 14px; padding:12px 13px 4px; margin-top:6px;
+  border-top:1px solid oklch(1 0 0 / 0.06);
+  font-family:var(--mono); font-size:9px; letter-spacing:0.14em; text-transform:uppercase;
+  color:oklch(var(--faint) / 0.6);
+}
+.dr-foot span{ display:inline-flex; align-items:baseline; gap:7px; }
+.dr-foot small{ font-size:8px; color:oklch(var(--faint) / 0.4); }
+
+/* keyboard guests get a visible footing */
+.blob:focus-visible, .dr-head:focus-visible, .dr-row:focus-visible, .dr-home:focus-visible,
+.undo-chip:focus-visible, .row:focus-visible, .door:focus-visible{
+  outline:2px solid oklch(var(--act) / 0.7); outline-offset:2px; border-radius:6px;
+}
+
 /* ---- narrow ---- */
 @media (max-width: 720px){
   .row{ grid-template-columns: minmax(0,1fr); padding: 20px 14px 20px 20px; }
   .act{ justify-self:start; margin-top:10px; }
-  .whisper{ flex-direction:column; gap:14px; padding-inline:20px; }
+  .his-line{ padding:14px 16px 6px; }
+  .segs{ height:30px; }
+  .seg{ font-size:8px; letter-spacing:0.06em; }
+  .whisper-line{ flex-direction:column; gap:14px; }
   .hand{ align-self:flex-start; }
+  #whisper{ font-size:15px; }
+  .door-inner{ gap:20px; }
+  .door-glyph{ width:26px; height:46px; }
   .habit{ grid-template-columns: 76px 1fr; }
   .habit .tally{ grid-column:2; justify-self:end; }
   .return{ font-size:10.5px; letter-spacing:0.06em; }
+  .blob{ width:34px; height:34px; left:12px; top:12px; }
+  .blob .blob-mark .m-act{ width:14px; } .blob .blob-mark .m-many{ width:10px; } .blob .blob-mark .m-obs{ width:6px; }
+  .drawer{ left:10px; right:10px; width:auto; top:58px; bottom:10px; }
+  .drawer.open{ box-shadow: 0 0 0 100vmax oklch(0 0 0 / 0.5), 0 28px 70px -26px oklch(0 0 0 / 0.95); }
+  html.drawer-open, html.drawer-open body{ overflow:hidden; }  /* the sheet owns the scroll */
 }
 
 @media (prefers-reduced-motion: reduce){
   *{ animation:none !important; transition-duration:1ms !important; }
+  .dr-sec, .dr-list{ transition-delay:0ms !important; }
 }
 </style>
 </head>
 <body>
 <div class="atmos" aria-hidden="true"></div>
 
+<button class="blob" id="blob" type="button" aria-expanded="false" aria-label="Open the roster">
+  <span class="blob-mark" aria-hidden="true"><i class="m-act"></i><i class="m-many"></i><i class="m-obs"></i></span>
+  <span class="blob-n">24</span>
+</button>
+<nav class="drawer" id="drawer" aria-hidden="true">
+  <a class="dr-home dr-sec" style="--ds:0ms" href="students-tab-mock.html">
+    <span class="hl" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+    <span>The Line<small>back to all 24 students</small></span>
+  </a>
+  <div class="dr-sec sec-raised" style="--ds:40ms">
+    <div class="dr-head is-open" data-sec="s-need"><span class="h-act">Needs you</span><b>4</b></div>
+    <div class="dr-list open" id="s-need">
+      <a class="dr-row r-here" href="#" aria-current="page"><i>MB</i><span>Marcus Bell<small class="s-brass">this file · 2 answers + 1 resume · today 2:00</small></span></a>
+      <a class="dr-row r-act" href="students-tab-mock.html#r-priya"><i>PR</i><span>Priya Raman<small>1 answer to sign</small></span></a>
+      <a class="dr-row r-act" href="students-tab-mock.html#r-devon"><i>DO</i><span>Devon Ortiz<small class="s-brass">1 answer + 1 resume · advanced since you left</small></span></a>
+      <a class="dr-row r-act" href="students-tab-mock.html#r-aisha"><i>AW</i><span>Aisha Whitfield<small>1 answer to sign</small></span></a>
+    </div>
+  </div>
+  <div class="dr-sec sec-flush" style="--ds:90ms">
+    <div class="dr-head" data-sec="s-quiet"><span class="h-obs">Gone quiet</span><b>2</b></div>
+    <div class="dr-list" id="s-quiet">
+      <a class="dr-row r-obs" href="students-tab-mock.html#r-tomas"><i>TH</i><span>Tomás Herrera<small class="s-obs2">quiet 6 days</small></span></a>
+      <a class="dr-row r-obs" href="students-tab-mock.html#r-noor"><i>NS</i><span>Noor Sullivan<small class="s-obs2">quiet 5 days</small></span></a>
+    </div>
+  </div>
+  <div class="dr-sec sec-plain" style="--ds:140ms">
+    <div class="dr-head" data-sec="s-stage"><span>The five stages</span><b>24</b></div>
+    <div class="dr-list" id="s-stage">
+      <a class="dr-row" href="students-tab-mock.html"><i>3</i><span>Onboarding</span></a>
+      <a class="dr-row" href="students-tab-mock.html"><i>8</i><span>Answering</span></a>
+      <a class="dr-row" href="students-tab-mock.html"><i>5</i><span>Resume in</span></a>
+      <a class="dr-row" href="students-tab-mock.html"><i>4</i><span>Meeting set</span></a>
+      <a class="dr-row" href="students-tab-mock.html"><i>4</i><span>Interviewing<small class="s-brass">Marcus stands here</small></span></a>
+    </div>
+  </div>
+  <div class="dr-sec sec-deep" style="--ds:190ms">
+    <div class="dr-head" data-sec="s-all"><span class="h-all">All students</span><b>24</b></div>
+    <div class="dr-list" id="s-all">
+      <a class="dr-row" href="students-tab-mock.html#r-aisha"><i>AW</i><span>Aisha Whitfield</span></a>
+      <a class="dr-row" href="students-tab-mock.html#r-cole"><i>CB</i><span>Cole Bishop</span></a>
+      <a class="dr-row" href="students-tab-mock.html#r-devon"><i>DO</i><span>Devon Ortiz</span></a>
+      <a class="dr-row more-row" href="students-tab-mock.html"><i>⋯</i><span>A to Z, all 24<small>type-to-jump lives here later</small></span></a>
+    </div>
+  </div>
+  <div class="dr-foot">
+    <span>settings<small>soon</small></span>
+    <span>playbooks<small>soon</small></span>
+    <span>questions<small>soon</small></span>
+  </div>
+</nav>
+
 <main class="page">
 
   <!-- ========== 1. STUDENT FILE ========== -->
   <section class="wrap">
     <nav class="crumb arrive">
-      <a href="#">Students</a><span class="sep">/</span><span>Marcus Bell</span>
+      <a href="students-tab-mock.html">Students</a><span class="sep">/</span><span>Marcus Bell</span>
     </nav>
 
     <header class="masthead arrive" style="--d:60ms">
@@ -387,52 +785,89 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </header>
 
-    <div class="arrive" style="--d:120ms">
+    <!-- his stretch of the Line -->
+    <section class="his-line arrive" style="--d:120ms" aria-label="Where Marcus stands">
+      <div class="hl-head">
+        <span>His line — where Marcus stands</span>
+        <span class="lens">your lens · not his words</span>
+      </div>
+      <div class="segs">
+        <span class="seg past" style="--sd:200ms">onboarding</span>
+        <span class="seg past" style="--sd:280ms">answering</span>
+        <span class="seg past" style="--sd:360ms">resume in</span>
+        <span class="seg past" style="--sd:440ms">meeting set</span>
+        <span class="seg here" style="--sd:520ms">interviewing
+          <span class="me" aria-label="Marcus stands here — session today">MB</span>
+        </span>
+        <span class="hl-seat" title="the seat — his door is open" aria-hidden="true"></span>
+      </div>
+      <div class="whisper-line">
+        <button class="undo-chip" id="undo-chip" type="button" disabled>↩ undo</button>
+        <span id="whisper" aria-live="polite">Marcus is showtime ready — the door is open</span>
+        <span class="hand">frozen order</span>
+      </div>
+    </section>
+
+    <div class="arrive" style="--d:180ms">
       <div class="sec-head">
         <span>The work</span>
-        <span class="count">3 with you</span>
+        <span class="count" id="with-you">3 with you</span>
       </div>
 
       <div class="work">
-        <a class="row is-live" href="#">
+        <a class="row is-live" id="row-sign" href="#">
           <div>
             <div class="q">Why work for our company?</div>
-            <div class="meta">submitted <em>2d ago</em> · 240 words · third pass</div>
+            <div class="meta">submitted <em>2d ago</em> · 240 words · third pass<span class="passes" aria-label="third pass"><i class="done"></i><i class="done"></i><i class="done"></i></span></div>
+            <div class="teaser">I spent two years in support watching the same three objections lose deals nobody was allowed to fix…</div>
           </div>
-          <div class="act"><span class="mark" aria-hidden="true"></span>SIGN OFF →</div>
+          <div class="act"><span class="mark" aria-hidden="true"></span><span class="act-label">SIGN OFF →</span></div>
+          <div class="glance"><div><div class="g-inner">
+            <div class="excerpt">I spent two years in support watching the same three objections lose deals nobody was allowed to fix. Sales is where that gets fixed, and the ceiling is the part I want.</div>
+            <div class="you-said">you said, pass 2: "name the objections — make it concrete"</div>
+            <div class="changed">since pass 2: <b>+38 words</b> · objections now named · closing line rewritten</div>
+          </div></div></div>
         </a>
 
         <a class="row" href="#">
           <div>
             <div class="q">Walk me through your resume</div>
-            <div class="meta">submitted <em>4h ago</em> · 310 words · first pass</div>
+            <div class="meta">submitted <em>4h ago</em> · 310 words · first pass<span class="passes" aria-label="first pass"><i class="done"></i><i></i><i></i></span></div>
+            <div class="teaser">Four years at Fastway Logistics, from night-shift dispatch to owning the routing stack nobody else would touch…</div>
           </div>
           <div class="act"><span class="mark" aria-hidden="true"></span>REVIEW →</div>
+          <div class="glance"><div><div class="g-inner">
+            <div class="excerpt">Four years at Fastway Logistics, from night-shift dispatch to owning the routing stack nobody else would touch. I fixed the part everyone routed around, and that is the story of most of my resume.</div>
+            <div class="you-said">first pass — no notes from you yet</div>
+          </div></div></div>
         </a>
 
-        <a class="row" href="#">
+        <a class="row fresh" href="#">
           <div>
             <div class="q">Resume v3</div>
             <div class="meta">snapshot, submitted <em>yesterday</em> · 1 page · replaces v2</div>
+            <div class="teaser">changes vs v2: summary tightened, Fastway metrics added, down to one page…</div>
           </div>
           <div class="act"><span class="mark hollow" aria-hidden="true"></span>REVIEW →</div>
+          <div class="glance"><div><div class="g-inner">
+            <div class="changed">vs v2: <b>summary tightened</b> · Fastway routing metrics added (18% fewer missed windows) · education moved below experience · <b>one page now</b></div>
+            <div class="you-said">you said, on v2: "cut it to a page — lead with the routing win"</div>
+          </div></div></div>
         </a>
-      </div>
-
-      <div class="whisper">
-        <span>quiet 2 days on the resume line since you cleared the sign off</span>
-        <span class="hand">frozen order</span>
       </div>
     </div>
   </section>
 
   <!-- ========== 2. THE DOOR ========== -->
-  <div class="door-shell arrive" style="--d:180ms">
+  <div class="door-shell arrive" style="--d:240ms">
     <a class="door" href="#world">
       <div class="door-inner">
-        <div class="eyebrow">Cross over</div>
-        <div class="word">Marcus's world <span class="arrow">→</span></div>
-        <p class="sub">Everything past this line is his, exactly as he sees it. You can look. You cannot write.</p>
+        <span class="door-glyph" aria-hidden="true"></span>
+        <div>
+          <div class="eyebrow">Cross over</div>
+          <div class="word">Marcus's world <span class="arrow">→</span></div>
+          <p class="sub">Everything past this line is his, exactly as he sees it. You can look. You cannot write.</p>
+        </div>
       </div>
     </a>
   </div>
@@ -488,12 +923,12 @@ a{ color:inherit; text-decoration:none; }
           <h3>The Bank</h3>
           <span class="note">his answers, his order</span>
         </div>
-        <div class="bankline">
-          <span><b>24</b> questions</span><span class="sep">·</span>
-          <span><b>7</b> signed</span><span class="sep">·</span>
-          <span><b>3</b> with Chris</span><span class="sep">·</span>
-          <span><b>5</b> drafted, not sent</span><span class="sep">·</span>
-          <span>9 blank</span>
+        <div class="bank-stats">
+          <div class="stat"><span class="n" style="--cd:200ms">24</span><span class="k">questions</span></div>
+          <div class="stat"><span class="n" style="--cd:300ms">7</span><span class="k">signed</span></div>
+          <div class="stat"><span class="n" style="--cd:400ms">3</span><span class="k">with Chris</span></div>
+          <div class="stat"><span class="n" style="--cd:500ms">5</span><span class="k">drafted, not sent</span></div>
+          <div class="stat mutered"><span class="n" style="--cd:600ms">9</span><span class="k">blank</span></div>
         </div>
         <div class="inert">
           <span class="btn">Send it</span>
@@ -501,10 +936,170 @@ a{ color:inherit; text-decoration:none; }
         </div>
       </div>
 
-      <div class="foot">Comp · not production · direction pinned 2026-08-11</div>
+      <div class="foot">Comp · not production · direction pinned 2026-08-11 · revamp: the tab's room, one student deep · demo: click SIGN OFF — undo appears by the whisper</div>
     </div>
   </section>
 
 </main>
+
+<script>
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // The whisper speaks HIS week, one line at a time — the band's own voice.
+  const whispers = [
+    'Marcus is showtime ready — the door is open',
+    'quiet 2 days on the resume line since you cleared the sign off',
+    'resume v3 arrived yesterday — it replaces v2, unreviewed',
+  ];
+  let wi = 0;
+  let pendingUndo = null;
+  const wEl = document.getElementById('whisper');
+  function setWhisper(text){
+    if (!wEl) return;
+    wEl.innerHTML = text.split(' — ')
+      .map(part => part.replace(/&/g,'&amp;').replace(/</g,'&lt;'))
+      .join('<span class="sep">—</span>');
+  }
+  if (calm){
+    setWhisper(whispers.join(' · '));
+  } else {
+    setWhisper(whispers[0]);
+    let paused = false;  // hovering the whisper holds it still
+    wEl?.closest('.whisper-line')?.addEventListener('mouseenter', () => paused = true);
+    wEl?.closest('.whisper-line')?.addEventListener('mouseleave', () => paused = false);
+    setInterval(() => {
+      if (paused || pendingUndo) return;
+      wEl.style.opacity = '0';
+      setTimeout(() => { wi = (wi + 1) % whispers.length; setWhisper(whispers[wi]); wEl.style.opacity = '1'; }, 900);
+    }, 9000);
+  }
+
+  // The Bank's numbers ARRIVE — the Line's odometer roll, his metal.
+  function rollCounts(){
+    if (calm) return;
+    document.querySelectorAll('.stat .n').forEach(el => {
+      const target = parseInt(el.textContent, 10);
+      const delay = parseInt((el.getAttribute('style') || '').match(/--cd:\s*(\d+)/)?.[1] || '200', 10);
+      el.textContent = '0';
+      const t0 = performance.now() + delay + 400;
+      function tick(now){
+        const p = Math.min(1, Math.max(0, (now - t0) / 700));
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(Math.round(eased * target));
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+  // roll when the Bank scrolls into view, once
+  const bank = document.querySelector('.bank-stats');
+  if (bank && 'IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)){ rollCounts(); io.disconnect(); }
+    }, { threshold: 0.4 });
+    io.observe(bank);
+  } else { rollCounts(); }
+
+  // THE SIGN-OFF CEREMONY — earned calm, DOM-derived counts, visible undo.
+  const undoChip = document.getElementById('undo-chip');
+  const signRow = document.getElementById('row-sign');
+  const withYou = document.getElementById('with-you');
+  function showUndo(label, restore){
+    pendingUndo = { restore };
+    undoChip.textContent = '↩ undo · ' + label;
+    undoChip.disabled = false;
+    undoChip.classList.remove('on'); void undoChip.offsetWidth;
+    undoChip.classList.add('on');
+  }
+  function hideUndo(){ pendingUndo = null; undoChip.disabled = true; undoChip.classList.remove('on'); }
+  undoChip?.addEventListener('click', () => {
+    if (!pendingUndo) return;
+    pendingUndo.restore();
+    hideUndo();
+  });
+  signRow?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (signRow.classList.contains('signed')) return;
+    hideUndo();  // a new ceremony commits the previous one
+    const label = signRow.querySelector('.act-label');
+    const prev = { w: wEl?.textContent, c: withYou.textContent, l: label.textContent };
+    signRow.classList.remove('is-live'); signRow.classList.add('signed');
+    label.textContent = 'SIGNED ✓';
+    const n = parseInt(withYou.textContent, 10);
+    withYou.textContent = (n - 1) + ' with you';
+    setWhisper('signed — one fewer thing between Marcus and the seat');
+    atmos?.classList.add('exhale');   // MOTION 2 — the room exhales with you
+    showUndo('the sign off', () => {
+      signRow.classList.add('is-live'); signRow.classList.remove('signed');
+      label.textContent = prev.l;
+      withYou.textContent = prev.c;
+      atmos?.classList.remove('exhale');
+      setWhisper(prev.w || whispers[wi]);
+    });
+  });
+
+  // PURPOSEFUL MOTION 1 — approach: his door lights the room as you near it.
+  const atmos = document.querySelector('.atmos');
+  const doorEl = document.querySelector('.door');
+  if (!calm && atmos && doorEl){
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const r = doorEl.getBoundingClientRect();
+      // 1 when the door is centered in view; 0 when a viewport away; clamped
+      const p = Math.min(1, Math.max(0, 1 - Math.abs(r.top + r.height/2 - innerHeight/2) / innerHeight));
+      atmos.style.setProperty('--approach', p.toFixed(3));
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(measure); }, { passive:true });
+    measure();
+  }
+
+  // ---- the rail: blob unfurls the roster drawer (the tab's, verbatim) ----
+  const blob = document.getElementById('blob');
+  const drawer = document.getElementById('drawer');
+  document.querySelectorAll('.dr-list').forEach(l => {
+    const inner = document.createElement('div'); inner.className = 'dr-inner';
+    while (l.firstChild) inner.appendChild(l.firstChild);
+    l.appendChild(inner);
+  });
+  blob?.addEventListener('click', () => {
+    const open = drawer.classList.toggle('open');
+    blob.setAttribute('aria-expanded', String(open));
+    drawer.setAttribute('aria-hidden', String(!open));
+    document.documentElement.classList.toggle('drawer-open', open);
+    if (!open) blob.focus();  // closing hands focus back to the mark
+  });
+  document.querySelectorAll('.dr-head').forEach(h => {
+    h.setAttribute('role', 'button');
+    h.setAttribute('tabindex', '0');
+    h.setAttribute('aria-controls', h.dataset.sec);
+    h.setAttribute('aria-expanded', h.classList.contains('is-open') ? 'true' : 'false');
+    const toggle = () => {
+      const list = document.getElementById(h.dataset.sec);
+      const open = list.classList.toggle('open');
+      if (open){  // single-open: the drawer stays a switchboard (chapman-ruled)
+        document.querySelectorAll('.dr-list.open').forEach(l => {
+          if (l !== list){
+            l.classList.remove('open');
+            const oh = document.querySelector('[data-sec="' + l.id + '"]');
+            oh?.classList.remove('is-open'); oh?.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      h.classList.toggle('is-open', open);
+      h.setAttribute('aria-expanded', String(open));
+    };
+    h.addEventListener('click', toggle);
+    h.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+    });
+  });
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) blob.click();
+  });
+  document.addEventListener('click', (e) => {
+    if (drawer.classList.contains('open') && !drawer.contains(e.target) && !blob.contains(e.target)) blob.click();
+  });
+</script>
 </body>
 </html>
