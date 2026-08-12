@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Pitchos — what's built</title>
+<style>
+  :root{--bg:#0b0a09;--panel:#131110;--ink:#ece7dd;--dim:#8f887c;--brass:#c9a35c;--plum:#8f7fb8;--teal:#7fd0c8;--line:#242019}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,"Segoe UI",sans-serif;padding:48px 24px 80px}
+  .wrap{max-width:1060px;margin:0 auto}
+  .crumb{font:12px/1 ui-monospace,Consolas,monospace;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+  h1{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(34px,5vw,52px);margin:10px 0 6px}
+  .sub{color:var(--dim);max-width:60ch;margin-bottom:8px}
+  .stamp{font:12px/1 ui-monospace,Consolas,monospace;color:var(--brass);letter-spacing:.12em;margin-bottom:44px;display:inline-block;border:1px solid var(--line);padding:7px 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:10px}
+  .card.wide{grid-column:1/-1}
+  .k{display:flex;justify-content:space-between;align-items:baseline}
+  .k .n{font:11px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+  .done{font:11px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;color:var(--teal)}
+  h2{font-family:Georgia,serif;font-weight:500;font-size:24px}
+  .card p{color:var(--dim);font-size:14px}
+  .go{margin-top:auto;padding-top:8px}
+  .go a{color:var(--brass);text-decoration:none;font:13px ui-monospace,Consolas,monospace;letter-spacing:.06em;border-bottom:1px solid transparent}
+  .go a:hover{border-bottom-color:var(--brass)}
+  .shots{display:flex;gap:10px;flex-wrap:wrap}
+  .shots a{flex:1 1 220px;min-width:0}
+  .shots img{width:100%;display:block;border:1px solid var(--line);cursor:zoom-in}
+  .cap{font-size:12px;color:var(--dim);margin-top:5px}
+  dialog{border:1px solid var(--line);background:var(--bg);padding:8px;max-width:min(1280px,94vw)}
+  dialog::backdrop{background:rgba(0,0,0,.82)}
+  dialog img{width:100%;display:block}
+  .foot{margin-top:52px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:18px;max-width:70ch}
+  .foot b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="crumb">Pitchos · build review</div>
+  <h1>What's built</h1>
+  <p class="sub">Six pieces, all complete. The first two are fully interactive — click in and use them. The rest are real running code, shown as captures from the live build.</p>
+  <span class="stamp">AUGUST 12, 2026 · ALL ITEMS DONE</span>
+
+  <div class="grid">
+    <div class="card wide">
+      <div class="k"><span class="n">01 · Interactive — open it</span><span class="done">DONE</span></div>
+      <h2>The Students tab</h2>
+      <p>The new coach home. Every student is a named cube on the Line; the room itself tells you who needs you — doors open when someone's showtime-ready, quiet students cool toward the cold edge, movers slide with a brass afterglow. Press G to choose who walks. Hover any cube for their story. A rail drawer keeps the whole roster one keystroke away.</p>
+      <div class="go"><a href="students-tab-mock.html">Open the Students tab →</a></div>
+    </div>
+
+    <div class="card wide">
+      <div class="k"><span class="n">02 · Interactive — open it</span><span class="done">DONE</span></div>
+      <h2>The Student File</h2>
+      <p>Click a student, land in their File — same world, one student deep. The work waiting on you sits on top with sign-off in one click; below it, who they are, their daily ritual, and their full history.</p>
+      <div class="go"><a href="student-file-mock.html">Open Marcus Bell's File →</a></div>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">03 · Built &amp; running</span><span class="done">DONE</span></div>
+      <h2>Coach roster, in the app</h2>
+      <p>The working roster already in the codebase — live status per student, waiting counts, quiet-student flags, and the drill-in with answer sign-off and time-boxed resume viewing.</p>
+      <div class="shots">
+        <a href="#" data-img="shots/demo-wo1-coach.png"><img src="shots/demo-wo1-coach.png" alt="Coach roster" loading="lazy"><div class="cap">Roster — click to enlarge</div></a>
+        <a href="#" data-img="shots/demo-wo1-extra.png"><img src="shots/demo-wo1-extra.png" alt="Student drill-in" loading="lazy"><div class="cap">Drill-in: sign-off + resume review</div></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">04 · Built &amp; running</span><span class="done">DONE</span></div>
+      <h2>Outreach queue</h2>
+      <p>Inside My Pipeline: a "who to contact now" queue that fires on real triggers — a posting re-verified today, a week of silence, an interview on the calendar. Each row is a five-minute action with a one-click log.</p>
+      <div class="shots">
+        <a href="#" data-img="shots/demo-wo2-populated.png"><img src="shots/demo-wo2-populated.png" alt="Outreach queue populated" loading="lazy"><div class="cap">A live NOW row — click to enlarge</div></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">05 · Built &amp; tested</span><span class="done">DONE</span></div>
+      <h2>Daily practice, server-backed</h2>
+      <p>Practice tracking moved off the device and onto the server — streaks and history survive any phone. Migrations written and staged; 38 dedicated tests, 1,782 green across the suite.</p>
+    </div>
+
+    <div class="card">
+      <div class="k"><span class="n">06 · Staged</span><span class="done">DONE</span></div>
+      <h2>Database package</h2>
+      <p>The full coach-roster database layer — roles, policies, resume storage, audit trail — written, audited across three review rounds, and packaged with an operator runbook. One scheduled execution hour turns everything above on.</p>
+    </div>
+  </div>
+
+  <p class="foot"><b>Where this stands:</b> the interactive pages are the signed design direction; items 03–06 are working code on reviewed branches. Nothing here has touched the live database yet — everything ships together after the scheduled execution hour.</p>
+</div>
+
+<dialog id="zoom"><img id="zoomimg" alt=""></dialog>
+<script>
+const d=document.getElementById('zoom'),di=document.getElementById('zoomimg');
+document.querySelectorAll('[data-img]').forEach(a=>a.onclick=e=>{e.preventDefault();di.src=a.dataset.img;d.showModal()});
+d.onclick=()=>d.close();
+</script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student File + the Door + World View — Pitch comp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Geist:wght@300..600&family=Geist+Mono:wght@300..500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — pinned first. No inline magic numbers below.
+   Ground + text + brass lifted from pitchos DESIGN.md section 3.
+   ============================================================ */
+:root{
+  /* ground (LIT surfaces) */
+  --surface-deep: 0.108 0.012 58;
+  --surface:      0.135 0.014 58;
+  --surface-rise: 0.168 0.015 58;
+
+  /* text ladder */
+  --text:  0.975 0.006 75;
+  --muted: 0.76  0.010 75;
+  --faint: 0.69  0.014 75;
+  --dim:   0.63  0.010 75;
+
+  /* THE COLOR LAW — three registers, one page */
+  --act:      0.84 0.115 209;  /* CYAN  — Chris ACTING. work marks + action labels only. */
+  --obs:      0.70 0.112 302;  /* PLUM  — Chris WATCHING. vitals accents, quiet whisper, door edge, return chrome. */
+  --brass:    0.78 0.13 70;    /* BRASS — Marcus's own world. Door band + World View only. */
+  --brass-bri:0.84 0.14 68;
+  --brass-ink:0.18 0.04 70;
+
+  /* hairlines: pure-neutral scrims, the LIT idiom */
+  --rule:      1px solid oklch(1 0 0 / 0.09);
+  --rule-firm: 1px solid oklch(1 0 0 / 0.14);
+
+  /* type */
+  --display: 'Funnel Display', system-ui, sans-serif;
+  --body:    'Geist', system-ui, sans-serif;
+  --mono:    'Geist Mono', ui-monospace, monospace;
+  --hand:    'Instrument Serif', serif;  /* coach's margin note: app serif italic — handwriting retired per DESIGN.md, chapman-ruled 2026-08-12 */
+
+  /* space (8pt) */
+  --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:72px; --s7:112px;
+  --row-min: 86px;
+  --page: 1120px;
+  --gutter: clamp(20px, 5vw, 64px);
+
+  /* motion — one curve, one duration class, nothing autonomous */
+  --expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 280ms;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0;
+  background: oklch(var(--surface-deep));
+  color: oklch(var(--text));
+  font-family: var(--body);
+  font-size:16px;
+  line-height:1.5;
+  font-variant-numeric: tabular-nums;
+  overflow-x:hidden;
+}
+h1,h2,h3,p{ margin:0; }
+a{ color:inherit; text-decoration:none; }
+
+/* ---- atmosphere: static aurora dyad + paper grain (no animation) ---- */
+.atmos{ position:fixed; inset:0; pointer-events:none; z-index:0; }
+/* Shipped Chrome.jsx aurora, coach re-theme, frozen mid-drift (comp = no
+   animation): the app's two 60vmax blobs — blob-brass reads through the act
+   cyan under [data-role=coach]; blob-plum keeps the app's literal one-off hue.
+   Effective center alphas = shipped 0.6/0.5 x the 0.35 layer opacity; the
+   blur(80px) is emulated by the gradient falloff. */
+.atmos::before{
+  content:''; position:absolute; inset:-15%;
+  background:
+    radial-gradient(60vmax 60vmax at 22% 4%, oklch(var(--act) / 0.6), transparent 70%),
+    radial-gradient(60vmax 60vmax at 85% 94%, oklch(0.55 0.12 320 / 0.5), transparent 70%);
+  filter: blur(80px);          /* the shipped smoothness lives HERE, not in the falloff */
+  opacity: 0.35;               /* shipped layer opacity */
+}
+.atmos::after{
+  content:''; position:absolute; inset:0; opacity:0.55; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.38'/%3E%3C/svg%3E");
+  background-size:160px 160px;
+}
+
+.page{ position:relative; z-index:1; }
+.wrap{ max-width:var(--page); margin:0 auto; padding-inline:var(--gutter); }
+
+/* one-shot arrival, first paint only */
+@keyframes arrive{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:none; } }
+.arrive{ animation: arrive 480ms var(--expo) both; animation-delay: var(--d, 0ms); }
+
+/* ============================================================
+   1. STUDENT FILE — the coach layer
+   ============================================================ */
+.crumb{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+  color: oklch(var(--faint) / 0.8);
+  padding-block: var(--s4) 0;
+  display:flex; align-items:center; gap:10px;
+}
+.crumb .sep{ color: oklch(var(--obs) / 0.7); }
+.crumb a{ transition: color var(--dur) var(--expo); }
+.crumb a:hover{ color: oklch(var(--text)); }
+
+.masthead{ padding-block: var(--s5) var(--s6); position:relative; }
+.masthead h1{
+  font-family:var(--display); font-weight:500;
+  font-size: clamp(52px, 10.5vw, 108px);
+  line-height:0.92; letter-spacing:-0.035em;
+  margin-left:-0.045em;
+}
+.vitals{
+  font-family:var(--mono); font-size:clamp(12px, 1.5vw, 14.5px);
+  letter-spacing:0.01em; color: oklch(var(--muted));
+  margin-top: var(--s1);
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:0 12px;
+}
+.vitals .dot{ color: oklch(var(--obs) / 0.85); }        /* PLUM: observation punctuation */
+.vitals .watch{ color: oklch(var(--obs) / 0.95); }      /* PLUM: what Chris is watching */
+.vitals .tier{ color: oklch(var(--brass-bri) / 0.92); } /* BRASS: readiness tier ONLY — his achievement, his metal (chapman-ruled 2026-08-12); never counts/chips */
+
+/* ---- THE WORK ---- */
+.sec-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--s3);
+  font-family:var(--mono); font-size:11px; letter-spacing:0.3em; text-transform:uppercase;
+  color: oklch(var(--faint)); padding: 0 18px var(--s2) 26px;
+}
+.sec-head .count{ letter-spacing:0.08em; color: oklch(var(--faint)); }
+
+.work{ border-bottom: var(--rule); }
+.row{
+  position:relative; display:grid; gap: 4px 24px;
+  grid-template-columns: minmax(0,1fr) auto; align-items:center;
+  min-height: var(--row-min); padding: 22px 18px 22px 26px;
+  border-top: var(--rule);
+  transition: background var(--dur) var(--expo);
+}
+.row:hover{ background: linear-gradient(90deg, oklch(1 0 0 / 0.05), transparent 68%); }
+/* the live row is LIT from its mark, not boxed — the wash decays to nothing */
+.row.is-live{ background: linear-gradient(90deg, oklch(var(--act) / 0.075), oklch(1 0 0 / 0.02) 34%, transparent 76%); }
+.row.is-live:hover{ background: linear-gradient(90deg, oklch(var(--act) / 0.1), oklch(1 0 0 / 0.03) 34%, transparent 78%); }
+.row.is-live::before{                                    /* CYAN: the one actionable mark */
+  content:''; position:absolute; inset-block:0; left:0; width:1px;
+  background: oklch(var(--act));
+}
+.row .q{
+  font-family:var(--display); font-weight:400;
+  font-size: clamp(21px, 2.9vw, 30px); line-height:1.12; letter-spacing:-0.02em;
+}
+.row .meta{
+  font-family:var(--mono); font-size:12.5px; color: oklch(var(--faint));
+  margin-top:6px; letter-spacing:0.01em;
+}
+.row .meta em{ font-style:normal; color: oklch(var(--muted)); }
+.act{
+  display:flex; align-items:center; gap:14px; justify-self:end;
+  font-family:var(--mono); font-size:12px; letter-spacing:0.05em;
+  color: oklch(var(--act));                               /* CYAN: action label */
+  transition: transform var(--dur) var(--expo), opacity var(--dur) var(--expo);
+}
+.row:hover .act{ transform: translateX(4px); }
+.mark{
+  width:9px; height:9px; border-radius:999px; display:inline-block;
+  background: oklch(var(--act)); flex:none;
+}
+.mark.hollow{ background:transparent; box-shadow: inset 0 0 0 1.5px oklch(var(--act) / 0.72); }
+
+/* the plum whisper + the one hand note */
+.whisper{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--s3);
+  padding: var(--s3) 18px 0 26px;
+  font-family:var(--mono); font-size:12.5px;
+  color: oklch(var(--obs) / 0.92);                        /* PLUM: quiet / stall observation */
+}
+.hand{
+  font-family:var(--hand); font-style:italic; font-size:19px; line-height:1;
+  letter-spacing:0.01em;
+  color: oklch(var(--faint) / 0.85);
+  transform: rotate(-2.5deg); white-space:nowrap;
+}
+
+/* ============================================================
+   2. THE DOOR — the signature moment
+   ============================================================ */
+/* whisper->Door on the ladder: clean 112 (s7) above, 32 (s4) kept below */
+.door-shell{ margin-top: var(--s7); padding-top: 0; padding-bottom: var(--s4); }
+.door{
+  display:block; position:relative; width:100%; isolation:isolate;
+  padding: clamp(28px, 3vw, 40px) var(--gutter);
+  border-block: 1px solid oklch(var(--obs) / 0.34);       /* PLUM edge: the crossing is announced */
+  background:
+    radial-gradient(70% 150% at 50% 118%, oklch(var(--brass) / 0.20), transparent 70%),
+    radial-gradient(46% 120% at 50% 100%, oklch(var(--brass-bri) / 0.13), transparent 72%),
+    linear-gradient(180deg, oklch(var(--surface) / 0.5), oklch(var(--surface-rise) / 0.62));
+  box-shadow:
+    0 -20px 54px -36px oklch(var(--obs) / 0.62),
+    0 18px 42px -36px oklch(var(--obs) / 0.5);
+  transition: box-shadow var(--dur) var(--expo), border-color var(--dur) var(--expo);
+}
+.door::after{                                             /* the warm floor of the doorway */
+  content:''; position:absolute; inset-inline:0; bottom:0; height:2px; z-index:-1;
+  background: linear-gradient(90deg, transparent, oklch(var(--brass-bri) / 0.5) 22%, oklch(var(--brass-bri) / 0.5) 78%, transparent);
+}
+.door-inner{ max-width:var(--page); margin:0 auto; }
+.door .eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.32em; text-transform:uppercase;
+  color: oklch(var(--obs) / 0.9); margin-bottom: var(--s2);
+}
+.door .word{
+  font-family:var(--display); font-weight:400;
+  font-size: clamp(38px, 6.6vw, 70px); line-height:1; letter-spacing:-0.035em;
+  color: oklch(var(--brass-bri));                          /* BRASS: his warmth, seen from outside */
+  display:flex; align-items:baseline; gap:0.28em;
+}
+.door .arrow{ display:inline-block; transition: transform var(--dur) var(--expo); }
+.door .sub{
+  font-family:var(--mono); font-size:12.5px; color: oklch(var(--faint));
+  margin-top: var(--s3); max-width:56ch; line-height:1.65;
+}
+.door:hover{
+  border-color: oklch(var(--obs) / 0.5);
+  box-shadow: 0 -24px 64px -32px oklch(var(--obs) / 0.78), 0 22px 50px -32px oklch(var(--obs) / 0.62);
+}
+.door:hover .arrow{ transform: translateX(10px); }
+
+/* ============================================================
+   3. WORLD VIEW — Marcus's own app, read-only, his brass register
+   ============================================================ */
+/* past the door the whole ground warms — you are standing in his register now.
+   Marcus's sky is the shipped student aurora VERBATIM in geometry: gold blob
+   high-left, plum blob low-right (the exact dyad students live under), frozen. */
+.world{
+  position:relative; overflow:hidden; padding-bottom: var(--s7);
+  background:
+    linear-gradient(180deg, oklch(var(--brass) / 0.055), oklch(var(--brass) / 0.028) 52%, oklch(var(--brass) / 0.012));
+}
+.world::before{
+  content:''; position:absolute; inset:-15%; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(60vmax 60vmax at 18% 2%, oklch(var(--brass) / 0.6), transparent 70%),
+    radial-gradient(60vmax 60vmax at 88% 98%, oklch(0.55 0.12 320 / 0.5), transparent 70%);
+  filter: blur(80px);
+  opacity: 0.35;
+}
+.world > *{ position:relative; z-index:1; }
+
+.return{
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; justify-content:space-between; gap:var(--s2);
+  padding: 11px var(--gutter);
+  font-family:var(--mono); font-size:11.5px; letter-spacing:0.1em;
+  color: oklch(var(--obs) / 0.98);                          /* PLUM: you are watching, not living */
+  background: oklch(var(--surface-deep) / 0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid oklch(var(--obs) / 0.3);
+}
+.return .back{ display:inline-flex; align-items:center; gap:8px; transition: color var(--dur) var(--expo); }
+.return .back:hover{ color: oklch(var(--text)); }
+
+.world-body{ padding-top: var(--s6); }
+.eyebrow{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.32em; text-transform:uppercase;
+  color: oklch(var(--brass) / 0.72);
+}
+.world h2{
+  font-family:var(--display); font-weight:400;
+  font-size: clamp(34px, 5vw, 50px); line-height:1.04; letter-spacing:-0.03em;
+  margin-top: var(--s2);
+  color: oklch(0.96 0.028 72);
+}
+.world h3{ color: oklch(0.95 0.024 72); }
+.world .subline{
+  font-family:var(--mono); font-size:13px; color: oklch(0.70 0.026 70);
+  margin-top: var(--s2); display:flex; flex-wrap:wrap; align-items:center; gap:0 6px;
+}
+.prose{ max-width:62ch; margin-top: var(--s4); }
+.prose p{ font-size:17.5px; line-height:1.72; color: oklch(0.93 0.018 72); }
+.prose p + p{ margin-top: var(--s3); }
+
+.ro{                                                        /* PLUM: read-only chrome */
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase;
+  color: oklch(var(--obs) / 0.95);
+  border:1px solid oklch(var(--obs) / 0.34); border-radius:999px;
+  padding:4px 10px;
+}
+.ro .pip{ width:5px; height:5px; border-radius:999px; background: oklch(var(--obs) / 0.9); }
+
+.block{ margin-top: var(--s6); padding-top: var(--s4); border-top: var(--rule); }
+.block-head{ display:flex; align-items:baseline; justify-content:space-between; gap:var(--s3); flex-wrap:wrap; }
+.block h3{
+  font-family:var(--display); font-weight:400; font-size:24px; letter-spacing:-0.02em;
+}
+.block .note{ font-family:var(--mono); font-size:12px; color: oklch(var(--faint)); }
+
+.ritual{ margin-top: var(--s3); }
+.ritual .line{
+  display:flex; align-items:center; gap:16px;
+  padding: 22px 18px 22px 26px; border-top: var(--rule);
+  font-size:16px; color: oklch(var(--text) / 0.9);
+}
+.ritual .line:first-child{ border-top:0; }
+.ritual .line .t{ flex:1; min-width:0; }
+.ritual .line .when{ font-family:var(--mono); font-size:12px; color: oklch(var(--faint)); }
+.tick{ width:11px; height:11px; border-radius:999px; flex:none; }
+.tick.done{ background: oklch(var(--brass)); }             /* BRASS: his own world */
+.tick.open{ box-shadow: inset 0 0 0 1.5px oklch(var(--text) / 0.24); }
+
+/* his private practice, rendered quietly: a record, not a scoreboard */
+.habits{ display:grid; gap: var(--s2); margin-top: var(--s4); }
+.habit{ display:grid; grid-template-columns: 76px minmax(0, 300px) auto; align-items:center; gap: var(--s3); justify-content:start; }
+.habit .name{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.22em; text-transform:uppercase;
+  color: oklch(var(--faint) / 0.85);
+}
+.streak{ display:flex; gap:5px; }
+.streak i{ display:block; width:100%; height:13px; border-radius:1px; background: oklch(var(--text) / 0.075); }
+.streak i.on{ background: oklch(var(--brass) / 0.36); }
+.streak i.today{ background: oklch(var(--brass) / 0.8); }
+.habit .tally{ font-family:var(--mono); font-size:11.5px; color: oklch(var(--faint)); }
+
+.bankline{
+  margin-top: var(--s4); padding: 22px 18px 22px 26px; border-top: var(--rule);
+  display:flex; flex-wrap:wrap; align-items:baseline; gap: 0 14px;
+  font-family:var(--mono); font-size:13.5px; color: oklch(var(--muted));
+}
+.bankline b{ font-weight:500; color: oklch(var(--brass-bri)); }
+.bankline .sep{ color: oklch(var(--text) / 0.22); }
+
+.inert{
+  margin-top: var(--s4); display:flex; flex-wrap:wrap; align-items:center; gap:14px;
+}
+.inert .btn{
+  font-family:var(--mono); font-size:12px; letter-spacing:0.06em;
+  padding: 11px 20px; border-radius:10px;
+  background: oklch(var(--brass) / 0.1); border:1px solid oklch(var(--brass) / 0.26);
+  color: oklch(var(--brass-bri) / 0.5); cursor:not-allowed;
+}
+.inert .why{ font-family:var(--mono); font-size:11.5px; color: oklch(var(--obs) / 0.92); }
+
+.foot{
+  margin-top: var(--s6); padding-top: var(--s3); border-top: var(--rule);
+  font-family:var(--mono); font-size:11px; letter-spacing:0.1em;
+  color: oklch(var(--text) / 0.3);
+}
+
+/* ---- narrow ---- */
+@media (max-width: 720px){
+  .row{ grid-template-columns: minmax(0,1fr); padding: 20px 14px 20px 20px; }
+  .act{ justify-self:start; margin-top:10px; }
+  .whisper{ flex-direction:column; gap:14px; padding-inline:20px; }
+  .hand{ align-self:flex-start; }
+  .habit{ grid-template-columns: 76px 1fr; }
+  .habit .tally{ grid-column:2; justify-self:end; }
+  .return{ font-size:10.5px; letter-spacing:0.06em; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition-duration:1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="atmos" aria-hidden="true"></div>
+
+<main class="page">
+
+  <!-- ========== 1. STUDENT FILE ========== -->
+  <section class="wrap">
+    <nav class="crumb arrive">
+      <a href="#">Students</a><span class="sep">/</span><span>Marcus Bell</span>
+    </nav>
+
+    <header class="masthead arrive" style="--d:60ms">
+      <h1>Marcus Bell</h1>
+      <div class="vitals">
+        <span>interviewing</span><span class="dot">·</span>
+        <span class="tier">showtime ready</span><span class="dot">·</span>
+        <span class="watch">resume v3 unreviewed</span><span class="dot">·</span>
+        <span>session Thu 2:30</span>
+      </div>
+    </header>
+
+    <div class="arrive" style="--d:120ms">
+      <div class="sec-head">
+        <span>The work</span>
+        <span class="count">3 with you</span>
+      </div>
+
+      <div class="work">
+        <a class="row is-live" href="#">
+          <div>
+            <div class="q">Why work for our company?</div>
+            <div class="meta">submitted <em>2d ago</em> · 240 words · third pass</div>
+          </div>
+          <div class="act"><span class="mark" aria-hidden="true"></span>SIGN OFF →</div>
+        </a>
+
+        <a class="row" href="#">
+          <div>
+            <div class="q">Walk me through your resume</div>
+            <div class="meta">submitted <em>4h ago</em> · 310 words · first pass</div>
+          </div>
+          <div class="act"><span class="mark" aria-hidden="true"></span>REVIEW →</div>
+        </a>
+
+        <a class="row" href="#">
+          <div>
+            <div class="q">Resume v3</div>
+            <div class="meta">snapshot, submitted <em>yesterday</em> · 1 page · replaces v2</div>
+          </div>
+          <div class="act"><span class="mark hollow" aria-hidden="true"></span>REVIEW →</div>
+        </a>
+      </div>
+
+      <div class="whisper">
+        <span>quiet 2 days on the resume line since you cleared the sign off</span>
+        <span class="hand">frozen order</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 2. THE DOOR ========== -->
+  <div class="door-shell arrive" style="--d:180ms">
+    <a class="door" href="#world">
+      <div class="door-inner">
+        <div class="eyebrow">Cross over</div>
+        <div class="word">Marcus's world <span class="arrow">→</span></div>
+        <p class="sub">Everything past this line is his, exactly as he sees it. You can look. You cannot write.</p>
+      </div>
+    </a>
+  </div>
+
+  <!-- ========== 3. WORLD VIEW ========== -->
+  <section class="world" id="world">
+    <div class="return">
+      <span>Viewing as Marcus — read-only</span>
+      <a class="back" href="#">← back to his file</a>
+    </div>
+
+    <div class="wrap world-body">
+      <div class="eyebrow">About You</div>
+      <h2>Who Marcus is</h2>
+      <div class="subline">last edited 6 days ago · 2 paragraphs &nbsp;<span class="ro"><span class="pip"></span>read-only</span></div>
+
+      <div class="prose">
+        <p>I spent four years fixing warehouse routing software nobody wanted to touch, and I got good at walking into a mess and finding the one thing holding it up. That is the part of the job I actually like. The rest is patience.</p>
+        <p>I am looking for a team small enough that I can see what my work does. I care about being trusted early and I am fine being told I am wrong. What I want next is a room where the hard problem is the product, not the process.</p>
+      </div>
+
+      <div class="block">
+        <div class="block-head">
+          <h3>Morning</h3>
+          <span class="note">Tue 12 Aug · 2 of 3 done</span>
+        </div>
+        <div class="ritual">
+          <div class="line"><span class="tick done"></span><span class="t">Ten minutes sitting, no phone</span><span class="when">6:20 AM</span></div>
+          <div class="line"><span class="tick done"></span><span class="t">Three miles, easy pace</span><span class="when">6:45 AM</span></div>
+          <div class="line"><span class="tick open"></span><span class="t">Twenty pages before the laptop opens</span><span class="when">not yet</span></div>
+        </div>
+
+        <div class="habits">
+          <div class="habit">
+            <span class="name">mind</span>
+            <span class="streak" aria-label="mind, 11 of the last 14 days">
+              <i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on today"></i>
+            </span>
+            <span class="tally">11 / 14</span>
+          </div>
+          <div class="habit">
+            <span class="name">body</span>
+            <span class="streak" aria-label="body, 9 of the last 14 days">
+              <i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on today"></i>
+            </span>
+            <span class="tally">9 / 14</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-head">
+          <h3>The Bank</h3>
+          <span class="note">his answers, his order</span>
+        </div>
+        <div class="bankline">
+          <span><b>24</b> questions</span><span class="sep">·</span>
+          <span><b>7</b> signed</span><span class="sep">·</span>
+          <span><b>3</b> with Chris</span><span class="sep">·</span>
+          <span><b>5</b> drafted, not sent</span><span class="sep">·</span>
+          <span>9 blank</span>
+        </div>
+        <div class="inert">
+          <span class="btn">Send it</span>
+          <span class="why">his control, inert while you are watching</span>
+        </div>
+      </div>
+
+      <div class="foot">Comp · not production · direction pinned 2026-08-11</div>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>
