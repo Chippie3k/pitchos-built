@@ -1,0 +1,1008 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Bank — the pushback ladder · Pitch comp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Geist:wght@300..600&family=Geist+Mono:wght@300..500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THE BANK, REBUILT — student side (Marcus's POV).
+   ONE IDEA: an answer isn't yours until it survives the pushback.
+   Ladder: answer → go-ahead (Chris signs) → the pushback → showtime.
+   Register: the student's own golden world (shipped app aurora,
+   gold high-left, plum low-right). Brass = earned. Plum = waiting
+   on Chris. The one celebration on the page is the go-ahead flare.
+   ============================================================ */
+:root{
+  --surface-deep: 0.108 0.012 58;
+  --surface:      0.135 0.014 58;
+  --surface-rise: 0.168 0.015 58;
+
+  --text:  0.975 0.006 75;
+  --muted: 0.76  0.010 75;
+  --faint: 0.69  0.014 75;
+
+  --gold:     0.80 0.14 78;    /* the student's metal — his app accent */
+  --gold-bri: 0.86 0.15 76;
+  --obs:      0.70 0.112 302;  /* PLUM — waiting on Chris, the watcher's color */
+  --brass:    0.78 0.13 70;
+  --brass-bri:0.84 0.14 68;
+
+  --rule:      1px solid oklch(1 0 0 / 0.09);
+  --display: 'Funnel Display', system-ui, sans-serif;
+  --body:    'Geist', system-ui, sans-serif;
+  --mono:    'Geist Mono', ui-monospace, monospace;
+  --serif:   'Instrument Serif', serif;
+
+  --page: 1080px;
+  --gutter: clamp(20px, 4vw, 56px);
+  --expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 280ms;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+body{
+  margin:0; background: oklch(var(--surface-deep)); color: oklch(var(--text));
+  font-family: var(--body); font-size:16px; line-height:1.5;
+  font-variant-numeric: tabular-nums; overflow-x:hidden; min-height:100vh;
+}
+h1,h2,h3,p{ margin:0; }
+a{ color:inherit; text-decoration:none; }
+
+/* his sky: the shipped student aurora, alive barely, no grain */
+.atmos{ position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.atmos::before{
+  content:''; position:absolute; inset:-15%;
+  background:
+    radial-gradient(60vmax 60vmax at 18% 2%, oklch(var(--gold) / 0.55), transparent 70%),
+    radial-gradient(60vmax 60vmax at 88% 98%, oklch(0.55 0.12 320 / 0.5), transparent 70%);
+  filter: blur(80px); opacity:0.32;
+  animation: drift 90s ease-in-out infinite alternate;
+}
+@keyframes drift{ to{ transform: rotate(3deg) scale(1.07) translateY(-1.5%); } }
+
+.page{ position:relative; z-index:1; max-width:var(--page); margin:0 auto; padding: 0 var(--gutter) 96px; }
+@keyframes arrive{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:none; } }
+.arrive{ animation: arrive 480ms var(--expo) both; animation-delay: var(--d, 0ms); }
+
+/* ---- masthead: the app's own voice ---- */
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.3em; text-transform:uppercase;
+  color: oklch(var(--faint)); padding-top:44px;
+}
+h1{
+  font-family:var(--serif); font-weight:400; font-size:clamp(44px, 6.5vw, 64px);
+  line-height:0.98; letter-spacing:-0.01em; margin-top:10px;
+}
+h1 .stop{ color: oklch(var(--gold-bri)); }
+.sub{
+  font-family:var(--mono); font-size:13px; color: oklch(var(--faint)); margin-top:12px;
+}
+.sub b{ font-weight:400; color: oklch(var(--gold-bri)); }
+.sub .wait{ color: oklch(var(--obs)); }
+
+/* ============================================================
+   YOUR LINE — the coverage bands as the student's own Line.
+   Five bands filling toward the door. Same instrument the coach
+   reads, one student deep, pointed at mastery instead of stages.
+   ============================================================ */
+.myline{
+  margin-top:34px; border:1px solid oklch(1 0 0 / 0.09); border-radius:16px;
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.028), oklch(1 0 0 / 0.008));
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.05) inset, 0 14px 34px -22px oklch(0 0 0 / 0.7);
+  padding:16px 20px 6px;
+}
+.ml-head{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.2em; text-transform:uppercase;
+  color: oklch(var(--faint)); padding-bottom:16px;
+}
+.bands{ display:flex; gap:4px; align-items:stretch; }
+.bandc{ flex:1 1 0; }
+.bandc .n{
+  font-family:var(--display); font-weight:430; font-size:22px; line-height:1;
+  color: oklch(var(--text) / 0.92); margin-bottom:2px;
+}
+.bandc .n small{ font-family:var(--mono); font-size:10px; color: oklch(var(--faint)); margin-left:3px; }
+.meter{
+  height:8px; border-radius:4px; margin-top:8px;
+  background: oklch(1 0 0 / 0.07); overflow:hidden; position:relative;
+}
+.meter i{
+  display:block; height:100%; width: var(--w, 0%);
+  border-radius:4px;
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.55), oklch(var(--gold-bri) / 0.9));
+  transform-origin:left; transform: scaleX(0);
+  animation: fill 900ms var(--expo) both; animation-delay: var(--fd, 400ms);
+}
+@keyframes fill{ to{ transform:none; } }
+.bandc .k{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase;
+  color: oklch(var(--faint)); margin-top:8px;
+}
+.bandc.chris .k{ color: oklch(var(--obs) / 0.95); }
+/* the door at the end of his line: showtime-ready answers live here */
+.ml-door{
+  flex:none; width:78px; display:flex; flex-direction:column; align-items:center; gap:6px;
+  justify-content:flex-end; padding-bottom:2px;
+}
+.door-glyph{
+  width:20px; height:34px; border-radius:10px 10px 2px 2px;
+  border:1.5px solid oklch(var(--brass-bri) / 0.85);
+  border-left-color: oklch(var(--brass-bri) / 0.4);
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.5), oklch(var(--brass) / 0.12) 60%);
+  box-shadow: 0 0 20px -3px oklch(var(--brass) / 0.55);
+  animation: ember 7s ease-in-out 3s infinite;
+  position:relative; z-index:0;
+}
+@keyframes ember{
+  0%,100%{ box-shadow: 0 0 20px -3px oklch(var(--brass) / 0.5); }
+  50%{ box-shadow: 0 0 30px -2px oklch(var(--brass) / 0.8); }
+}
+@keyframes door-flare{
+  0%{ box-shadow: 0 0 20px -3px oklch(var(--brass) / 0.55); }
+  35%{ box-shadow: 0 0 46px 4px oklch(var(--brass) / 0.95); }
+  100%{ box-shadow: 0 0 20px -3px oklch(var(--brass) / 0.55); }
+}
+.door-glyph.flare{ animation: door-flare 1200ms var(--expo) 1, ember 7s ease-in-out 4s infinite; }
+.ml-door .dn{
+  font-family:var(--serif); font-style:italic; font-size:12px;
+  color: oklch(var(--brass-bri) / 0.9); white-space:nowrap;
+}
+.whisper-line{
+  position:relative; border-top:1px solid oklch(1 0 0 / 0.05); margin-top:16px;
+  padding:16px 2px 8px; min-height:40px;
+}
+#whisper{
+  font-family:var(--serif); font-style:italic; font-size:16.5px; letter-spacing:0.015em;
+  color: oklch(var(--muted) / 0.95); transition: opacity 900ms ease;
+}
+.undo-chip{
+  position:absolute; right:2px; top:12px;
+  font-family:var(--mono); font-size:10px; letter-spacing:0.08em;
+  color:oklch(var(--brass-bri) / 0.9); background:oklch(var(--brass) / 0.09);
+  border:1px solid oklch(var(--brass) / 0.35); border-radius:999px;
+  padding:6px 13px; cursor:pointer;
+  opacity:0; transform:translateY(5px); pointer-events:none;
+  transition:opacity 240ms var(--expo), transform 240ms var(--expo);
+}
+.undo-chip.on{ opacity:1; transform:none; pointer-events:auto; }
+.undo-chip:hover{ background:oklch(var(--brass) / 0.16); }
+
+/* ============================================================
+   THE SESSION — the payoff of the whole ladder. The live hour
+   assembles its own role-play agenda from what's ready. The Bank
+   does the reading so the hour can be pressure.
+   ============================================================ */
+.session{
+  margin-top:26px; border:1px solid oklch(var(--brass) / 0.32); border-radius:16px;
+  background:
+    radial-gradient(80% 140% at 50% 115%, oklch(var(--brass) / 0.1), transparent 70%),
+    linear-gradient(180deg, oklch(1 0 0 / 0.03), oklch(1 0 0 / 0.008));
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.05) inset, 0 18px 40px -26px oklch(0 0 0 / 0.85);
+  padding:18px 22px 16px;
+}
+.ss-head{
+  display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.22em; text-transform:uppercase;
+  color: oklch(var(--brass-bri) / 0.9);
+}
+.ss-head .when{ letter-spacing:0.06em; color: oklch(var(--text) / 0.85); }
+.ss-list{ margin-top:12px; }
+.ss-row{
+  display:flex; align-items:baseline; gap:12px; padding:10px 2px;
+  border-top:1px solid oklch(1 0 0 / 0.06);
+  font-size:15px; color: oklch(var(--text) / 0.92);
+}
+.ss-row:first-child{ border-top:0; }
+.ss-row .rp{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase;
+  color: oklch(var(--brass-bri) / 0.85); flex:none;
+}
+.ss-row .note{ font-family:var(--mono); font-size:11.5px; color: oklch(var(--faint)); margin-left:auto; white-space:nowrap; }
+.ss-row .note.hot{ color: oklch(var(--gold-bri)); }
+.ss-why{
+  font-family:var(--serif); font-style:italic; font-size:15.5px;
+  color: oklch(var(--muted) / 0.9); margin-top:12px; padding-top:12px;
+  border-top:1px solid oklch(1 0 0 / 0.06);
+}
+
+/* the thread: passes + Chris's notes, the coaching loop made visible */
+.thread{ margin-bottom:16px; }
+.pass{
+  font-size:13.5px; line-height:1.6; color: oklch(var(--muted) / 0.6); max-width:64ch;
+  border-left:2px solid oklch(1 0 0 / 0.12); padding-left:16px;
+}
+.pass .pl{ font-family:var(--mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color: oklch(var(--faint) / 0.8); display:block; margin-bottom:3px; }
+.coach-say{
+  font-family:var(--serif); font-style:italic; font-size:15px;
+  color: oklch(var(--obs) / 0.95); margin:10px 0 10px 16px;
+}
+.coach-say .who{ font-family:var(--mono); font-style:normal; font-size:10px; letter-spacing:0.12em; color: oklch(var(--obs) / 0.7); margin-right:8px; }
+/* Chris's note stands down once the student is drafting against it */
+.coach-say{ transition: opacity 500ms var(--expo); }
+.coach-say.dimmed{ opacity:0.4; }
+.revise{
+  display:inline-flex; align-items:center; gap:10px; margin-top:14px;
+  background:none; border:0; padding:0; cursor:pointer; text-align:left;
+  font-family:var(--mono); font-size:12px; letter-spacing:0.05em;
+  color: oklch(var(--gold-bri));
+}
+.revise .mark{ width:9px; height:9px; border-radius:999px; background: oklch(var(--gold-bri)); flex:none; }
+.revise[disabled]{ display:none; }   /* consumed — the draft below is now the state */
+
+/* PASS 4 — the draft the student opens against Chris's note */
+.draft-wrap{
+  display:grid; grid-template-rows:0fr; visibility:hidden;
+  transition: grid-template-rows 240ms var(--expo), visibility 0s 240ms;
+}
+.draft-wrap.open{
+  grid-template-rows:1fr; visibility:visible;
+  transition: grid-template-rows 240ms var(--expo);
+}
+.draft-in{ min-height:0; overflow:hidden; }
+.pass.draft{
+  margin-top:12px; border-left-color: oklch(var(--gold) / 0.55);
+  color: oklch(var(--text) / 0.86);
+}
+.pass.draft .pl{ color: oklch(var(--gold-bri) / 0.9); }
+.draft-foot{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.05em;
+  color: oklch(var(--faint)); margin-top:9px; padding-left:18px;
+}
+.draft-foot b{ font-weight:400; color: oklch(var(--obs) / 0.95); }
+
+/* NOT STARTED — what starting actually looks like */
+.start-p{
+  font-size:15.5px; line-height:1.65; color: oklch(var(--text) / 0.82); max-width:66ch;
+  border-left:2px solid oklch(1 0 0 / 0.14); padding-left:16px;
+}
+.start-p b{ font-weight:400; color: oklch(var(--gold-bri) / 0.92); }
+.start-flow{
+  display:flex; gap:9px; align-items:center; flex-wrap:wrap; margin-top:16px;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase;
+  color: oklch(var(--faint));
+}
+.start-flow b{ font-weight:400; color: oklch(var(--obs) / 0.95); }
+.start-flow .arr{ color: oklch(var(--text) / 0.25); }
+.begin{
+  display:inline-flex; align-items:center; gap:10px; margin-top:16px;
+  font-family:var(--mono); font-size:12px; letter-spacing:0.05em;
+  color: oklch(var(--gold-bri));
+}
+.begin .mark{ width:9px; height:9px; border-radius:999px; background: oklch(var(--gold-bri) / 0.85); flex:none; }
+@keyframes mark-breathe{
+  0%,100%{ box-shadow: 0 0 4px -1px oklch(var(--gold) / 0.4); }
+  50%{ box-shadow: 0 0 12px 0 oklch(var(--gold) / 0.8); }
+}
+.revise .mark{ animation: mark-breathe 5.2s ease-in-out 2s infinite; }
+
+/* ============================================================
+   THE LADDER LEGEND — four rungs, said once, quietly.
+   ============================================================ */
+.ladder-note{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase;
+  color: oklch(var(--faint)); margin-top:26px;
+}
+.ladder-note .rung{ display:inline-flex; align-items:center; gap:7px; }
+.ladder-note .rung i{ width:7px; height:7px; border-radius:999px; display:inline-block; }
+.r1 i{ box-shadow: inset 0 0 0 1.2px oklch(var(--text) / 0.35); }
+.r2 i{ background: oklch(var(--obs) / 0.9); }
+.r3 i{ background: oklch(var(--gold) / 0.85); }
+.r4 i{ background: oklch(var(--brass-bri)); box-shadow:0 0 8px -1px oklch(var(--brass) / 0.7); }
+.ladder-note .arr{ color: oklch(var(--text) / 0.25); }
+
+/* ---- section heads ---- */
+.sec{
+  display:flex; justify-content:space-between; align-items:baseline; gap:16px;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.24em; text-transform:uppercase;
+  color: oklch(var(--faint)); margin:44px 0 12px; padding:0 4px;
+}
+.sec .r{ letter-spacing:0.08em; }
+.sec.chris span:first-child{ color: oklch(var(--obs) / 0.95); }
+
+/* ============================================================
+   QUESTION CARDS — the metal ladder made physical.
+   ============================================================ */
+.q-list{ display:flex; flex-direction:column; gap:10px; }
+.qcard{
+  border:1px solid oklch(1 0 0 / 0.1); border-radius:14px; overflow:hidden;
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.03), oklch(1 0 0 / 0.008));
+  transition: border-color var(--dur) var(--expo), box-shadow var(--dur) var(--expo), transform var(--dur) var(--expo);
+}
+.qcard:hover{ transform: translateY(-1px); box-shadow: 0 14px 34px -22px oklch(0 0 0 / 0.8); }
+/* rung states carried on the card's left edge + warmth */
+.qcard{ position:relative; }
+.qcard::before{
+  content:''; position:absolute; left:0; top:10px; bottom:10px; width:2px; border-radius:2px; z-index:2;
+  transition: background 600ms var(--expo), box-shadow 600ms var(--expo);
+}
+/* the warm sheet: the card's own metal rising. Static on a ready card,
+   and the thing that actually WARMS when the last objection is held. */
+.qcard::after{
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background: linear-gradient(180deg, oklch(var(--brass) / 0.075), transparent 70%);
+  opacity:0; transition: opacity 700ms var(--expo);
+}
+.qcard.st-ready::after{ opacity:1; }
+.q-row, .q-body, .chris-note{ position:relative; z-index:1; }
+.qcard.st-blank::before{ background: oklch(1 0 0 / 0.1); }
+.qcard.st-sent::before{ background: oklch(var(--obs) / 0.8); }
+.qcard.st-push::before,
+.qcard.st-draft::before{ background: oklch(var(--gold) / 0.85); }
+.qcard.st-ready{ border-color: oklch(var(--brass) / 0.4); }
+.qcard.st-ready::before{ background: oklch(var(--brass-bri)); box-shadow:0 0 10px -2px oklch(var(--brass) / 0.7); }
+.q-row{
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 20px; align-items:center;
+  padding:18px 18px 18px 24px; cursor:pointer;
+}
+.q-row .q{
+  font-family:var(--display); font-weight:420;
+  font-size: clamp(18px, 2.2vw, 23px); line-height:1.15; letter-spacing:-0.015em;
+}
+.q-row .qmeta{
+  font-family:var(--mono); font-size:11.5px; color: oklch(var(--faint)); margin-top:5px;
+  display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+}
+.qmeta .st-chip{ letter-spacing:0.06em; }
+.st-sent .qmeta .st-chip{ color: oklch(var(--obs)); }
+.st-push .qmeta .st-chip,
+.st-draft .qmeta .st-chip{ color: oklch(var(--gold-bri)); }
+.st-ready .qmeta .st-chip{ color: oklch(var(--brass-bri)); }
+/* the chip turns over rather than swapping: out, then back with the new word */
+@keyframes chip-turn{
+  0%{ opacity:1; transform:none; }
+  32%{ opacity:0; transform:translateY(-5px); }
+  33%{ opacity:0; transform:translateY(5px); }
+  100%{ opacity:1; transform:none; }
+}
+.st-chip.turn, .ob-a.turn{ animation: chip-turn 420ms var(--expo) 1 both; }
+/* the pushback tally: held / total, tiny shields */
+.shields{ display:inline-flex; gap:4px; }
+.shields i{
+  width:9px; height:11px; display:inline-block;
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%);
+  background: oklch(1 0 0 / 0.14);
+  transition: background 320ms var(--expo);
+}
+.shields i.held{ background: oklch(var(--gold) / 0.9); }
+/* the shield the ceremony just filled drops into the row and settles */
+@keyframes shield-fill{
+  0%{ transform: translateY(-4px) scale(0.72); filter: brightness(2.2); }
+  100%{ transform:none; filter:none; }
+}
+.shields i.just{ animation: shield-fill 460ms var(--expo) 1 both; }
+.q-open{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
+  color: oklch(var(--faint)); white-space:nowrap;
+  transition: transform var(--dur) var(--expo), color var(--dur) var(--expo);
+}
+.qcard:hover .q-open{ color: oklch(var(--muted)); transform: translateX(3px); }
+
+/* Chris's margin note on assigned questions — his hand, in the student's book */
+.chris-note{
+  font-family:var(--serif); font-style:italic; font-size:15.5px;
+  color: oklch(var(--obs) / 0.95);
+  padding:0 18px 16px 24px; margin-top:-6px;
+}
+
+/* ---- the open card body: the drawer idiom, so cards breathe open ---- */
+.q-body{
+  display:grid; grid-template-rows:0fr; visibility:hidden;
+  transition: grid-template-rows 240ms var(--expo), visibility 0s 240ms;
+}
+.q-body.open{
+  grid-template-rows:1fr; visibility:visible;
+  transition: grid-template-rows 240ms var(--expo);
+}
+.q-in{ min-height:0; overflow:hidden; border-top: var(--rule); padding: 20px 24px 22px; }
+.answer{
+  font-size:15.5px; line-height:1.65; color: oklch(var(--text) / 0.9); max-width:66ch;
+  border-left:2px solid oklch(var(--gold) / 0.4); padding-left:16px;
+}
+.go-line{
+  display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+  font-family:var(--mono); font-size:12px; margin-top:14px;
+}
+.go-line .go-mark{ color: oklch(var(--brass-bri)); letter-spacing:0.06em; }
+.go-line .go-note{ font-family:var(--serif); font-style:italic; font-size:15px; color: oklch(var(--muted)); }
+
+/* THE PUSHBACK — unlocked by the go-ahead */
+.push{ margin-top:22px; }
+.push-head{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.22em; text-transform:uppercase;
+  color: oklch(var(--gold-bri) / 0.9); padding-bottom:10px;
+}
+.push-head .tally{ letter-spacing:0.06em; color: oklch(var(--faint)); }
+.ob{
+  border-top:1px solid oklch(1 0 0 / 0.07);
+  padding:14px 2px;
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 18px; align-items:center;
+}
+.ob .ob-q{
+  font-family:var(--display); font-weight:400; font-size:16.5px; letter-spacing:-0.01em;
+  color: oklch(var(--text) / 0.94);
+}
+.ob .ob-q::before{ content:'“'; color: oklch(var(--gold) / 0.7); margin-right:2px; }
+.ob .ob-q::after{ content:'”'; color: oklch(var(--gold) / 0.7); margin-left:2px; }
+.ob .ob-a{
+  font-size:13.5px; color: oklch(var(--muted) / 0.85); margin-top:5px; max-width:62ch;
+}
+.ob .ob-st{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.06em; white-space:nowrap;
+  color: oklch(var(--gold-bri) / 0.9);
+}
+.ob.held .ob-st{ color: oklch(var(--gold) / 0.75); }
+.ob.open-ob .ob-st{ color: oklch(var(--gold-bri)); }
+.ob.open-ob{ cursor:pointer; border-radius:8px; }
+.ob.open-ob:hover{ background: oklch(1 0 0 / 0.03); }
+/* the one open objection breathes — it is the next thing */
+@keyframes ob-breathe{
+  0%,100%{ text-shadow: 0 0 0 oklch(var(--gold) / 0); }
+  50%{ text-shadow: 0 0 18px oklch(var(--gold) / 0.55); }
+}
+.ob.open-ob .ob-st{ animation: ob-breathe 5.2s ease-in-out 2s infinite; }
+
+/* the locked pushback — visible but veiled. Anticipation, not denial. */
+.push.locked .ob{ opacity:0.45; }
+.push.locked .ob .ob-q{ filter: blur(0.5px); }
+.push.locked .push-head{ color: oklch(var(--obs) / 0.9); }
+.lock-line{
+  font-family:var(--mono); font-size:11.5px; color: oklch(var(--obs) / 0.95);
+  border-top:1px solid oklch(1 0 0 / 0.07); padding-top:12px;
+}
+
+/* ready state footer inside a card */
+.ready-line{
+  display:flex; align-items:center; gap:10px; margin-top:18px;
+  font-family:var(--serif); font-style:italic; font-size:15.5px;
+  color: oklch(var(--brass-bri) / 0.9);
+}
+.ready-line i{
+  width:12px; height:19px; border-radius:6px 6px 1px 1px; flex:none;
+  border:1.2px solid oklch(var(--brass-bri) / 0.85);
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.5), oklch(var(--brass) / 0.12));
+  box-shadow: 0 0 12px -3px oklch(var(--brass) / 0.6);
+}
+
+.foot{
+  margin-top:56px; padding-top:18px; border-top: var(--rule);
+  font-family:var(--mono); font-size:11px; letter-spacing:0.1em;
+  color: oklch(var(--text) / 0.3);
+}
+
+.q-row:focus-visible, .ob.open-ob:focus-visible, .undo-chip:focus-visible{
+  outline:2px solid oklch(var(--gold) / 0.7); outline-offset:2px; border-radius:8px;
+}
+
+@media (max-width:720px){
+  /* every two-column head becomes a stack rather than a squeeze */
+  .ml-head, .ss-head, .push-head, .sec{ flex-wrap:wrap; gap:4px 14px; }
+  .sec{ margin:34px 0 12px; }
+
+  .sub b, .sub .wait{ white-space:nowrap; }
+  /* the column legend labels a column that no longer exists once stacked */
+  .ml-head span:last-child{ display:none; }
+
+  .bands{ flex-wrap:wrap; gap:14px 5px; }
+  .bandc{ flex:0 1 calc(33.333% - 4px); min-width:0; }   /* both rows keep one column grid */
+  .ml-door{ width:100%; flex-direction:row; justify-content:flex-start; gap:10px; padding:6px 0 8px; }
+
+  /* the undo chip rides above the whisper instead of overlapping it,
+     and takes no room at all until the ceremony hands it out */
+  .whisper-line{ padding-top:14px; }
+  .undo-chip{ position:static; display:none; margin-bottom:11px; }
+  .undo-chip.on{ display:inline-block; }
+  #whisper{ display:block; font-size:15.5px; }
+
+  .myline{ padding:16px 16px 6px; }
+  .session{ padding:16px 16px 14px; }
+  .ss-row{ flex-wrap:wrap; gap:4px 10px; font-size:14.5px; }
+  .ss-row .rp{ flex-basis:100%; }                     /* every row folds the same way */
+  .ss-row .note{ margin-left:0; white-space:normal; flex-basis:100%; }
+
+  .q-row{ grid-template-columns:minmax(0,1fr); padding:16px 16px 16px 20px; }
+  .q-open{ display:none; }
+  .q-in{ padding:16px 18px 18px 20px; }
+  .chris-note{ padding:0 16px 14px 20px; font-size:15px; }
+  .answer, .start-p{ padding-left:14px; }
+  .pass{ padding-left:14px; }
+  .coach-say{ margin-left:8px; }
+  .ob{ grid-template-columns:minmax(0,1fr); }
+  .ob .ob-st{ margin-top:4px; }
+  .draft-foot{ padding-left:14px; }
+}
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition-duration:1ms !important; }
+  .q-body, .draft-wrap{ transition-delay:0ms !important; }
+  .meter i{ transform:none; }
+}
+</style>
+</head>
+<body>
+<div class="atmos" aria-hidden="true"></div>
+
+<main class="page">
+  <div class="eyebrow arrive">Answer library · Marcus Bell</div>
+  <h1 class="arrive" style="--d:50ms">The Bank<span class="stop">.</span></h1>
+  <p class="sub arrive" style="--d:90ms">68 questions · <b id="sub-ready">2 showtime-ready</b> · <span class="wait" id="sub-wait">1 sent back</span> · Thursday's hour is already a role-play</p>
+
+  <!-- ============ YOUR LINE ============ -->
+  <section class="myline arrive" style="--d:140ms" aria-label="Your coverage">
+    <div class="ml-head">
+      <span>Your line — what you can already hold</span>
+      <span>answered / total</span>
+    </div>
+    <div class="bands">
+      <div class="bandc">
+        <div class="n">3<small>/ 5</small></div>
+        <div class="meter"><i style="--w:60%; --fd:400ms"></i></div>
+        <div class="k">Grand slams</div>
+      </div>
+      <div class="bandc chris">
+        <div class="n">1<small>/ 2</small></div>
+        <div class="meter"><i style="--w:50%; --fd:520ms"></i></div>
+        <div class="k">From Chris</div>
+      </div>
+      <div class="bandc">
+        <div class="n">6<small>/ 18</small></div>
+        <div class="meter"><i style="--w:33%; --fd:640ms"></i></div>
+        <div class="k">Behaviorals</div>
+      </div>
+      <div class="bandc">
+        <div class="n">4<small>/ 13</small></div>
+        <div class="meter"><i style="--w:31%; --fd:760ms"></i></div>
+        <div class="k">Role</div>
+      </div>
+      <div class="bandc">
+        <div class="n">2<small>/ 28</small></div>
+        <div class="meter"><i style="--w:7%; --fd:880ms"></i></div>
+        <div class="k">Advanced AE</div>
+      </div>
+      <div class="ml-door">
+        <span class="door-glyph" id="door" aria-hidden="true"></span>
+        <span class="dn" id="ready-n">2 showtime-ready</span>
+      </div>
+    </div>
+    <div class="whisper-line">
+      <button class="undo-chip" id="undo-chip" type="button" disabled>↩ undo</button>
+      <span id="whisper" aria-live="polite">the go-ahead came back on Why tech sales — the pushback is open</span>
+    </div>
+  </section>
+
+  <!-- ============ THE SESSION — where the ladder leads ============ -->
+  <section class="session arrive" style="--d:180ms" aria-label="Thursday's session">
+    <div class="ss-head">
+      <span>The session — what the live hour is for</span>
+      <span class="when">Thursday 2:30 · with Chris</span>
+    </div>
+    <div class="ss-list">
+      <div class="ss-row"><span class="rp">Role-play</span><span>Why tech sales? — then its pushback, live</span><span class="note hot">1 objection still open</span></div>
+      <div class="ss-row"><span class="rp">Role-play</span><span>Sell me the product you supported.</span><span class="note">survived the pushback Mon</span></div>
+      <div class="ss-row"><span class="rp">If time</span><span>Walk me through your experience.</span><span class="note">ready since Fri</span></div>
+    </div>
+    <div class="ss-why">this agenda built itself from the Bank — the reading is done before the hour, so the hour is pressure.</div>
+  </section>
+
+  <div class="ladder-note arrive" style="--d:200ms">
+    <span class="rung r1"><i></i>answer it</span><span class="arr">→</span>
+    <span class="rung r2"><i></i>the go-ahead</span><span class="arr">→</span>
+    <span class="rung r3"><i></i>the pushback</span><span class="arr">→</span>
+    <span class="rung r4"><i></i>showtime</span>
+  </div>
+
+  <!-- ============ GRAND SLAMS ============ -->
+  <div class="sec arrive" style="--d:240ms"><span>Grand slams — everyone walks with these</span><span class="r">same five, every student</span></div>
+  <div class="q-list arrive" style="--d:270ms">
+
+    <!-- THE OPEN CARD: pushback unlocked, one objection left -->
+    <div class="qcard st-push" id="card-push">
+      <div class="q-row" role="button" tabindex="0" aria-expanded="true">
+        <div>
+          <div class="q">Why tech sales?</div>
+          <div class="qmeta">
+            <span class="st-chip">THE PUSHBACK — OPEN</span>
+            <span>·</span>
+            <span class="shields" id="shields" aria-label="2 of 3 objections held"><i class="held"></i><i class="held"></i><i></i></span>
+            <span id="held-n">2 of 3 held</span>
+          </div>
+        </div>
+        <span class="q-open">close ▴</span>
+      </div>
+      <div class="q-body open">
+       <div class="q-in">
+        <div class="thread">
+          <div class="pass"><span class="pl">Pass 1 · Mon</span>I like solving problems and talking to people, and sales pays for the ambitious…</div>
+          <div class="coach-say"><span class="who">CHRIS · MON</span>"generic — every candidate says this. what did YOU watch happen in support?"</div>
+        </div>
+        <div class="answer">I spent two years in support watching the same three objections lose deals nobody was allowed to fix. Sales is where that gets fixed, and the ceiling is the part I want.</div>
+        <div class="go-line">
+          <span class="go-mark">GO-AHEAD ✓ Chris · Tue</span>
+          <span class="go-note">"signed — sharp. hold the pushback before Thursday and we role-play it live."</span>
+        </div>
+        <div class="push">
+          <div class="push-head"><span>The pushback — Chris will push here</span><span class="tally" id="tally">1 to hold</span></div>
+          <div class="ob held">
+            <div>
+              <div class="ob-q">Sales is a numbers game. Why would a support engineer last?</div>
+              <div class="ob-a">Because I've already lived the numbers from the other side — I know exactly which three objections kill the deal, and I'm the one who used to fix them after it died.</div>
+            </div>
+            <span class="ob-st">HELD ✓</span>
+          </div>
+          <div class="ob held">
+            <div>
+              <div class="ob-q">You've never carried a quota.</div>
+              <div class="ob-a">Right — and I've never missed an SLA either. A number I own changes how I work, it doesn't scare me. Ask me what I did when the queue doubled.</div>
+            </div>
+            <span class="ob-st">HELD ✓</span>
+          </div>
+          <div class="ob open-ob" id="ob-open" role="button" tabindex="0">
+            <div>
+              <div class="ob-q">Why not stay in support, where you're already senior?</div>
+              <div class="ob-a" style="color:oklch(var(--faint) / 0.8)">draft it, say it out loud, then mark it held — Chris hears it live on Thursday.</div>
+            </div>
+            <span class="ob-st">HOLD IT →</span>
+          </div>
+        </div>
+       </div>
+      </div>
+    </div>
+
+    <!-- ready card, closed -->
+    <div class="qcard st-ready">
+      <div class="q-row" role="button" tabindex="0" aria-expanded="false">
+        <div>
+          <div class="q">Walk me through your experience.</div>
+          <div class="qmeta">
+            <span class="st-chip">SHOWTIME ✦</span>
+            <span>·</span>
+            <span class="shields" aria-label="3 of 3 held"><i class="held"></i><i class="held"></i><i class="held"></i></span>
+            <span>survived the pushback · Fri</span>
+          </div>
+        </div>
+        <span class="q-open">open ▾</span>
+      </div>
+      <div class="q-body">
+       <div class="q-in">
+        <div class="answer">Two years at Fastway Logistics on the support side. I was the escalation the AEs called when a deal was already dying, so I heard the same three objections every time: the integration story, the migration cost, and who owns it after go-live. I got good at answering all three before anyone asked. That's the job I'm interviewing for.</div>
+        <div class="go-line">
+          <span class="go-mark">GO-AHEAD ✓ Chris · Wed</span>
+          <span class="go-note">"signed on the second pass — lead with Fastway, not the job title."</span>
+        </div>
+        <div class="push">
+          <div class="push-head"><span>The pushback — it survived all three</span><span class="tally">3 of 3 held</span></div>
+          <div class="ob held">
+            <div><div class="ob-q">That's a support résumé. Where's the selling?</div></div>
+            <span class="ob-st">HELD ✓</span>
+          </div>
+          <div class="ob held">
+            <div><div class="ob-q">Two years is short. Why leave now?</div></div>
+            <span class="ob-st">HELD ✓</span>
+          </div>
+          <div class="ob held">
+            <div><div class="ob-q">Do it again in ninety seconds.</div></div>
+            <span class="ob-st">HELD ✓</span>
+          </div>
+        </div>
+        <div class="ready-line"><i aria-hidden="true"></i>through the door since Friday — Thursday's hour opens on this one</div>
+       </div>
+      </div>
+    </div>
+
+    <!-- sent card: waiting on the go-ahead, pushback veiled -->
+    <div class="qcard st-sent" id="card-sent">
+      <div class="q-row" role="button" tabindex="0" aria-expanded="true">
+        <div>
+          <div class="q">Why work for our company?</div>
+          <div class="qmeta">
+            <span class="st-chip">SENT BACK — CHRIS LEFT A NOTE</span>
+            <span>·</span>
+            <span class="shields" aria-label="2 objections waiting, locked"><i></i><i></i></span>
+          </div>
+        </div>
+        <span class="q-open">close ▴</span>
+      </div>
+      <div class="q-body open">
+       <div class="q-in">
+        <div class="thread" style="margin-bottom:0">
+          <div class="pass"><span class="pl">Pass 3 · yesterday</span>Because the product actually works and the team seems strong. I read the case studies and the growth story is real…</div>
+          <div class="coach-say" id="sent-note"><span class="who">CHRIS · TODAY</span>"you're quoting their homepage back at them. find the thing YOU noticed that they didn't say — then send it again."</div>
+          <div class="draft-wrap" id="draft-wrap">
+            <div class="draft-in">
+              <div class="pass draft"><span class="pl">Pass 4 · drafting now</span>Every case study on your site is a finance team, but the two roles you're hiring this quarter are both ops. Somebody is building that motion from scratch this year, and I've spent two years inside ops queues watching where it breaks…</div>
+              <div class="draft-foot">not sent yet — <b>goes to Chris</b> when you send it</div>
+            </div>
+          </div>
+        </div>
+        <button class="revise" id="revise-btn" type="button"><span class="mark" aria-hidden="true"></span>REVISE PASS 4 →</button>
+        <div class="push locked">
+          <div class="push-head"><span>The pushback — waiting behind the go-ahead</span></div>
+          <div class="ob">
+            <div><div class="ob-q">Every candidate says our product page back to us. What did you actually find?</div></div>
+            <span class="ob-st">LOCKED</span>
+          </div>
+          <div class="ob">
+            <div><div class="ob-q">Why us and not the bigger logo down the street?</div></div>
+            <span class="ob-st">LOCKED</span>
+          </div>
+          <div class="lock-line">the pushback opens when Chris signs — you can read it, not answer it yet</div>
+        </div>
+       </div>
+      </div>
+    </div>
+
+    <!-- blank card -->
+    <div class="qcard st-blank">
+      <div class="q-row" role="button" tabindex="0" aria-expanded="false">
+        <div>
+          <div class="q">Why should we hire you?</div>
+          <div class="qmeta"><span class="st-chip">NOT STARTED</span><span>·</span><span>the fifth grand slam waits</span></div>
+        </div>
+        <span class="q-open">open ▾</span>
+      </div>
+      <div class="q-body">
+       <div class="q-in">
+        <div class="start-p">Nothing here yet. Start with the one thing you did that <b>nobody asked you to do</b> — then the reason they should hire you is a story, not a list of adjectives.</div>
+        <div class="start-flow">
+          <span>you write pass 1</span><span class="arr">→</span>
+          <span><b>Chris reads it</b></span><span class="arr">→</span>
+          <span>he signs it or sends it back</span><span class="arr">→</span>
+          <span>then the pushback opens</span>
+        </div>
+        <div class="begin"><span class="mark" aria-hidden="true"></span>START PASS 1 →</div>
+       </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FROM CHRIS ============ -->
+  <div class="sec chris arrive" style="--d:320ms"><span>From Chris — picked for you</span><span class="r">assigned with intent</span></div>
+  <div class="q-list arrive" style="--d:350ms">
+    <div class="qcard st-ready">
+      <div class="q-row" role="button" tabindex="0" aria-expanded="false">
+        <div>
+          <div class="q">Sell me the product you supported.</div>
+          <div class="qmeta">
+            <span class="st-chip">SHOWTIME ✦</span>
+            <span>·</span>
+            <span class="shields" aria-label="2 of 2 held"><i class="held"></i><i class="held"></i></span>
+            <span>survived the pushback · Mon</span>
+          </div>
+        </div>
+        <span class="q-open">open ▾</span>
+      </div>
+      <div class="chris-note">"you'll get this in every AE loop — your support years are the weapon, not the excuse." — Chris</div>
+      <div class="q-body">
+       <div class="q-in">
+        <div class="answer">Fastway's routing platform. Right now you're running forty trucks on a whiteboard and a phone — I know, because I was the phone. The pitch isn't the feature list, it's that your dispatcher stops being the single point of failure the morning she calls in sick. Let me walk you through that morning.</div>
+        <div class="go-line">
+          <span class="go-mark">GO-AHEAD ✓ Chris · Fri</span>
+          <span class="go-note">"signed — you sold her morning, not the software. don't let anyone talk you out of it."</span>
+        </div>
+        <div class="push">
+          <div class="push-head"><span>The pushback — it survived both</span><span class="tally">2 of 2 held</span></div>
+          <div class="ob held">
+            <div><div class="ob-q">We already have something that works.</div></div>
+            <span class="ob-st">HELD ✓</span>
+          </div>
+          <div class="ob held">
+            <div><div class="ob-q">Why would I buy this from someone who's never sold anything?</div></div>
+            <span class="ob-st">HELD ✓</span>
+          </div>
+        </div>
+        <div class="ready-line"><i aria-hidden="true"></i>through the door since Monday — Chris runs it at you live on Thursday</div>
+       </div>
+      </div>
+    </div>
+    <div class="qcard st-blank">
+      <div class="q-row" role="button" tabindex="0" aria-expanded="false">
+        <div>
+          <div class="q">Your last manager calls me. What's the one thing they warn me about?</div>
+          <div class="qmeta"><span class="st-chip">NOT STARTED</span><span>·</span><span>3 objections waiting behind it</span></div>
+        </div>
+        <span class="q-open">open ▾</span>
+      </div>
+      <div class="chris-note">"interviewers use this to find the ceiling. we'll set it ourselves." — Chris</div>
+      <div class="q-body">
+       <div class="q-in">
+        <div class="start-p">Nothing here yet. Start by naming the real thing your manager would say — <b>then what you did about it</b>. The warning you say first stops being a warning.</div>
+        <div class="start-flow">
+          <span>you write pass 1</span><span class="arr">→</span>
+          <span><b>Chris reads it</b></span><span class="arr">→</span>
+          <span>he signs it or sends it back</span><span class="arr">→</span>
+          <span>then the pushback opens</span>
+        </div>
+        <div class="begin"><span class="mark" aria-hidden="true"></span>START PASS 1 →</div>
+        <div class="push locked">
+          <div class="push-head"><span>The pushback — waiting behind the go-ahead</span><span class="tally">3 waiting</span></div>
+          <div class="ob">
+            <div><div class="ob-q">That's a strength dressed as a weakness. Try again.</div></div>
+            <span class="ob-st">LOCKED</span>
+          </div>
+          <div class="ob">
+            <div><div class="ob-q">What would they say if I asked them the same question tomorrow?</div></div>
+            <span class="ob-st">LOCKED</span>
+          </div>
+          <div class="ob">
+            <div><div class="ob-q">Has anyone ever had to have a hard conversation with you about it?</div></div>
+            <span class="ob-st">LOCKED</span>
+          </div>
+          <div class="lock-line">Chris picked these when he assigned the question — you can read them, not answer them yet</div>
+        </div>
+       </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Comp · not production · student side of the pinned world · the loop: answer → Chris comments or sends back → go-ahead → pushback → the live hour is role-play · demo: click HOLD IT on the open objection, or REVISE PASS 4 on the sent-back one — undo by the whisper</div>
+</main>
+
+<script>
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // the whisper: his own quiet narration, rotating
+  const whispers = [
+    'the go-ahead came back on Why tech sales — hold the pushback before Thursday',
+    'Chris sent Why work for our company back with a note — pass 4 is yours',
+    'Thursday is a role-play now: two answers and their pushback, live',
+  ];
+  let wi = 0, pendingUndo = null;
+  const wEl = document.getElementById('whisper');
+  const setWhisper = t => { if (wEl) wEl.textContent = t; };
+  if (calm){ setWhisper(whispers.join(' · ')); }
+  else {
+    let paused = false;
+    wEl?.closest('.whisper-line')?.addEventListener('mouseenter', () => paused = true);
+    wEl?.closest('.whisper-line')?.addEventListener('mouseleave', () => paused = false);
+    setInterval(() => {
+      if (paused || pendingUndo) return;
+      wEl.style.opacity = '0';
+      setTimeout(() => { wi = (wi + 1) % whispers.length; setWhisper(whispers[wi]); wEl.style.opacity = '1'; }, 900);
+    }, 9000);
+  }
+
+  // THE HOLD CEREMONY — the page's one interactive proof.
+  // Marking the last objection held = the answer survives the pushback:
+  // card warms to ready, the door flares, counts derive from the DOM, undo restores.
+  const undoChip = document.getElementById('undo-chip');
+  // ceremonies are staged with timers; undo has to be able to call them off
+  let timers = [];
+  const at = (ms, fn) => timers.push(setTimeout(fn, calm ? 0 : ms));
+  const clearStage = () => { timers.forEach(clearTimeout); timers = []; };
+  function showUndo(label, restore){
+    pendingUndo = { restore };
+    undoChip.textContent = '↩ undo · ' + label;
+    undoChip.disabled = false;
+    undoChip.classList.remove('on'); void undoChip.offsetWidth;
+    undoChip.classList.add('on');
+  }
+  function hideUndo(){ pendingUndo = null; undoChip.disabled = true; undoChip.classList.remove('on'); }
+  undoChip?.addEventListener('click', () => { if (pendingUndo){ clearStage(); pendingUndo.restore(); hideUndo(); } });
+
+  // the chip turns over: out, swap the word at the dark point, back in
+  function turnChip(chip, text){
+    if (calm){ chip.textContent = text; return; }
+    chip.classList.remove('turn'); void chip.offsetWidth; chip.classList.add('turn');
+    at(135, () => { chip.textContent = text; });
+  }
+
+  const ob = document.getElementById('ob-open');
+  ob?.addEventListener('click', () => {
+    if (ob.classList.contains('held')) return;
+    clearStage(); hideUndo();
+    const card = document.getElementById('card-push');
+    const chip = card.querySelector('.st-chip');
+    const tally = document.getElementById('tally');
+    const heldN = document.getElementById('held-n');
+    const shield = document.getElementById('shields').querySelector('i:not(.held)');
+    const readyN = document.getElementById('ready-n');
+    const subReady = document.getElementById('sub-ready');
+    const st = ob.querySelector('.ob-st');
+    const obA = ob.querySelector('.ob-a');
+    const door = document.getElementById('door');
+    const prev = { w: wEl?.textContent, chip: chip.textContent, tally: tally.textContent,
+                   held: heldN.textContent, ready: readyN.textContent, st: st.textContent,
+                   sub: subReady.textContent, a: obA.textContent, aStyle: obA.getAttribute('style') };
+
+    // beat 1 — the objection is held and its shield drops into the row
+    ob.classList.remove('open-ob'); ob.classList.add('held');
+    st.textContent = 'HELD ✓';
+    shield.classList.remove('just'); void shield.offsetWidth;
+    shield.classList.add('held', 'just');
+    tally.textContent = 'all held';
+    heldN.textContent = '3 of 3 held';
+
+    // beat 2 — the card warms: the metal rises, the edge turns brass (700ms transitions)
+    at(90, () => { card.classList.remove('st-push'); card.classList.add('st-ready'); });
+
+    // beat 3 — the prompt gives way to the answer he just held, and the chip turns over
+    if (calm) obA.removeAttribute('style'); else at(135, () => obA.removeAttribute('style'));
+    turnChip(obA, "Because senior in support means I've hit the ceiling on how much of the problem I'm allowed to touch. The fix I keep writing up is a conversation someone else gets to have. I want to be the one having it.");
+    at(190, () => turnChip(chip, 'SHOWTIME ✦'));
+
+    // beat 4 — the door hears about it
+    at(340, () => {
+      readyN.textContent = '3 showtime-ready';
+      subReady.textContent = '3 showtime-ready';
+      door.classList.remove('flare'); void door.offsetWidth; door.classList.add('flare');
+    });
+
+    // beat 5 — and only then does the page say it out loud
+    at(560, () => {
+      setWhisper('Why tech sales survived the pushback — it walks through the door');
+      showUndo('the held objection', () => {
+        ob.classList.add('open-ob'); ob.classList.remove('held');
+        st.textContent = prev.st;
+        shield.removeAttribute('class');
+        chip.classList.remove('turn');
+        obA.classList.remove('turn');
+        obA.textContent = prev.a; obA.setAttribute('style', prev.aStyle);
+        chip.textContent = prev.chip; tally.textContent = prev.tally; heldN.textContent = prev.held;
+        card.classList.add('st-push'); card.classList.remove('st-ready');
+        readyN.textContent = prev.ready; subReady.textContent = prev.sub;
+        door.classList.remove('flare');
+        setWhisper(prev.w || whispers[wi]);
+      });
+    });
+  });
+
+  // THE REVISE CEREMONY — pass 4 opens against Chris's note.
+  const revise = document.getElementById('revise-btn');
+  revise?.addEventListener('click', () => {
+    if (revise.disabled) return;
+    clearStage(); hideUndo();
+    const card = document.getElementById('card-sent');
+    const chip = card.querySelector('.st-chip');
+    const note = document.getElementById('sent-note');
+    const draft = document.getElementById('draft-wrap');
+    const subWait = document.getElementById('sub-wait');
+    const prev = { w: wEl?.textContent, chip: chip.textContent, sub: subWait.textContent };
+
+    revise.disabled = true;
+    note.classList.add('dimmed');
+    draft.classList.add('open');
+    at(120, () => turnChip(chip, 'PASS 4 — IN DRAFT'));
+    at(200, () => {
+      card.classList.remove('st-sent'); card.classList.add('st-draft');
+      subWait.textContent = '1 in draft';
+    });
+    at(460, () => {
+      setWhisper('pass 4 is open on Why work for our company — say the thing you noticed');
+      showUndo('the draft', () => {
+        draft.classList.remove('open');
+        note.classList.remove('dimmed');
+        chip.classList.remove('turn');
+        chip.textContent = prev.chip;
+        card.classList.add('st-sent'); card.classList.remove('st-draft');
+        subWait.textContent = prev.sub;
+        revise.disabled = false;
+        setWhisper(prev.w || whispers[wi]);
+      });
+    });
+  });
+  ob?.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); ob.click(); }
+  });
+
+  // card open/close (comp: the two expanded cards toggle their bodies)
+  document.querySelectorAll('.q-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const body = row.parentElement.querySelector('.q-body');
+      if (!body) return;
+      const open = body.classList.contains('open');
+      body.classList.toggle('open', !open);
+      row.setAttribute('aria-expanded', String(!open));
+      const cue = row.querySelector('.q-open');
+      if (cue) cue.textContent = open ? 'open ▾' : 'close ▴';
+    });
+    row.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); row.click(); }
+    });
+  });
+</script>
+</body>
+</html>

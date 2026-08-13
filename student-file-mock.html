@@ -356,10 +356,107 @@ a{ color:inherit; text-decoration:none; }
 /* the sign-off ceremony: the row settles into earned calm */
 .row.signed{ opacity:0.45; }
 .row.signed .q{ color: oklch(var(--muted)); }
-.row.signed::before{ background: oklch(var(--brass) / 0.6); }
+.row.signed::before{ content:''; position:absolute; inset-block:0; left:0; width:1px; background: oklch(var(--brass) / 0.6); }
 .row.signed{ background: linear-gradient(90deg, oklch(var(--brass) / 0.05), transparent 60%); }
 .row.signed .act{ color: oklch(var(--brass-bri) / 0.85); }
 .row.signed .mark{ background: oklch(var(--brass-bri)); animation:none; }
+
+/* ---- HIS OTHER TWO ANSWERS: send it back, or sign with a condition.
+   Both live in the same act cluster. Sending back is his WATCHING
+   voice handing the pass over, so it is plum, not cyan; the go-ahead
+   is brass (his movement is unblocked) with a plum condition on it. ---- */
+.act button{
+  font:inherit; letter-spacing:inherit; color:inherit;
+  background:none; border:0; padding:0; cursor:pointer;
+}
+.act .alt{ color: oklch(var(--obs) / 0.95); }
+.act .alt:hover{ color: oklch(var(--obs)); }
+.row.signed .alt, .row.sent-back .alt{ display:none; }   /* one ceremony at a time, said in the row */
+.note-out{
+  font-family:var(--hand); font-style:italic; font-size:16px; line-height:1.5;
+  color: oklch(var(--obs) / 0.95); margin-top:10px; max-width:72ch;
+}
+.note-out .who{
+  font-family:var(--mono); font-style:normal; font-size:10px; letter-spacing:0.12em;
+  color: oklch(var(--obs) / 0.7); margin-right:8px;
+}
+.go-out{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-top:10px; }
+.go-out[hidden], .note-out[hidden]{ display:none; }   /* a class selector outranks the UA [hidden] rule */
+.go-out .go-mark{
+  font-family:var(--mono); font-size:12px; letter-spacing:0.06em;
+  color: oklch(var(--brass-bri));
+}
+.go-out .cond{
+  font-family:var(--hand); font-style:italic; font-size:15.5px;
+  color: oklch(var(--obs) / 0.95);
+}
+/* sent back: it left your side. Plum edge, his move now. */
+.row.sent-back{ opacity:0.62; background: linear-gradient(90deg, oklch(var(--obs) / 0.06), transparent 62%); }
+.row.sent-back::before{
+  content:''; position:absolute; inset-block:0; left:0; width:1px;
+  background: oklch(var(--obs) / 0.85);
+}
+.row.sent-back .q{ color: oklch(var(--muted)); }
+.row.sent-back .act-label{ color: oklch(var(--obs) / 0.9); }
+.row.sent-back .mark{ background: oklch(var(--obs)); animation:none; }
+
+/* ============================================================
+   1b. ASSIGNED — what Chris picked FOR him. Everything here is a
+   record of his own movement (brass shields, brass showtime) with
+   Chris's margin voice in plum. The only cyan is the last row,
+   because assigning is the one thing Chris DOES here.
+   ============================================================ */
+.after-work{ margin-top: var(--s6); }   /* the Assigned block gets its own air */
+.assigned .row{ cursor:default; }
+.assigned .row .q{ font-size: clamp(18px, 2.2vw, 23px); }  /* records rank below The Work */
+.chris-note{
+  font-family:var(--hand); font-style:italic; font-size:16px; line-height:1.5;
+  color: oklch(var(--obs) / 0.95); margin-top:9px; max-width:72ch;
+}
+.shields{ display:inline-flex; gap:4px; margin-left:9px; vertical-align:-1px; }
+.shields i{
+  width:9px; height:11px; display:inline-block;
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%);
+  background: oklch(1 0 0 / 0.14);
+}
+.shields i.held{ background: oklch(var(--brass) / 0.9); }   /* BRASS: he held it */
+.state{
+  font-family:var(--mono); font-size:12px; letter-spacing:0.05em;
+  justify-self:end; white-space:nowrap; color: oklch(var(--faint));
+}
+.state.showtime{ color: oklch(var(--brass-bri) / 0.95); }
+
+/* the assign affordance: quiet until you look at it, then it shows
+   you the parcel — the question, the objections behind it, the note
+   on top. Uses the glance ladder as-is; no new mechanism. */
+.row.assign{ cursor:pointer; }
+.row.assign .q{ font-size: clamp(19px, 2.2vw, 23px); color: oklch(var(--act) / 0.92); }
+.row.assign .glance .g-inner{ max-width:none; }
+.assign-preview{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--s2); }
+.slot{
+  border:1px dashed oklch(1 0 0 / 0.16); border-radius:12px; padding:14px 15px 16px;
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.022), transparent);
+}
+.slot .n{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.2em; text-transform:uppercase;
+  color: oklch(var(--act) / 0.8);
+}
+.slot .what{
+  font-family:var(--display); font-weight:400; font-size:17px; letter-spacing:-0.01em;
+  color: oklch(var(--text) / 0.85); margin-top:9px; line-height:1.2;
+}
+.slot .how{ font-family:var(--mono); font-size:11px; color: oklch(var(--faint)); margin-top:8px; line-height:1.55; }
+.slot .shields{ margin-left:0; margin-top:10px; }
+.slot .quill{ font-family:var(--hand); font-style:italic; font-size:16px; color: oklch(var(--obs) / 0.85); margin-top:9px; }
+.slot .quill::after{                       /* the note is still being written */
+  content:''; display:inline-block; width:1px; height:0.95em; margin-left:3px;
+  vertical-align:-2px; background: oklch(var(--obs) / 0.9);
+}
+.lands{
+  font-family:var(--mono); font-size:11.5px; color: oklch(var(--faint));
+  margin-top:16px; padding-top:12px; border-top:1px solid oklch(1 0 0 / 0.06);
+}
+.lands b{ font-weight:400; color: oklch(var(--obs) / 0.95); }
 
 /* ============================================================
    2. THE DOOR — the signature moment. Now it IS a door: his
@@ -689,6 +786,9 @@ a{ color:inherit; text-decoration:none; }
 @media (max-width: 720px){
   .row{ grid-template-columns: minmax(0,1fr); padding: 20px 14px 20px 20px; }
   .act{ justify-self:start; margin-top:10px; }
+  .state{ justify-self:start; margin-top:10px; white-space:normal; }
+  .after-work .sec-head{ flex-direction:column; align-items:flex-start; gap:6px; }
+  .assign-preview{ grid-template-columns: minmax(0,1fr); }
   .his-line{ padding:14px 16px 6px; }
   .segs{ height:30px; }
   .seg{ font-size:8px; letter-spacing:0.06em; }
@@ -815,19 +915,25 @@ a{ color:inherit; text-decoration:none; }
       </div>
 
       <div class="work">
-        <a class="row is-live" id="row-sign" href="#">
+        <div class="row is-live" id="row-sign" tabindex="0">
           <div>
             <div class="q">Why work for our company?</div>
             <div class="meta">submitted <em>2d ago</em> · 240 words · third pass<span class="passes" aria-label="third pass"><i class="done"></i><i class="done"></i><i class="done"></i></span></div>
             <div class="teaser">I spent two years in support watching the same three objections lose deals nobody was allowed to fix…</div>
+            <div class="note-out" id="sent-note" hidden><span class="who">YOUR NOTE · JUST NOW</span>"you're quoting their homepage back at them — find the thing YOU noticed that they didn't say, then send it again."</div>
+            <div class="go-out" id="go-cond" hidden><span class="go-mark">GO-AHEAD ✓</span><span class="cond">pushback required before Thursday</span></div>
           </div>
-          <div class="act"><span class="mark" aria-hidden="true"></span><span class="act-label">SIGN OFF →</span></div>
+          <div class="act">
+            <span class="mark" aria-hidden="true"></span>
+            <button class="act-label" id="btn-sign" type="button">SIGN OFF →</button>
+            <button class="alt" id="btn-back" type="button">SEND BACK ↩</button>
+          </div>
           <div class="glance"><div><div class="g-inner">
             <div class="excerpt">I spent two years in support watching the same three objections lose deals nobody was allowed to fix. Sales is where that gets fixed, and the ceiling is the part I want.</div>
             <div class="you-said">you said, pass 2: "name the objections — make it concrete"</div>
             <div class="changed">since pass 2: <b>+38 words</b> · objections now named · closing line rewritten</div>
           </div></div></div>
-        </a>
+        </div>
 
         <a class="row" href="#">
           <div>
@@ -854,6 +960,63 @@ a{ color:inherit; text-decoration:none; }
             <div class="you-said">you said, on v2: "cut it to a page — lead with the routing win"</div>
           </div></div></div>
         </a>
+      </div>
+    </div>
+
+    <div class="arrive after-work" style="--d:210ms">
+      <div class="sec-head">
+        <span>Assigned — picked for Marcus</span>
+        <span class="count">2 assigned · 1 still cold</span>
+      </div>
+
+      <div class="work assigned">
+        <div class="row">
+          <div>
+            <div class="q">Sell me the product you supported.</div>
+            <div class="meta">assigned <em>9 days ago</em> · 2 objections attached<span class="shields" aria-label="2 of 2 objections held"><i class="held"></i><i class="held"></i></span></div>
+            <div class="chris-note">"you'll get this in every AE loop — your support years are the weapon, not the excuse."</div>
+          </div>
+          <div class="state showtime">SHOWTIME ✦ — survived the pushback</div>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="q">Your last manager calls me. What's the one thing they warn me about?</div>
+            <div class="meta">assigned <em>6 days ago</em> · 3 objections attached<span class="shields" aria-label="no objections held yet"><i></i><i></i><i></i></span></div>
+            <div class="chris-note">"interviewers use this to find the ceiling. we'll set it ourselves."</div>
+          </div>
+          <div class="state">not started</div>
+        </div>
+
+        <div class="row assign" tabindex="0">
+          <div>
+            <div class="q">Assign a question</div>
+            <div class="teaser">pick it, attach the objections he will have to hold, write the note that arrives on top…</div>
+          </div>
+          <div class="act"><span class="mark hollow" aria-hidden="true"></span>ASSIGN →</div>
+          <div class="glance"><div><div class="g-inner">
+            <div class="assign-preview">
+              <div class="slot">
+                <div class="n">1 · the question</div>
+                <div class="what">Pick one he cannot walk past.</div>
+                <div class="how">68 in the bank · 9 blank for him</div>
+              </div>
+              <div class="slot">
+                <div class="n">2 · the objections</div>
+                <div class="what">Attach what you will push with.</div>
+                <div class="how">two or three — he has to hold every one</div>
+                <span class="shields" aria-hidden="true"><i></i><i></i><i></i></span>
+              </div>
+              <div class="slot">
+                <div class="n">3 · the note</div>
+                <div class="what">Say why this one.</div>
+                <div class="how">it arrives in your hand, on top of the question</div>
+                <div class="quill">because your last manager will</div>
+              </div>
+            </div>
+            <div class="lands">it lands in his bank under <b>From Chris</b>, your note on top — the pushback stays locked until you sign.</div>
+          </div></div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -936,7 +1099,7 @@ a{ color:inherit; text-decoration:none; }
         </div>
       </div>
 
-      <div class="foot">Comp · not production · direction pinned 2026-08-11 · revamp: the tab's room, one student deep · demo: click SIGN OFF — undo appears by the whisper</div>
+      <div class="foot">Comp · not production · direction pinned 2026-08-11 · revamp: the tab's room, one student deep · demo: click SIGN OFF or SEND BACK — undo appears by the whisper</div>
     </div>
   </section>
 
@@ -950,12 +1113,15 @@ a{ color:inherit; text-decoration:none; }
     'Marcus is showtime ready — the door is open',
     'quiet 2 days on the resume line since you cleared the sign off',
     'resume v3 arrived yesterday — it replaces v2, unreviewed',
+    'you assigned "your last manager calls me" 6 days ago — still not started',
   ];
   let wi = 0;
   let pendingUndo = null;
+  let curWhisper = '';           // the SOURCE line, so an undo restores it verbatim
   const wEl = document.getElementById('whisper');
   function setWhisper(text){
     if (!wEl) return;
+    curWhisper = text;
     wEl.innerHTML = text.split(' — ')
       .map(part => part.replace(/&/g,'&amp;').replace(/</g,'&lt;'))
       .join('<span class="sep">—</span>');
@@ -1017,23 +1183,50 @@ a{ color:inherit; text-decoration:none; }
     pendingUndo.restore();
     hideUndo();
   });
-  signRow?.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (signRow.classList.contains('signed')) return;
+  const goCond = document.getElementById('go-cond');
+  const sentNote = document.getElementById('sent-note');
+  const settled = () => signRow.classList.contains('signed') || signRow.classList.contains('sent-back');
+
+  document.getElementById('btn-sign')?.addEventListener('click', () => {
+    if (settled()) return;
     hideUndo();  // a new ceremony commits the previous one
     const label = signRow.querySelector('.act-label');
-    const prev = { w: wEl?.textContent, c: withYou.textContent, l: label.textContent };
+    const prev = { w: curWhisper, c: withYou.textContent, l: label.textContent };
     signRow.classList.remove('is-live'); signRow.classList.add('signed');
     label.textContent = 'SIGNED ✓';
+    goCond.hidden = false;            // the go-ahead carries its condition
     const n = parseInt(withYou.textContent, 10);
     withYou.textContent = (n - 1) + ' with you';
-    setWhisper('signed — one fewer thing between Marcus and the seat');
+    setWhisper('go-ahead — the pushback opens, he holds it before Thursday');
     atmos?.classList.add('exhale');   // MOTION 2 — the room exhales with you
     showUndo('the sign off', () => {
       signRow.classList.add('is-live'); signRow.classList.remove('signed');
       label.textContent = prev.l;
+      goCond.hidden = true;
       withYou.textContent = prev.c;
       atmos?.classList.remove('exhale');
+      setWhisper(prev.w || whispers[wi]);
+    });
+  });
+
+  // THE SEND-BACK — the other half of the loop. It leaves your side
+  // with your note on it; the pass becomes his.
+  document.getElementById('btn-back')?.addEventListener('click', () => {
+    if (settled()) return;
+    hideUndo();
+    const label = signRow.querySelector('.act-label');
+    const prev = { w: curWhisper, c: withYou.textContent, l: label.textContent };
+    signRow.classList.remove('is-live'); signRow.classList.add('sent-back');
+    label.textContent = 'SENT BACK ↩';
+    sentNote.hidden = false;
+    const n = parseInt(withYou.textContent, 10);
+    withYou.textContent = (n - 1) + ' with you';
+    setWhisper('sent back with a note — pass 4 is Marcus’s');
+    showUndo('the send back', () => {
+      signRow.classList.add('is-live'); signRow.classList.remove('sent-back');
+      label.textContent = prev.l;
+      sentNote.hidden = true;
+      withYou.textContent = prev.c;
       setWhisper(prev.w || whispers[wi]);
     });
   });
