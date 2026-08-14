@@ -1,0 +1,1816 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Bank — the route to the door · Pitch comp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Geist:wght@300..600&family=Geist+Mono:wght@300..500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THE BANK — THE ROUTE TO THE DOOR. Student side (Marcus's POV).
+   ONE IDEA: every question is a stone travelling toward Thursday's
+   door, and the bay it sits in tells you whose hands it's in.
+   The route IS the progress instrument — no bars, no percentages.
+   Register: the student's own golden world (gold high-left, brass
+   low-centre, plum counterweight). THE COLOR LAW IS THE STATE
+   MACHINE: plum = Chris's voice / ball in his court · gold = the
+   student's claim, held on paper · brass = earned, survived him live.
+   Brass is never spent on paper, and nothing here can mint it.
+   ============================================================ */
+:root{
+  --surface-deep: 0.108 0.012 58;
+  --surface:      0.135 0.014 58;
+  --surface-rise: 0.168 0.015 58;
+
+  --text:  0.975 0.006 75;
+  --muted: 0.76  0.010 75;
+  --faint: 0.69  0.014 75;
+
+  --gold:     0.80 0.14 78;    /* the student's metal — his app accent */
+  --gold-bri: 0.86 0.15 76;
+  --obs:      0.70 0.112 302;  /* PLUM — waiting on Chris, the watcher's color */
+  --brass:    0.78 0.13 70;
+  --brass-bri:0.84 0.14 68;
+
+  --rule:      1px solid oklch(1 0 0 / 0.09);
+  --display: 'Funnel Display', system-ui, sans-serif;
+  --body:    'Geist', system-ui, sans-serif;
+  --mono:    'Geist Mono', ui-monospace, monospace;
+  --serif:   'Instrument Serif', serif;
+
+  --page: 1180px;
+  --gutter: clamp(20px, 4vw, 56px);
+  --expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 280ms;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+body{
+  margin:0; background: oklch(var(--surface-deep)); color: oklch(var(--text));
+  font-family: var(--body); font-size:16px; line-height:1.5;
+  font-variant-numeric: tabular-nums; overflow-x:hidden; min-height:100vh;
+}
+h1,h2,h3,p{ margin:0; }
+button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+button, [role="button"]{ touch-action:manipulation; }
+
+/* his sky: the shipped student aurora, alive barely, no grain — VERBATIM */
+.atmos{ position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.atmos::before{
+  content:''; position:absolute; inset:-15%;
+  background:
+    radial-gradient(60vmax 60vmax at 18% 2%, oklch(var(--gold) / 0.8), transparent 74%),
+    radial-gradient(50vmax 44vmax at 55% 112%, oklch(var(--brass) / 0.4), transparent 72%),
+    radial-gradient(60vmax 60vmax at 88% 98%, oklch(0.55 0.12 320 / 0.55), transparent 70%);
+  filter: blur(80px); opacity:0.42;
+  animation: drift 90s ease-in-out infinite alternate;
+}
+@keyframes drift{ to{ transform: rotate(3deg) scale(1.07) translateY(-1.5%); } }
+
+.page{ position:relative; z-index:1; max-width:var(--page); margin:0 auto; padding: 0 var(--gutter) 80px; }
+@keyframes arrive{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:none; } }
+.arrive{ animation: arrive 480ms var(--expo) both; animation-delay: var(--d, 0ms); }
+
+/* ---- masthead: said once, quietly ---- */
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.3em; text-transform:uppercase;
+  color: oklch(var(--faint)); padding-top:40px;
+}
+h1{
+  font-family:var(--serif); font-weight:400; font-size:clamp(38px, 5vw, 52px);
+  line-height:0.98; letter-spacing:-0.01em; margin-top:8px;
+}
+h1 .stop{ color: oklch(var(--gold-bri)); }
+
+/* ============================================================
+   THE POINTER — the world's voice, naming exactly one next action,
+   with a gold sightline drawn to the stone it names.
+   ============================================================ */
+.routewrap{ position:relative; margin-top:26px; }
+.pointer{
+  position:relative; z-index:3; min-height:34px;
+  display:flex; align-items:baseline; gap:16px; flex-wrap:wrap;
+  padding-bottom:26px;
+}
+#whisper{
+  font-family:var(--serif); font-style:italic; font-size:17px; letter-spacing:0.015em;
+  color: oklch(var(--muted) / 0.95); transition: opacity 420ms ease;
+}
+#whisper .tgt{
+  font-style:italic; color: oklch(var(--gold-bri)); font-weight:400;
+  box-shadow: inset 0 -1px 0 oklch(var(--gold) / 0.55);
+}
+.undo-chip{
+  min-height:44px;
+  font-family:var(--mono); font-size:10px; letter-spacing:0.08em;
+  color:oklch(var(--brass-bri) / 0.9); background:oklch(var(--brass) / 0.09);
+  border:1px solid oklch(var(--brass) / 0.35); border-radius:999px;
+  padding:6px 13px;
+  opacity:0; transform:translateY(5px); pointer-events:none;
+  transition:opacity 240ms var(--expo), transform 240ms var(--expo);
+}
+.undo-chip.on{ opacity:1; transform:none; pointer-events:auto; }
+.undo-chip:hover{ background:oklch(var(--brass) / 0.16); }
+
+/* the sightline: one hairline from the named phrase to the named stone */
+.sight{ position:absolute; inset:0; z-index:2; pointer-events:none; overflow:visible; }
+.sight line{ stroke: oklch(var(--gold) / 0.5); stroke-width:1; transition: all 380ms var(--expo); }
+.sight circle{ fill: oklch(var(--gold-bri) / 0.9); transition: all 380ms var(--expo); }
+
+/* ============================================================
+   THE ROUTE — four bays travelling left to right toward the door.
+   ============================================================ */
+.route{
+  position:relative; z-index:1;
+  display:grid; grid-template-columns: repeat(4, minmax(0,1fr)) 108px;
+  gap:14px; align-items:stretch;
+  border-top:1px solid oklch(1 0 0 / 0.09);
+  padding-top:16px;
+  transition: padding var(--dur) var(--expo);
+}
+.route.compressed{ padding-top:12px; }
+/* THE ROUTE IS THE PROGRESS INSTRUMENT: one floor rule under every bay,
+   running cool at the start and gold-then-brass as it nears the door.
+   No bar, no percentage — the density itself is the reading. */
+.route::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background: linear-gradient(90deg,
+    oklch(1 0 0 / 0.08) 0%, oklch(var(--obs) / 0.3) 26%,
+    oklch(var(--gold) / 0.55) 58%, oklch(var(--gold-bri) / 0.85) 80%,
+    oklch(var(--brass-bri) / 0.95) 100%);
+}
+.bay{
+  position:relative; min-height:124px;
+  border-radius:14px 14px 0 0; padding:10px 10px 16px;
+  background: linear-gradient(180deg, var(--bayglow, transparent), transparent 84%);
+  transition: background 600ms var(--expo);
+}
+.bay::after{        /* the bay's own ground, in its own register */
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background: var(--bayfloor, transparent);
+}
+.bay + .bay::before{
+  content:''; position:absolute; left:-8px; top:30px; bottom:0; width:1px;
+  background: linear-gradient(180deg, transparent, oklch(1 0 0 / 0.14) 40%, oklch(1 0 0 / 0.07));
+}
+.bay-k{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.2em; text-transform:uppercase;
+  color: oklch(var(--faint)); margin-bottom:12px; white-space:nowrap;
+}
+/* the register map, said in the bay floor: gold · plum · warmest gold · threshold */
+.bay.b-yours { --bayglow: oklch(var(--gold) / 0.10); --bayfloor: oklch(var(--gold) / 0.34); }
+.bay.b-yours  .bay-k{ color: oklch(var(--gold-bri) / 0.8); }
+.bay.b-chris { --bayglow: oklch(var(--obs) / 0.10);  --bayfloor: oklch(var(--obs) / 0.5); }
+.bay.b-chris  .bay-k{ color: oklch(var(--obs) / 0.9); }
+.bay.b-push  { --bayglow: oklch(var(--gold) / 0.22);  --bayfloor: oklch(var(--gold-bri) / 0.8); }
+.bay.b-push   .bay-k{ color: oklch(var(--gold-bri)); }
+.bay.b-ready { --bayglow: oklch(var(--gold) / 0.15);  --bayfloor: oklch(var(--gold-bri) / 0.6); }
+.bay.b-ready  .bay-k{ color: oklch(var(--gold-bri) / 0.92); }
+.stones{ display:flex; flex-direction:column; gap:8px; }
+
+/* ---- the stone ---- */
+.stone{
+  position:relative; display:block; width:100%; text-align:left;
+  border:1px solid oklch(1 0 0 / 0.1); border-radius:11px;
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.035), oklch(1 0 0 / 0.008));
+  padding:11px 12px 10px 15px; overflow:hidden;
+  opacity:0.68;
+  transition: opacity var(--dur) var(--expo), border-color var(--dur) var(--expo),
+              box-shadow var(--dur) var(--expo), transform var(--dur) var(--expo),
+              background 600ms var(--expo);
+}
+.stone::before{
+  content:''; position:absolute; left:0; top:9px; bottom:9px; width:2px; border-radius:2px;
+  background: oklch(1 0 0 / 0.12);
+  transition: background 600ms var(--expo), box-shadow 600ms var(--expo);
+}
+.b-yours .stone::before{ background: oklch(var(--gold) / 0.55); }
+.b-yours .stone.blank::before{ background: oklch(1 0 0 / 0.14); }
+.b-chris .stone::before{ background: oklch(var(--obs) / 0.85); }
+.b-push  .stone::before{ background: oklch(var(--gold-bri)); box-shadow:0 0 9px -2px oklch(var(--gold) / 0.6); }
+.b-ready .stone::before{ background: oklch(var(--gold-bri)); box-shadow:0 0 10px -2px oklch(var(--gold) / 0.7); }
+.b-ready .stone.live::before{
+  background: linear-gradient(180deg, oklch(var(--brass-bri)) 45%, oklch(var(--gold) / 0.8) 60%);
+  box-shadow: 0 0 10px -3px oklch(var(--brass) / 0.6);
+}
+.stone:hover{ opacity:0.9; transform: translateY(-1px); }
+.stone.sel{
+  opacity:1; border-color: oklch(var(--gold) / 0.4);
+  background: linear-gradient(180deg, oklch(var(--gold) / 0.09), oklch(1 0 0 / 0.012));
+  box-shadow: 0 14px 30px -20px oklch(0 0 0 / 0.9), 0 0 0 1px oklch(var(--gold) / 0.14);
+}
+.b-chris .stone.sel{ border-color: oklch(var(--obs) / 0.45); background: linear-gradient(180deg, oklch(var(--obs) / 0.1), oklch(1 0 0 / 0.012)); }
+.stone .t{
+  font-family:var(--display); font-weight:430; font-size:14.5px; line-height:1.2;
+  letter-spacing:-0.01em; color: oklch(var(--text) / 0.95);
+}
+.stone .m{
+  display:flex; align-items:center; gap:8px; margin-top:7px;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase;
+  color: oklch(var(--faint));
+}
+/* the two marks: a grand slam everyone walks with, or one Chris picked for you */
+.mark{ width:7px; height:7px; flex:none; display:inline-block; }
+.mark.gs{ background: oklch(var(--gold) / 0.75); clip-path: polygon(50% 0,100% 50%,50% 100%,0 50%); }
+.mark.chris{ background: oklch(var(--obs) / 0.9); border-radius:999px; }
+/* the stone that just warmed — its metal rises once and stays */
+@keyframes warm{
+  0%{ box-shadow: 0 0 0 0 oklch(var(--gold) / 0); }
+  45%{ box-shadow: 0 0 26px -4px oklch(var(--gold) / 0.75); }
+  100%{ box-shadow: 0 14px 30px -20px oklch(0 0 0 / 0.9), 0 0 0 1px oklch(var(--gold) / 0.14); }
+}
+.stone.warmed{ animation: warm 620ms var(--expo) 1 both; }
+/* at the threshold: the ready stone that leans toward the door */
+.stone.leaning{ transform: translateX(9px) rotate(0.6deg); }
+.stone.leaning:hover{ transform: translateX(11px) translateY(-1px) rotate(0.6deg); }
+.stone.leaning::after{   /* the pull of the door, felt on the stone's door-side edge */
+  content:''; position:absolute; right:0; top:0; bottom:0; width:26px;
+  background: linear-gradient(90deg, transparent, oklch(var(--brass) / 0.16));
+}
+
+/* the shield ramp, unchanged from the world:
+   empty = not held · outlined = claimed on paper · solid = survived Chris live */
+.shields{ display:inline-flex; gap:3px; }
+.shields i{
+  width:8px; height:10px; display:inline-block;
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%);
+  background: oklch(1 0 0 / 0.06);
+  box-shadow: inset 0 0 0 1.2px oklch(1 0 0 / 0.16);
+  transition: background 320ms var(--expo), box-shadow 320ms var(--expo);
+}
+.shields i.held{ background: oklch(var(--gold) / 0.2); box-shadow: inset 0 0 0 1.4px oklch(var(--gold) / 0.95); }
+.shields i.brass{ background: oklch(var(--brass-bri)); box-shadow: 0 0 7px -1px oklch(var(--brass) / 0.85); }
+.shields i.stale{ background: oklch(var(--gold) / 0.07); box-shadow: inset 0 0 0 1.2px oklch(var(--gold) / 0.38); }
+
+/* ---- THE DOOR: Thursday's hour, at the right edge of the route ---- */
+.doorbay{
+  display:flex; flex-direction:column; align-items:center; gap:9px;
+  padding-top:30px;
+}
+.door-glyph{
+  width:24px; height:42px; border-radius:12px 12px 2px 2px;
+  border:1.5px solid oklch(var(--brass-bri) / 0.85);
+  border-left-color: oklch(var(--brass-bri) / 0.4);
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.5), oklch(var(--brass) / 0.12) 60%);
+  box-shadow: 0 0 20px -3px oklch(var(--brass) / 0.55);
+  animation: ember 7s ease-in-out 3s infinite;
+}
+@keyframes ember{
+  0%,100%{ box-shadow: 0 0 20px -3px oklch(var(--brass) / 0.5); }
+  50%{ box-shadow: 0 0 30px -2px oklch(var(--brass) / 0.8); }
+}
+.doorbay .dn{
+  font-family:var(--serif); font-style:italic; font-size:13px; text-align:center;
+  color: oklch(var(--brass-bri) / 0.9); line-height:1.25;
+}
+
+/* ============================================================
+   THE MANTEL — past the door. A brass rail where the ones that
+   survived him live rest as spines, reopenable, never re-litigated.
+   ============================================================ */
+.mantel{
+  position:relative; margin-top:20px; padding:13px 4px 0;
+  border-top:1px solid oklch(var(--brass) / 0.34);
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.mantel::before{
+  content:''; position:absolute; left:0; right:0; top:-1px; height:1px;
+  background: linear-gradient(90deg, transparent, oklch(var(--brass) / 0.55) 30%, oklch(var(--brass) / 0.2));
+}
+.mantel-k{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.2em; text-transform:uppercase;
+  color: oklch(var(--brass-bri) / 0.8); margin-right:4px;
+}
+.spine{
+  border:1px solid oklch(var(--brass) / 0.4); border-radius:999px;
+  background: linear-gradient(180deg, oklch(var(--brass) / 0.14), oklch(var(--brass) / 0.04));
+  padding:6px 13px; font-family:var(--display); font-weight:420; font-size:13px;
+  color: oklch(var(--brass-bri) / 0.95);
+  transition: background var(--dur) var(--expo), transform var(--dur) var(--expo);
+}
+.spine:hover{ background: oklch(var(--brass) / 0.2); transform: translateY(-1px); }
+.spine.sel{ background: oklch(var(--brass) / 0.26); box-shadow: 0 0 14px -4px oklch(var(--brass) / 0.8); }
+.mantel .count{
+  margin-left:auto; font-family:var(--mono); font-size:10.5px; letter-spacing:0.14em;
+  text-transform:uppercase; color: oklch(var(--brass-bri) / 0.85);
+}
+
+/* ============================================================
+   THE READING STAGE — unfurls from the stone you picked.
+   LEFT: the thread. RIGHT: the pushback.
+   ============================================================ */
+.stagewrap{
+  display:grid; grid-template-rows:0fr; visibility:hidden; margin-top:8px;
+  transition: grid-template-rows 320ms var(--expo), visibility 0s 320ms;
+}
+.stagewrap.open{
+  grid-template-rows:1fr; visibility:visible;
+  transition: grid-template-rows 320ms var(--expo);
+}
+.stage-clip{ min-height:0; overflow:hidden; }
+.stage{
+  margin-top:26px; border:1px solid oklch(1 0 0 / 0.09); border-radius:16px;
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.028), oklch(1 0 0 / 0.006));
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.05) inset, 0 18px 44px -30px oklch(0 0 0 / 0.9);
+  display:grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+}
+@keyframes unfurl{
+  from{ opacity:0; transform: translateY(-8px) scaleY(0.985); }
+  to{ opacity:1; transform:none; }
+}
+.stage.play{ animation: unfurl 340ms var(--expo) both; transform-origin: var(--ox, 50%) top; }
+@keyframes glide{
+  from{ opacity:0; transform: translateX(var(--gx, 10px)); }
+  to{ opacity:1; transform:none; }
+}
+.stage.glide .pane{ animation: glide 240ms var(--expo) both; }
+.pane{ padding:22px 24px 24px; min-width:0; }
+.pane + .pane{ border-left:1px solid oklch(1 0 0 / 0.07); }
+
+.st-title{
+  font-family:var(--serif); font-weight:400; font-size:clamp(24px, 2.6vw, 31px);
+  line-height:1.08; letter-spacing:-0.01em; color: oklch(var(--text));
+}
+.st-sub{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
+  color: oklch(var(--faint)); margin-top:9px;
+}
+.st-note{
+  font-family:var(--serif); font-style:italic; font-size:15px;
+  color: oklch(var(--obs) / 0.95); margin-top:12px;
+}
+
+/* the folio edges: earlier passes, filed not deleted. They swap in place. */
+.folios{ display:flex; gap:6px; flex-wrap:wrap; margin-top:18px; }
+.folio{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.14em; text-transform:uppercase;
+  color: oklch(var(--faint)); border-left:2px solid oklch(1 0 0 / 0.16);
+  background: linear-gradient(90deg, oklch(1 0 0 / 0.05), transparent);
+  padding:6px 12px 6px 9px; border-radius:0 6px 6px 0;
+  transition: color var(--dur) var(--expo), border-color var(--dur) var(--expo), background var(--dur) var(--expo);
+}
+.folio:hover{ color: oklch(var(--muted)); border-left-color: oklch(var(--gold) / 0.6); }
+.folio.cur{
+  color: oklch(var(--gold-bri) / 0.95); border-left-color: oklch(var(--gold-bri));
+  background: linear-gradient(90deg, oklch(var(--gold) / 0.1), transparent);
+}
+
+.passbody{
+  margin-top:16px; font-size:15px; line-height:1.65; color: oklch(var(--text) / 0.9);
+  border-left:2px solid oklch(var(--gold) / 0.4); padding-left:16px; max-width:60ch;
+}
+.passbody .pl{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase;
+  color: oklch(var(--gold-bri) / 0.85); display:block; margin-bottom:5px;
+}
+.passbody.sent{ border-left-color: oklch(var(--obs) / 0.6); }
+.passbody.sent .pl{ color: oklch(var(--obs) / 0.95); }
+
+/* CHRIS'S REPLY — a solid plum field, read at reading size. His voice has weight. */
+.reply{
+  margin-top:16px; border-radius:12px; padding:14px 16px 15px;
+  background: oklch(0.235 0.045 302);
+  border:1px solid oklch(var(--obs) / 0.34);
+}
+.reply .rh{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.14em; text-transform:uppercase;
+  color: oklch(var(--obs) / 0.75);
+}
+.stamp{
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase;
+  border-radius:999px; padding:4px 11px; white-space:nowrap;
+}
+.stamp.s-pass{ color: oklch(0.17 0.03 302); background: oklch(var(--obs) / 0.92); font-weight:500; }
+.stamp.s-refine{ color: oklch(0.9 0.05 302); border:1px solid oklch(var(--obs) / 0.6); background: oklch(var(--obs) / 0.16); }
+.reply .rt{
+  /* the mechanism (Mobbin sweep 2026-08-13): color carries the ANCHOR (chip, edge,
+     stamp) — the reviewer's WORDS stay neutral high-contrast. Serif upright keeps
+     the warmth; italic retired from body copy. */
+  font-family:var(--serif); font-style:normal; font-size:19px; line-height:1.66;
+  letter-spacing:0.012em;
+  color: oklch(0.965 0.006 90); margin-top:10px; max-width:50ch;
+}
+.reply.brief .bl{
+  display:block; font-family:var(--mono); font-size:9.5px; letter-spacing:0.2em;
+  text-transform:uppercase; color: oklch(var(--obs) / 0.8); margin-bottom:9px;
+}
+.reply .bl{ display:none; }
+
+/* the draft the student owes, and the send that hands it over */
+.draft{
+  margin-top:16px; font-size:14.5px; line-height:1.6; color: oklch(var(--text) / 0.86);
+  border-left:2px solid oklch(var(--gold) / 0.55); padding-left:16px; max-width:60ch;
+}
+.draft .pl{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase;
+  color: oklch(var(--gold-bri) / 0.9); display:block; margin-bottom:5px;
+}
+.act{
+  display:inline-flex; align-items:center; gap:10px; margin-top:16px;
+  font-family:var(--mono); font-size:12px; letter-spacing:0.05em; color: oklch(var(--gold-bri));
+}
+.act .dot{ width:9px; height:9px; border-radius:999px; background: oklch(var(--gold-bri)); flex:none; }
+@keyframes mark-breathe{
+  0%,100%{ box-shadow: 0 0 4px -1px oklch(var(--gold) / 0.4); }
+  50%{ box-shadow: 0 0 12px 0 oklch(var(--gold) / 0.8); }
+}
+.act .dot{ animation: mark-breathe 5.2s ease-in-out 2s infinite; }
+.footline{
+  display:flex; align-items:center; gap:10px; margin-top:18px;
+  font-family:var(--serif); font-style:italic; font-size:15px;
+  color: oklch(var(--gold-bri) / 0.92); max-width:56ch;
+}
+.footline.brass{ color: oklch(var(--brass-bri) / 0.9); }
+.footline.plum{ color: oklch(var(--obs) / 0.92); }
+.footline i{
+  width:12px; height:15px; flex:none;
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%);
+  background: oklch(var(--gold) / 0.9);
+}
+/* mid-gauntlet: brass to the waterline, gold beneath — what survived, what still owes */
+.footline.brass i{ background: linear-gradient(180deg, oklch(var(--brass-bri)) 60%, oklch(var(--gold) / 0.5) 60%); }
+/* SHOWTIME carries the door itself, never a shield — it is already through */
+.footline.door{ color: oklch(var(--brass-bri) / 0.9); }
+.footline.door i{
+  width:12px; height:19px; clip-path:none; border-radius:6px 6px 1px 1px;
+  border:1.2px solid oklch(var(--brass-bri) / 0.85);
+  background: linear-gradient(90deg, oklch(var(--brass) / 0.5), oklch(var(--brass) / 0.12));
+  box-shadow: 0 0 12px -3px oklch(var(--brass) / 0.6);
+}
+.footline.plum i{ background: oklch(var(--obs) / 0.85); clip-path:none; border-radius:2px; width:10px; height:12px; }
+.blank-p{
+  margin-top:18px; font-size:15px; line-height:1.65; color: oklch(var(--text) / 0.82);
+  border-left:2px solid oklch(1 0 0 / 0.14); padding-left:16px; max-width:58ch;
+}
+.blank-p b{ font-weight:400; color: oklch(var(--gold-bri) / 0.92); }
+
+/* ---- RIGHT PANE: the pushback ---- */
+.push-head{
+  display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;
+  font-family:var(--mono); font-size:10px; letter-spacing:0.2em; text-transform:uppercase;
+  color: oklch(var(--gold-bri) / 0.9); padding-bottom:4px;
+}
+.push-head .tally{ letter-spacing:0.06em; color: oklch(var(--faint)); }
+.push.locked .push-head, .push.stale .push-head{ color: oklch(var(--obs) / 0.9); }
+.ob{
+  border-top:1px solid oklch(1 0 0 / 0.07); padding:13px 2px;
+  display:grid; grid-template-columns: minmax(0,1fr) auto; gap:5px 14px; align-items:start;
+  transition: opacity var(--dur) var(--expo);
+}
+.ob .ob-q{
+  font-family:var(--display); font-weight:400; font-size:15px; line-height:1.35;
+  letter-spacing:-0.01em; color: oklch(var(--text) / 0.94);
+}
+.ob .ob-q::before{ content:'\201C'; color: oklch(var(--gold) / 0.7); margin-right:1px; }
+.ob .ob-q::after{ content:'\201D'; color: oklch(var(--gold) / 0.7); margin-left:1px; }
+.ob .ob-st{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.06em; white-space:nowrap;
+  color: oklch(var(--gold-bri) / 0.9); padding-top:3px;
+}
+.ob.held .ob-st{ color: oklch(var(--gold) / 0.8); }
+.ob.survived .ob-st{ color: oklch(var(--brass-bri)); }
+.ob.unscored .ob-st{ color: oklch(var(--gold) / 0.85); }
+/* the rows stay single-line quotes; only the one you're working unfolds */
+.ob .ob-a{ font-size:13.5px; line-height:1.6; color: oklch(var(--muted) / 0.9); max-width:52ch; }
+.ob.held .ob-a{
+  display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;
+}
+.ob.open-ob{ cursor:pointer; border-radius:8px; }
+.ob.open-ob:hover{ background: oklch(1 0 0 / 0.03); }
+@keyframes ob-breathe{
+  0%,100%{ text-shadow: 0 0 0 oklch(var(--gold) / 0); }
+  50%{ text-shadow: 0 0 18px oklch(var(--gold) / 0.55); }
+}
+.ob.open-ob .ob-st{ animation: ob-breathe 5.2s ease-in-out 2s infinite; }
+/* Chris's one line when he drops one — it rides back with the objection */
+.ob-why{
+  font-family:var(--serif); font-style:normal; font-size:16px; line-height:1.62;
+  letter-spacing:0.012em;
+  color: oklch(0.92 0.012 90); border-left:2px solid oklch(var(--obs) / 0.6);
+  padding-left:12px; max-width:48ch;
+}
+.ob-why .who{
+  font-family:var(--mono); font-style:normal; font-size:9px; letter-spacing:0.14em;
+  text-transform:uppercase; color: oklch(var(--obs) / 0.7); margin-right:8px;
+}
+/* held compacts to gold: one line, no field, the claim standing on its own */
+.ob.held .ob-a{ color: oklch(var(--gold) / 0.72); font-size:13px; }
+/* THE PARRY — a comeback with a hard cap, not an essay */
+.parry{
+  grid-column:1 / -1; margin-top:10px;
+  border:1px dashed oklch(var(--gold) / 0.34); border-radius:10px;
+  background: oklch(var(--gold) / 0.035); padding:12px 13px 10px;
+}
+.parry .pdraft{ font-size:14px; line-height:1.6; color: oklch(var(--text) / 0.84); max-width:50ch; }
+.parry .pdraft::after{
+  content:''; display:inline-block; width:1.5px; height:14px; vertical-align:-2px; margin-left:2px;
+  background: oklch(var(--gold-bri) / 0.8);
+}
+.parry-foot{
+  display:flex; align-items:baseline; justify-content:space-between; gap:8px 14px; flex-wrap:wrap;
+  margin-top:10px; font-family:var(--mono); font-size:10px; letter-spacing:0.08em;
+  color: oklch(var(--faint));
+}
+.parry-foot .wc{ color: oklch(var(--gold-bri) / 0.9); white-space:nowrap; }
+/* locked: visible but veiled. Anticipation, not denial. */
+.push.locked .ob{ opacity:0.46; }
+.push.locked .ob .ob-q{ filter: blur(0.45px); }
+.push.stale .ob{ opacity:0.5; }
+.lock-line{
+  font-family:var(--mono); font-size:11px; line-height:1.5; color: oklch(var(--obs) / 0.95);
+  border-top:1px solid oklch(1 0 0 / 0.07); padding-top:12px; margin-top:2px;
+}
+.push-none{
+  font-family:var(--serif); font-style:italic; font-size:15px; color: oklch(var(--muted) / 0.8);
+  margin-top:14px; max-width:44ch;
+}
+
+/* the folio that travels: a narrow gold sliver flying from the draft to the route */
+.flyer{
+  position:fixed; z-index:40; pointer-events:none;
+  border-radius:3px; background: linear-gradient(180deg, oklch(var(--gold-bri) / 0.95), oklch(var(--gold) / 0.5));
+  box-shadow: 0 0 22px -4px oklch(var(--gold) / 0.9);
+}
+.travel-token{
+  position:fixed; z-index:42; pointer-events:none; max-width:190px;
+  border:1px solid oklch(var(--gold) / 0.48); border-radius:9px;
+  background:oklch(var(--surface-rise) / 0.98); color:oklch(var(--text));
+  padding:8px 10px; font-family:var(--display); font-size:12px; line-height:1.2;
+  box-shadow:0 16px 28px -16px oklch(0 0 0 / 0.95), 0 0 18px -5px oklch(var(--gold) / 0.72);
+  will-change:transform,opacity;
+}
+
+.foot{
+  margin-top:44px; padding-top:16px; border-top: var(--rule);
+  font-family:var(--mono); font-size:11px; line-height:1.6; letter-spacing:0.08em;
+  color: oklch(var(--text) / 0.3);
+}
+/* ONE ring for the whole world — same gold, same weight, wherever it lands.
+   The radius is never overridden: a focused stone keeps its own corners. */
+.stone:focus-visible, .folio:focus-visible, .ob.open-ob:focus-visible,
+.spine:focus-visible, .undo-chip:focus-visible, .act:focus-visible, .bay-k:focus-visible{
+  outline:2px solid oklch(var(--gold-bri) / 0.95); outline-offset:2px;
+}
+/* controls that live inside a clipping container — the bay, the mantel, a
+   scrolling stack — wear the ring INSIDE their own edge, or it gets cut off */
+.stone:focus-visible, .spine:focus-visible, .bay-k:focus-visible,
+.mantel-k:focus-visible{ outline-offset:-2px; }
+
+/* ============================================================
+   MOBILE — the route becomes a rail you push left to right by hand.
+   ============================================================ */
+@media (max-width:720px){
+  .page{ padding-bottom:56px; }
+  .eyebrow{ padding-top:28px; }
+  .pointer{ padding-bottom:18px; display:block; }
+  #whisper{ font-size:15.5px; display:block; }
+  /* the chip takes no room at all until a ceremony hands it out */
+  .undo-chip{ display:none; margin-top:12px; }
+  .undo-chip.on{ display:inline-block; }
+  .page:not(.is-work) .undo-chip.on{
+    position:absolute; right:0; bottom:5px; z-index:6; margin:0; padding:4px 8px;
+    max-width:112px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .sight{ display:none; }               /* a sightline can't point past a scroll edge */
+
+  .route{
+    display:flex; gap:10px; align-items:stretch;
+    overflow-x:auto; scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    margin:0 calc(-1 * var(--gutter)); padding:14px var(--gutter) 6px;
+  }
+  .route::-webkit-scrollbar{ display:none; }
+  .bay{ flex:0 0 74vw; max-width:300px; scroll-snap-align:start; min-height:0; }
+  .bay + .bay::before{ left:-5px; }
+  .doorbay{ flex:0 0 96px; padding-top:26px; scroll-snap-align:end; }
+
+  /* the mantel stays one strip you push, never a stack */
+  .mantel{
+    margin-top:16px; gap:8px; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none;
+    margin-left:calc(-1 * var(--gutter)); margin-right:calc(-1 * var(--gutter));
+    padding-left:var(--gutter); padding-right:var(--gutter);
+  }
+  .mantel::-webkit-scrollbar{ display:none; }
+  .mantel-k, .spine, .mantel .count{ flex:none; white-space:nowrap; }
+  /* the one number on the rail stays pinned; the spines scroll past it */
+  .mantel-k{ order:-2; }
+  .mantel .count{ order:-1; margin-left:0; margin-right:6px; }
+
+  .stage{ grid-template-columns: minmax(0,1fr); margin-top:20px; }
+  .pane{ padding:18px 18px 20px; }
+  .pane + .pane{ border-left:0; border-top:1px solid oklch(1 0 0 / 0.07); }
+  .ob{ grid-template-columns: minmax(0,1fr); }
+  .ob .ob-st{ padding-top:2px; }
+}
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition-duration:1ms !important; }
+  .stagewrap{ transition-delay:0ms !important; }
+}
+
+/* ============================================================
+   ROUTE COMP V2 - two postures, one state-built desk, honest door.
+   The existing tokens, atmosphere, fixtures, and ceremony grammar
+   remain the source material. This layer changes only their geography.
+   ============================================================ */
+.routewrap{
+  height:auto; min-height:240px; margin-top:26px; overflow:visible;
+  transition:height 380ms var(--expo);
+}
+.page.is-work .routewrap{ height:64px; min-height:64px; }
+.pointer{
+  height:48px; min-height:48px; padding-bottom:12px;
+  transition:opacity 180ms var(--expo), transform 380ms var(--expo), visibility 0s;
+}
+.page.is-work .pointer{
+  position:absolute; inset:0; height:64px; opacity:1; transform:none; visibility:visible; pointer-events:none;
+  transition:none;
+}
+.page.is-work #whisper{ opacity:0; visibility:hidden; }
+.page.is-work .whisper-pause{ display:none; }
+.page.is-work .undo-chip.on{
+  position:absolute; z-index:7; right:0; top:70px; bottom:auto; display:inline-block;
+  opacity:1; transform:none; pointer-events:auto;
+}
+#whisper{ font-size:19px; }
+.whisper-pause{
+  position:relative; min-width:44px; min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:0;
+  font-family:var(--mono); font-size:8.5px; letter-spacing:0.08em; text-transform:uppercase;
+  color:oklch(var(--faint));
+  /* the rule belongs under the WORD, not under the 44px target */
+  text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:4px;
+  text-decoration-color:oklch(1 0 0 / 0.2);
+}
+.whisper-pause::after{ content:''; position:absolute; inset:-8px -6px; min-height:44px; }
+.whisper-pause:hover{ color:oklch(var(--text)); }
+.route{
+  height:295px; min-height:295px; padding-top:14px;
+  grid-template-columns:minmax(210px,3fr) minmax(155px,2fr) minmax(280px,4fr) minmax(150px,2fr) 72px 96px;
+  gap:10px; transform:translateY(0);
+  transition:transform 380ms var(--expo), height 380ms var(--expo), padding 380ms var(--expo);
+}
+.page.is-work .route{
+  height:52px; min-height:0; padding-top:8px; transform:none; align-items:start;
+}
+.route::after{ bottom:0; }
+.bay{
+  min-height:280px; height:280px; padding:9px 8px 10px; overflow:hidden;
+  transition:height 380ms var(--expo), padding 380ms var(--expo), background 380ms var(--expo);
+}
+.bay-k{
+  width:100%; min-height:44px; display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin:0; text-align:left; font-weight:400;
+}
+/* label and count are one line of type: same leading, so they share a baseline */
+.bay-k .bay-label, .bay-k .bay-count{ line-height:1; }
+.bay-k .bay-count{ letter-spacing:0.08em; font-size:9px; }
+.stones{
+  max-height:none; margin-top:5px; padding-right:2px; overflow-y:visible; overscroll-behavior:contain;
+  scrollbar-color:oklch(1 0 0 / 0.18) transparent; scrollbar-width:thin;
+}
+/* A dense bay opens resting at its newest stone, so there is ALWAYS content above the
+   fold. Its masks follow the real scroll edges: top only when content remains above,
+   bottom only when content remains below. Scroll-margin keeps a tab-focused stone clear. */
+.stones.is-scrollable{
+  max-height:min(var(--stack-cap), 212px); overflow-y:auto;
+}
+.stones.is-scrollable .stone{ scroll-margin:20px 0; }
+.stones.is-scrollable.can-scroll-up.can-scroll-down,
+.mantel.can-scroll-up.can-scroll-down,
+.spines.can-scroll-up.can-scroll-down{
+  -webkit-mask-image:linear-gradient(180deg, transparent 0, oklch(var(--text)) var(--fade-top, 18px), oklch(var(--text)) calc(100% - var(--fade-bottom, 10px)), transparent 100%);
+  mask-image:linear-gradient(180deg, transparent 0, oklch(var(--text)) var(--fade-top, 18px), oklch(var(--text)) calc(100% - var(--fade-bottom, 10px)), transparent 100%);
+}
+.stones.is-scrollable.can-scroll-up:not(.can-scroll-down),
+.mantel.can-scroll-up:not(.can-scroll-down),
+.spines.can-scroll-up:not(.can-scroll-down){
+  -webkit-mask-image:linear-gradient(180deg, transparent 0, oklch(var(--text)) var(--fade-top, 18px));
+  mask-image:linear-gradient(180deg, transparent 0, oklch(var(--text)) var(--fade-top, 18px));
+}
+.stones.is-scrollable.can-scroll-down:not(.can-scroll-up),
+.mantel.can-scroll-down:not(.can-scroll-up),
+.spines.can-scroll-down:not(.can-scroll-up){
+  -webkit-mask-image:linear-gradient(180deg, oklch(var(--text)) calc(100% - var(--fade-bottom, 10px)), transparent 100%);
+  mask-image:linear-gradient(180deg, oklch(var(--text)) calc(100% - var(--fade-bottom, 10px)), transparent 100%);
+}
+.bay.empty{
+  height:34px; min-height:0; align-self:end; padding:4px 8px 5px; background:transparent;
+  border-top:1px solid oklch(1 0 0 / 0.09);
+  overflow:visible;               /* or the thin rail clips its own 44px reach */
+}
+.bay.empty .stones{ display:none; }
+.bay.empty .bay-k{ min-height:24px; position:relative; }
+.bay.empty .bay-k::after{ content:''; position:absolute; inset:-10px 0; min-height:44px; }
+/* the chip's hairline is drawn INSIDE it, so the 44px header inside is a true
+   44px target instead of losing 2px to the border box */
+.page.is-work .bay{
+  height:44px; min-height:0; padding:0 8px; border:0; border-radius:999px;
+  box-shadow:inset 0 0 0 1px oklch(1 0 0 / 0.09);
+  background:oklch(1 0 0 / 0.025);
+}
+.page.is-work .bay::after, .page.is-work .bay + .bay::before{ display:none; }
+/* in the compressed strip the header IS the chip — it must ring like one */
+.page.is-work .bay-k{ min-height:44px; margin:0; justify-content:center; border-radius:999px; }
+.page.is-work .bay-k .bay-count{ margin-left:2px; }
+.page.is-work .stones{ display:none; }
+.page.is-work .bay.has-selected{
+  box-shadow:inset 0 0 0 1px oklch(var(--gold) / 0.38); background:oklch(var(--gold) / 0.08);
+}
+.stone{ flex:none; padding:12px 12px 11px 15px; min-height:55px; }
+.stone .t{ font-size:15px; }
+
+.doorbay{
+  height:280px; min-height:280px; padding-top:24px; gap:8px; transition:height 380ms var(--expo), padding 380ms var(--expo);
+}
+.page.is-work .doorbay{ height:38px; min-height:0; padding:0; justify-content:center; }
+.page.is-work .door-glyph{ width:17px; height:28px; box-shadow:none; animation:none; }
+.page.is-work .doorbay .dn{ display:none; }
+
+/* Past the door: a short vertical shelf, never a route divider. */
+.mantel{
+  height:280px; min-height:280px; margin:0; padding:24px 0 7px 12px; border-top:0;
+  border-left:1px solid oklch(var(--brass) / 0.34);
+  display:flex; flex-direction:column; align-items:stretch; gap:6px; flex-wrap:nowrap;
+  --fade-top:14px; --fade-bottom:22px;
+  /* the shelf is fixed-height, so a long off-book list must scroll like a bay does —
+     squeezing it slices every spine's second line instead. Its edge masks use the same
+     honest scroll state as the stacks. */
+  overflow-y:auto; overflow-x:hidden; scrollbar-color:oklch(1 0 0 / 0.18) transparent; scrollbar-width:thin;
+  transition:height 380ms var(--expo), padding 380ms var(--expo);
+}
+.mantel::before{
+  left:-1px; right:auto; top:0; bottom:0; width:1px; height:auto;
+  background:linear-gradient(180deg, transparent, oklch(var(--brass) / 0.55) 30%, oklch(var(--brass) / 0.2));
+}
+.mantel-k{ margin:0; line-height:1.25; white-space:normal; letter-spacing:0.12em; }
+.mantel .count{ order:-1; margin:0 0 3px; font-size:9px; letter-spacing:0.08em; white-space:nowrap; }
+.spine{
+  /* chapman-ruled 2026-08-14: a spine is the same object on desktop as on mobile —
+     a brass stone, not a mono shelf-tag. Same geometry as .stone, brass register. */
+  flex:none;   /* a spine keeps its own height; the shelf scrolls instead of squashing it */
+  width:100%; min-height:44px; border-radius:9px; padding:9px 10px; text-align:left;
+  scroll-margin:14px 0;
+  font-family:var(--disp, var(--serif)); font-size:11.5px; letter-spacing:0.005em; line-height:1.3;
+  text-wrap:balance;      /* a spine on the shelf reads as even lines, never a 3-line rag */
+  overflow:hidden; text-overflow:clip; white-space:normal; overflow-wrap:normal; word-break:normal;
+}
+.page.is-work .mantel{ height:38px; min-height:0; padding:3px 0 3px 8px; justify-content:center; }
+.page.is-work .mantel-k, .page.is-work .spine{ display:none; }
+.page.is-work .mantel .count{ margin:0; font-size:8.5px; white-space:normal; line-height:1.15; }
+
+/* ORIENT is a prompt. WORK is a desk chosen by state. */
+.stagewrap{
+  display:block; visibility:visible; margin-top:8px; transition:none;
+}
+.page.is-work:has(.undo-chip.on) .stagewrap{ margin-top:38px; }
+.stage-clip{ overflow:visible; }
+.orient-prompt{
+  min-height:82px; display:flex; align-items:center; justify-content:center;
+  border-top:1px solid oklch(1 0 0 / 0.07);
+  font-family:var(--serif); font-style:italic; font-size:17px; color:oklch(var(--muted) / 0.72);
+}
+.stage{
+  display:block; margin-top:18px; border-radius:16px;
+  transition:opacity 180ms var(--expo), transform 380ms var(--expo);
+}
+.workspace{
+  min-height:calc(100dvh - 220px); display:grid; grid-template-columns:minmax(0,1fr) 200px;
+}
+.work-column{ min-width:0; padding:26px clamp(22px,3vw,38px) 34px; }
+.context-rail{
+  min-width:0; padding:21px 14px 26px; border-left:1px solid oklch(1 0 0 / 0.07);
+  background:oklch(1 0 0 / 0.012);
+}
+.context-k{
+  font-family:var(--mono); font-size:9px; letter-spacing:0.2em; text-transform:uppercase;
+  color:oklch(var(--faint)); margin-bottom:11px;
+}
+.context-section{ border-top:1px solid oklch(1 0 0 / 0.07); }
+.context-section summary{
+  min-height:44px; list-style:none; cursor:pointer; padding:10px 1px; align-items:center;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.11em; text-transform:uppercase;
+  color:oklch(var(--muted)); display:flex; justify-content:space-between; gap:8px;
+}
+.context-section summary::-webkit-details-marker{ display:none; }
+.context-section summary::after{ content:'+'; color:oklch(var(--gold-bri) / 0.72); }
+.context-section[open] summary::after{ content:'-'; }
+.context-body{ padding:0 1px 13px; font-size:12px; line-height:1.55; color:oklch(var(--muted) / 0.84); }
+/* the edge is always drawn, only its colour changes — a folio must not jump 2px
+   sideways when it becomes the one you are reading */
+.context-folio{
+  position:relative; display:block; width:100%; min-height:44px; padding:7px 0 7px 8px; text-align:left; color:inherit;
+  border-top:1px solid oklch(1 0 0 / 0.05); border-left:2px solid transparent;
+  font-size:11.5px; line-height:1.45;
+}
+.context-folio.has-anchor{ padding-left:22px; }
+.rail-dot{
+  position:absolute; left:9px; top:10px; width:5px; height:5px; border-radius:999px;
+  background:oklch(var(--obs) / 0.88); box-shadow:0 0 0 3px oklch(var(--obs) / 0.08);
+}
+.context-folio:first-child{ border-top:0; }
+.context-folio b{ display:block; color:oklch(var(--gold-bri) / 0.78); font-family:var(--mono); font-size:8.5px; font-weight:400; letter-spacing:0.08em; text-transform:uppercase; }
+/* the pass you are reading is lit exactly like the pass tab in the stage — same gold
+   edge, same 90deg wash — so the rail and the stage agree about where you are */
+.context-folio[data-context-pass]:hover{ border-left-color:oklch(var(--gold) / 0.5); }
+.context-folio.cur{
+  color:oklch(var(--text) / 0.92);
+  border-left-color:oklch(var(--gold-bri));
+  background:linear-gradient(90deg, oklch(var(--gold) / 0.1), transparent);
+}
+.context-folio.cur b{ color:oklch(var(--gold-bri) / 0.95); }
+.context-answer{ display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
+
+.work-head{ margin-bottom:22px; }
+.work-head-row{ display:flex; justify-content:space-between; align-items:baseline; gap:18px; }
+.close-work{
+  position:relative; flex:none; margin-top:0; min-height:44px; display:inline-flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:0.08em;
+  color:oklch(var(--muted)); padding:0 6px;
+  /* same law as the pause: the rule sits under the word, not at the target's floor */
+  text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:4px;
+  text-decoration-color:oklch(1 0 0 / 0.26);
+}
+.close-work::after{ content:''; position:absolute; inset:-8px -6px; min-height:44px; }
+.close-work:hover{ color:oklch(var(--text)); text-decoration-color:oklch(1 0 0 / 0.5); }
+.work-head .st-sub{ margin-top:8px; }
+.work-prompt{ max-width:58ch; font-family:var(--serif); font-style:italic; font-size:16px; color:oklch(var(--muted)); margin-top:10px; }
+.field-label{
+  display:block; margin-bottom:8px; font-family:var(--mono); font-size:9.5px; letter-spacing:0.14em;
+  text-transform:uppercase; color:oklch(var(--gold-bri) / 0.85);
+}
+.draft-field, .parry-field{
+  width:100%; min-height:178px; resize:vertical; padding:16px 17px;
+  border:1px solid oklch(var(--gold) / 0.32); border-radius:11px;
+  background:oklch(var(--gold) / 0.035); color:oklch(var(--text) / 0.92);
+  font-family:var(--body); font-size:15px; line-height:1.66; outline:none;
+}
+.draft-field:focus, .parry-field:focus{ border-color:oklch(var(--gold-bri) / 0.72); box-shadow:0 0 0 2px oklch(var(--gold) / 0.09); }
+.field-foot{ display:flex; justify-content:space-between; align-items:baseline; gap:14px; margin-top:9px; }
+.field-foot .hint{ font-family:var(--serif); font-style:italic; font-size:14px; color:oklch(var(--muted) / 0.78); }
+.wc{ font-family:var(--mono); font-size:10px; letter-spacing:0.06em; color:oklch(var(--gold-bri) / 0.9); white-space:nowrap; }
+.work-action{
+  min-height:44px; display:inline-flex; align-items:center; gap:9px; margin-top:18px; padding:9px 14px;
+  border:1px solid oklch(var(--gold) / 0.4); border-radius:999px;
+  background:oklch(var(--gold) / 0.08); color:oklch(var(--gold-bri));
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em;
+}
+.work-action:hover{ background:oklch(var(--gold) / 0.14); }
+.work-action.brass{ border-color:oklch(var(--brass) / 0.48); background:oklch(var(--brass) / 0.1); color:oklch(var(--brass-bri)); }
+
+/* Anchored notes: identity, quote-chip, neutral words. */
+.reply{ margin:0 0 22px; padding:15px 17px 17px; }
+.reply .rh{ margin-bottom:10px; }
+.quote-chip{
+  min-height:44px; display:inline-block; max-width:100%; margin-bottom:9px; padding:5px 9px;
+  border-left:2px solid oklch(var(--obs) / 0.72); border-radius:0 6px 6px 0;
+  background:oklch(var(--obs) / 0.13); color:oklch(0.9 0.025 302);
+  font-family:var(--body); font-size:11.5px; line-height:1.35; text-align:left;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.anchor-span{
+  position:relative; border-radius:3px; background:oklch(var(--obs) / 0.2); color:inherit; padding:1px 2px;
+  cursor:pointer; transition:background 180ms var(--expo), box-shadow 180ms var(--expo);
+}
+.anchor-span::after{ content:''; position:absolute; inset:-12px -4px; min-height:44px; }
+.anchor-span.is-static{ cursor:inherit; }
+.anchor-span.is-static::after{ display:none; }
+.pass-row{ position:relative; display:grid; grid-template-columns:20px minmax(0,1fr); margin-top:13px; }
+.pass-row .passbody{ grid-column:2; margin-top:0; }
+.gutter{ position:relative; grid-column:1; grid-row:1; }
+.gutter-dot{
+  position:absolute; left:4px; top:8px; width:6px; height:6px; border-radius:999px;
+  background:oklch(var(--obs) / 0.88); box-shadow:0 0 0 3px oklch(var(--obs) / 0.09);
+}
+.anchor-flash{ animation:anchor-flash 760ms var(--expo) 1; }
+@keyframes anchor-flash{
+  0%,100%{ box-shadow:0 0 0 0 oklch(var(--obs) / 0); }
+  38%{ box-shadow:0 0 0 5px oklch(var(--obs) / 0.22); background:oklch(var(--obs) / 0.31); }
+}
+.thread{ max-width:68ch; }
+.thread .reply{ margin-top:14px; }
+.read-only-line{ padding:11px 0; border-top:1px solid oklch(1 0 0 / 0.07); color:oklch(var(--text) / 0.86); font-size:14px; line-height:1.55; }
+.held-lines{ margin-top:22px; }
+.held-line{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; padding:10px 0; border-top:1px solid oklch(1 0 0 / 0.07); }
+.held-line span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.held-line .state{ font-family:var(--mono); font-size:9px; letter-spacing:0.05em; color:oklch(var(--brass-bri) / 0.86); white-space:nowrap; }
+
+@media (max-width:720px){
+  .page{ padding-left:16px; padding-right:16px; }
+  /* the tightened ORIENT band is 48 (whisper) + 61 (strip). Inside the strip every
+     gap is one 8px step: whisper baseline -> the route's hairline -> the chips ->
+     the route's floor. Nothing is squeezed; the band is just short. */
+  .routewrap{ height:109px; min-height:109px; margin-top:18px; }
+  .page.is-work .routewrap{ height:64px; min-height:64px; }
+  .page.is-work .undo-chip.on{ right:0; top:68px; bottom:auto; max-width:118px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  /* the desktop's 38px of clearance is shorter than the chip itself here, so the desk
+     was rising through the chip's lower half and eating the tap. 68px = the chip's own
+     44 + its 8 offset + 8 clear, measured: every pixel of the target now answers. */
+  .page.is-work:has(.undo-chip.on) .stagewrap{ margin-top:68px; }
+  .pointer{ height:48px; min-height:48px; padding-bottom:9px; }
+  #whisper{ font-size:16px; line-height:1.25; }
+  .whisper-pause{ position:absolute; right:0; top:0; }
+  #whisper{ padding-right:58px; }
+  .route, .route.dense-chris{
+    position:relative; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)) 34px minmax(0,1fr);
+    grid-template-rows:44px; align-items:start;
+    gap:5px; width:100%; height:61px; min-height:61px; margin:0; padding:8px 0; overflow:visible;
+    scroll-snap-type:none;
+  }
+  .page.is-work .route{ height:52px; padding-top:8px; transform:none; }
+  /* the strip is also how you change stones once you're at the desk, so a sheet dropped
+     in WORK has to push the desk down exactly as it does in ORIENT. Without this the
+     posture rule wins on specificity, the strip never grows, and the sheet opens BEHIND
+     the stage with every row of it dead to the touch. */
+  .page.is-work .routewrap:has(.mobile-open){ height:calc(81px + var(--mobile-sheet-height, 130px)); }
+  .page.is-work .route:has(.mobile-open){ height:calc(69px + var(--mobile-sheet-height, 130px)); }
+  /* two steps below the route's floor — the strip runs on one step, the desk starts on two */
+  .stage{ margin-top:16px; }
+  .bay, .page.is-work .bay{
+    position:static; width:auto; max-width:none; min-width:0; min-height:0; height:44px; padding:0 2px;
+    border:0; box-shadow:inset 0 0 0 1px oklch(1 0 0 / 0.09);
+    border-radius:999px; background:oklch(1 0 0 / 0.025);
+  }
+  /* on mobile a bay is a chip, never the desktop's thin rail — an empty one keeps the
+     full 44px ring and its count, or the label and the 0 collide inside a 24px box.
+     Holding nothing, it goes unfilled and drops its bay hue — the same thing the
+     desktop rail says by thinning, said here by going quiet. */
+  .bay.empty{ align-self:auto; height:44px; padding:0 2px; border-top:0;
+    box-shadow:inset 0 0 0 1px oklch(1 0 0 / 0.055); background:transparent; }
+  .bay.empty .bay-k{ min-height:44px; color:oklch(var(--faint) / 0.8); }
+  .bay.empty .bay-k::after{ display:none; }
+  .bay + .bay::before, .bay::after{ display:none; }
+  .bay-k, .page.is-work .bay-k{
+    min-height:44px; justify-content:center; font-size:7.5px; letter-spacing:0.07em; overflow:hidden;
+    border-radius:999px;
+  }
+  .bay-k .bay-label{ white-space:nowrap; }
+  .bay-k .bay-count{ font-size:7px; flex:none; }
+  .stones, .page.is-work .stones{ display:none; }
+  /* the sheet hangs 8px clear of the chip it came from, and keeps 8px under it */
+  .routewrap:has(.mobile-open){ height:calc(117px + var(--mobile-sheet-height, 130px)); }
+  .route:has(.mobile-open){ height:calc(69px + var(--mobile-sheet-height, 130px)); }
+  .bay.mobile-open{ overflow:visible; }
+  .bay.mobile-open .stones{
+    position:absolute; z-index:8; left:0; right:91px; top:60px; display:flex;
+    max-height:var(--stack-cap, min(38dvh, 280px)); overflow-y:auto; padding:9px; margin:0;
+    border:1px solid oklch(1 0 0 / 0.1); border-radius:12px;
+    background:oklch(var(--surface-rise) / 0.98); box-shadow:0 18px 34px -20px oklch(0 0 0 / 0.95);
+  }
+  .bay.mobile-open .stone{ min-height:48px; }
+  .doorbay, .page.is-work .doorbay{ height:44px; min-height:0; padding:2px 0; gap:0; justify-content:center; }
+  .door-glyph, .page.is-work .door-glyph{ width:15px; height:25px; }
+  .doorbay .dn{ display:none; }
+  .mantel, .page.is-work .mantel{
+    position:static; width:auto; min-width:0; height:44px; min-height:0; margin:0; padding:0 2px;
+    border:0; border-radius:999px; box-shadow:inset 0 0 0 1px oklch(1 0 0 / 0.09);
+    background:oklch(1 0 0 / 0.025); justify-content:center; overflow:hidden;
+  }
+  .mantel::before{ display:none; }
+  /* the off-book chip is the fifth peer in the strip: same 44px ring, same 7.5px mono
+     label, same 8px label-to-count gap and shared baseline as the four bays. Only the
+     hue separates it — brass (past the door) where the bays run gold. */
+  .mantel-k, .page.is-work .mantel-k{
+    width:100%; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px; margin:0;
+    border-radius:999px; font-size:7.5px; letter-spacing:0.07em; white-space:nowrap;
+  }
+  .mantel-k .mantel-label, .mantel-k .count, .page.is-work .mantel-k .count{
+    order:initial; display:block; margin:0; line-height:1; white-space:nowrap;
+  }
+  .mantel-k .count, .page.is-work .mantel-k .count{ font-size:7px; letter-spacing:0.08em; }
+  .spines{ display:none; --fade-top:14px; --fade-bottom:10px; }
+  .mantel.mobile-open{ overflow:visible; }
+  /* the same sheet the bays drop, in the mantel's register: one brass hairline
+     instead of the white one, everything else identical. It hangs from the right the
+     way the bays' hangs from the left — same width, mirrored, so the strip reads as
+     one drawer with two ends rather than two unrelated panels. */
+  .mantel.mobile-open .spines{
+    position:absolute; z-index:8; left:91px; right:0; top:60px; display:flex; flex-direction:column; gap:8px;
+    max-height:var(--stack-cap, min(38dvh, 280px)); overflow-y:auto; padding:9px;
+    border:1px solid oklch(var(--brass) / 0.3); border-radius:12px;
+    background:oklch(var(--surface-rise) / 0.98); box-shadow:0 18px 34px -20px oklch(0 0 0 / 0.95);
+  }
+  /* in the sheet a spine stops being a rail pill and becomes what a row in a sheet is
+     here — a stone — carrying the stone's geometry and the mantel's brass. */
+  .mantel.mobile-open .spine{
+    position:relative; display:block; width:100%; min-height:48px; height:auto;
+    border:1px solid oklch(var(--brass) / 0.34); border-radius:11px;
+    background:linear-gradient(180deg, oklch(var(--brass) / 0.11), oklch(var(--brass) / 0.02));
+    padding:12px 12px 11px 15px;
+    font-family:var(--display); font-weight:430; font-size:14.5px; line-height:1.2; letter-spacing:-0.01em;
+    color:oklch(var(--brass-bri) / 0.95);
+    overflow:visible; text-overflow:clip; white-space:normal; overflow-wrap:anywhere; word-break:normal;
+    text-wrap:pretty;
+    /* it rests at the stone's resting weight. Nothing past the door outshouts what is
+       still on the route — the brass says where it lives, not how loud it is. */
+    opacity:0.72;
+  }
+  .mantel.mobile-open .spine::before{
+    content:''; position:absolute; left:0; top:9px; bottom:9px; width:2px; border-radius:2px;
+    background:oklch(var(--brass-bri));
+  }
+  .mantel.mobile-open .spine:hover{ opacity:0.92; }
+  .mantel.mobile-open .spine.sel{
+    opacity:1;
+    background:linear-gradient(180deg, oklch(var(--brass) / 0.24), oklch(var(--brass) / 0.05));
+    box-shadow:0 14px 30px -20px oklch(0 0 0 / 0.9), 0 0 0 1px oklch(var(--brass) / 0.3);
+  }
+  .workspace{ min-height:calc(100dvh - 188px); grid-template-columns:minmax(0,1fr); }
+  .work-column{ padding:20px 17px 24px; }
+  .context-rail{ border-left:0; border-top:1px solid oklch(1 0 0 / 0.07); padding:16px 17px 20px; }
+  .draft-field, .parry-field{ min-height:150px; }
+  .field-foot{ align-items:flex-start; }
+  /* a held objection is the whole sentence or it is nothing — at 390 it wraps,
+     it never ellipses away the half that carries the meaning */
+  .held-line{ align-items:baseline; }
+  .held-line span:first-child{ overflow:visible; text-overflow:clip; white-space:normal; }
+}
+@media (min-width:721px) and (max-width:1100px){
+  .route{ grid-template-columns:minmax(0,3fr) minmax(0,2fr) minmax(0,4fr) minmax(0,2fr) 72px 96px; }
+}
+button:focus-visible,
+summary:focus-visible,
+textarea:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a[href]:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible{
+  outline:2px solid oklch(var(--gold-bri) / 0.95); outline-offset:2px;
+}
+@media (prefers-reduced-motion:reduce){
+  .routewrap, .route, .bay, .doorbay, .mantel, .pointer, .stage{ transition:none !important; }
+  .whisper-pause{ display:none; }
+  html{ scroll-behavior:auto; }
+}
+</style>
+</head>
+<body>
+<div class="atmos" aria-hidden="true"></div>
+
+<main class="page">
+  <div class="eyebrow arrive">Answer library &middot; Marcus Bell</div>
+  <h1 class="arrive" style="--d:50ms">The Bank<span class="stop">.</span></h1>
+
+  <div class="routewrap arrive" style="--d:120ms">
+    <svg class="sight" id="sight" aria-hidden="true"><line id="sight-l" x1="0" y1="0" x2="0" y2="0"/><circle id="sight-d" r="0" cx="0" cy="0"/></svg>
+    <div class="pointer">
+      <span id="whisper" aria-live="polite"></span>
+      <button class="whisper-pause" id="whisper-pause" type="button" aria-pressed="false">pause</button>
+      <button class="undo-chip" id="undo-chip" type="button" disabled>&#8617; undo</button>
+    </div>
+    <div class="route" id="route" aria-label="The route to Thursday"></div>
+  </div>
+
+  <div class="stagewrap" id="stagewrap">
+    <div class="stage-clip">
+      <div class="stage" id="stage"></div>
+    </div>
+  </div>
+
+  <!-- STATE COVERAGE — student-visible states from the plan (A-D):
+       DRAFTING (not started) ......... "Your last manager calls me" (YOURS bay, blank stone)
+       REFINE received + brief pinned . "Why work for our company?" (YOURS bay, pass 4 drafted)
+       WITH CHRIS ..................... "Tell me about a time you failed." (pass 3 sent)
+       stale-after-re-submission ...... its pushback block (held, stale until he re-stamps)
+       PUSHBACK OPEN .................. "Why tech sales?" (2 survived live, 1 back open)
+       dropped-with-reason ............ its third objection, carrying Chris's line
+       objections visible-but-LOCKED .. "Why work for our company?" · "Your last manager calls me"
+       READY FOR LIVE ................. "Walk me through your experience." (3 of 3 on paper)
+       LIVE_IN_PROGRESS ............... "Your first ninety days" (2 survived · 1 unscored, at the door)
+       SHOWTIME ....................... the two mantel spines (read-only when reopened)
+       N/A — DROPPED_PENDING_REASON: coach-side only (plan B7); the student never sees a drop
+             until its reason exists, so the only student rendering IS dropped-with-reason.
+       N/A — scoring disabled / error / conflict: coach-write contract (plan B5).
+       N/A — loading / stale-token / denied / reconnect: WO-DC gate; no live data layer here. -->
+  <div class="foot">Comp &middot; not production &middot; student side of the pinned world &middot; the route: yours &rarr; with Chris &rarr; the pushback &rarr; ready &rarr; through the door &middot; demo (comp-only theater): HOLD IT on the open objection, or SEND PASS 4 &mdash; undo beside the whisper</div>
+</main>
+
+<script>
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============================================================
+   THE FIXTURES — Marcus's questions, redistributed across the route.
+   Every stage body is data; render() is a pure function of state,
+   which is what makes undo byte-exact rather than hand-restored.
+   ============================================================ */
+const seed = {
+  sel: null,
+  lastSel: 'tech',
+  pointer: { id:'tech', text:'Chris dropped one on <b class="tgt">Why tech sales</b> Monday &mdash; it’s back open, and it’s 60 words' },
+  qs: [
+    { id:'company', bay:'yours', mark:'gs', t:'Why work for our company?',
+      full:'Why work for our company?', sub:'Refine · pass 4 is yours',
+      shields:['e','e'],
+      passes:[ { label:'Pass 3 · yesterday',
+                 text:'Because the product actually works and the team seems strong. I read the case studies and the growth story is real…',
+                 reply:{ stamp:'refine', who:'Chris · today', brief:true,
+                         quote:'Because the product actually works',
+                         text:'you’re quoting their homepage back at them. find the thing YOU noticed that they didn’t say — then send it again.' } } ],
+      draft:{ label:'Pass 4 · drafting now',
+              text:'Every case study on your site is a finance team, but the two roles you’re hiring this quarter are both ops. Somebody is building that motion from scratch this year, and I’ve spent two years inside ops queues watching where it breaks…' },
+      send:'SEND PASS 4 →',
+      push:{ mode:'locked', head:'The pushback — waiting behind his PASS',
+             obs:[ { q:'Every candidate says our product page back to us. What did you actually find?', st:'LOCKED' },
+                   { q:'Why us and not the bigger logo down the street?', st:'LOCKED' } ],
+             lock:'these open when he stamps PASS — you can read them, not answer them yet' } },
+
+    { id:'manager', bay:'yours', mark:'chris', blank:true, t:'Your last manager calls me…',
+      full:'Your last manager calls me. What’s the one thing they warn me about?',
+      sub:'Not started · 3 waiting behind it', shields:['e','e','e'],
+      note:{ who:'Chris · assigned', text:'interviewers use this to find the ceiling. we’ll set it ourselves.' },
+      blankP:'Nothing here yet. Start by naming the real thing your manager would say — <b>then what you did about it</b>. The warning you say first stops being a warning.',
+      push:{ mode:'locked', head:'The pushback — written when he assigned it',
+             obs:[ { q:'That’s a strength dressed as a weakness. Try again.', st:'LOCKED' },
+                   { q:'What would they say if I asked them the same question tomorrow?', st:'LOCKED' },
+                   { q:'Has anyone ever had to have a hard conversation with you about it?', st:'LOCKED' } ],
+             lock:'Chris wrote these when he assigned the question — you can read them, not answer them until he stamps PASS' } },
+
+    { id:'failed', bay:'chris', mark:'gs', t:'A time you failed',
+      full:'Tell me about a time you failed.', sub:'With Chris · pass 3 sent this morning',
+      shields:['s','s'],
+      passes:[ { label:'Pass 2 · Fri',
+                 text:'The rollout I owned went out with the old pricing table. I found it, I told the customer before they found it, and I wrote the check we all had to sign…',
+                 reply:{ stamp:'pass', who:'Chris · Fri', quote:'I told the customer before they found it',
+                         text:'good. it’s the telling-them-first part that sells — don’t bury it in the middle.' } },
+               { label:'Pass 3 · sent this morning', sent:true,
+                 text:'I put the pricing table live with last quarter’s numbers. I caught it at 6pm, called the customer before their finance team opened the file, and ate the difference in writing by the next morning…' } ],
+      foot:{ tone:'plum', text:'you moved it yourself — he owns the next move now' },
+      push:{ mode:'stale', head:'The pushback — held, but stale', tally:'2 held on paper',
+             obs:[ { q:'That’s a process failure. Where did YOU fail?', st:'HELD ON PAPER', cls:'held' },
+                   { q:'Who paid for it besides you?', st:'HELD ON PAPER', cls:'held' } ],
+             lock:'you re-sent the answer, so these two stop counting until he stamps pass 3 — nothing you held is lost' } },
+
+    { id:'tech', bay:'push', mark:'gs', t:'Why tech sales?',
+      full:'Why tech sales?', sub:'The pushback · 1 back to you',
+      shields:['b','b','e'],
+      passes:[ { label:'Pass 1 · Mon',
+                 text:'I like solving problems and talking to people, and sales pays for the ambitious…',
+                 reply:{ stamp:'refine', who:'Chris · Mon', quote:'I like solving problems and talking to people',
+                         text:'generic — every candidate says this. what did YOU watch happen in support?' } },
+               { label:'Pass 2 · Tue',
+                 text:'I spent two years in support watching the same three objections lose deals nobody was allowed to fix. Sales is where that gets fixed, and the ceiling is the part I want.',
+                 reply:{ stamp:'pass', who:'Chris · Tue', quote:'Sales is where that gets fixed',
+                         text:'signed — sharp. hold the pushback before Thursday and we role-play it live.' } } ],
+      foot:{ tone:'brass', text:'two survived him live on Monday — the third came back with a reason, and it’s the only thing left' },
+      push:{ mode:'open', head:'The pushback — two are already earned', tally:'1 to hold again',
+             obs:[ { q:'Sales is a numbers game. Why would a support engineer last?',
+                     a:'Because I’ve already lived the numbers from the other side — I know exactly which three objections kill the deal, and I’m the one who used to fix them after it died.',
+                     st:'SURVIVED ✓ LIVE', cls:'survived' },
+                   { q:'You’ve never carried a quota.',
+                     a:'Right — and I’ve never missed an SLA either. A number I own changes how I work, it doesn’t scare me. Ask me what I did when the queue doubled.',
+                     st:'SURVIVED ✓ LIVE', cls:'survived' },
+                   { q:'Why not stay in support, where you’re already senior?',
+                     why:{ who:'Dropped Mon · Chris', text:'you answered a different question. I asked why not STAY — you told me why sales. again.' },
+                     a:'say it out loud first — then mark it held, and Chris runs it at you again Thursday.',
+                     st:'HOLD IT →', cls:'open-ob', open:true,
+                     parry:'Senior in support means I’ve hit the ceiling on how much of the problem I’m allowed to touch. The fix I keep writing up is a conversation someone else gets to have. I want to be the one having it.' } ] } },
+
+    { id:'walk', bay:'ready', mark:'gs', t:'Walk me through your experience',
+      full:'Walk me through your experience.', sub:'Ready for live · 3 held on paper',
+      shields:['h','h','h'],
+      passes:[ { label:'Pass 2 · Wed',
+                 text:'Two years at Fastway Logistics on the support side. I was the escalation the AEs called when a deal was already dying, so I heard the same three objections every time: the integration story, the migration cost, and who owns it after go-live. I got good at answering all three before anyone asked. That’s the job I’m interviewing for.',
+                 reply:{ stamp:'pass', who:'Chris · Wed', quote:'Two years at Fastway Logistics',
+                         text:'signed on the second pass — lead with Fastway, not the job title.' } } ],
+      foot:{ tone:'gold', text:'on Thursday’s sheet since Friday — you’ve claimed all three; he decides out loud whether you held them' },
+      push:{ mode:'open', head:'The pushback — held on paper, all three', tally:'3 of 3 held',
+             obs:[ { q:'That’s a support résumé. Where’s the selling?', st:'HELD ON PAPER', cls:'held' },
+                   { q:'Two years is short. Why leave now?', st:'HELD ON PAPER', cls:'held' },
+                   { q:'Do it again in ninety seconds.', st:'HELD ON PAPER', cls:'held' } ] } },
+
+    { id:'ninety', bay:'ready', mark:'chris', live:true, t:'Your first ninety days',
+      full:'What would you do in your first ninety days?', sub:'Live · 2 survived · 1 unscored',
+      shields:['b','b','h'],
+      note:{ who:'Chris · assigned', quote:'Thirty days I ride the queue and the calls', text:'they’ll ask it in the final round and they’ll mean it — have the ninety days, not the adjectives.' },
+      passes:[ { label:'Pass 1 · Sat',
+                 text:'Thirty days I ride the queue and the calls until I can name your three most common objections without notes. Sixty, I’m running the discovery half myself and writing down what I got wrong. Ninety, I’m carrying my own number and I already know which deals die at the integration question, because I’ve been the person they escalate that one to for two years.',
+                 reply:{ stamp:'pass', who:'Chris · Sun', quote:'Ninety, I’m carrying my own number',
+                         text:'this is the one I want to hear under pressure. we start Monday’s hour here.' } } ],
+      foot:{ tone:'brass', text:'the hour ended here — two are yours for good, the third is still only a claim. Thursday picks it up on this exact line.' },
+      push:{ mode:'open', head:'The pushback — mid-gauntlet', tally:'2 survived · 1 unscored',
+             obs:[ { q:'Ninety days is a plan. What happens in week one?', st:'SURVIVED ✓ LIVE', cls:'survived' },
+                   { q:'You’ve never run discovery. Why would I let you near my pipeline in sixty days?', st:'SURVIVED ✓ LIVE', cls:'survived' },
+                   { q:'Name the three objections. Right now.',
+                     a:'Integration with the WMS, who owns the data after go-live, and the migration weekend nobody wants to staff. I answered all three for two years — I’ll name them before you finish the question.',
+                     st:'HELD ON PAPER — UNSCORED', cls:'unscored' } ] } },
+
+    { id:'sell', bay:'mantel', mark:'chris', t:'Sell me the product',
+      full:'Sell me the product you supported.', sub:'Through the door · Monday',
+      shields:['b','b'],
+      note:{ who:'Chris · assigned', quote:'I know, because I was the phone', text:'you’ll get this in every AE loop — your support years are the weapon, not the excuse.' },
+      passes:[ { label:'Pass 2 · Thu',
+                 text:'Fastway’s routing platform. Right now you’re running forty trucks on a whiteboard and a phone — I know, because I was the phone. The pitch isn’t the feature list, it’s that your dispatcher stops being the single point of failure the morning she calls in sick. Let me walk you through that morning.',
+                 reply:{ stamp:'pass', who:'Chris · Fri', quote:'your dispatcher stops being the single point of failure',
+                         text:'signed — you sold her morning, not the software. don’t let anyone talk you out of it.' } } ],
+      foot:{ tone:'door', text:'through the door Monday — you said all of it to his face and it held' },
+      push:{ mode:'open', head:'The pushback — both survived him live', tally:'2 of 2 survived',
+             obs:[ { q:'We already have something that works.', st:'SURVIVED ✓ LIVE', cls:'survived' },
+                   { q:'Why would I buy this from someone who’s never sold anything?', st:'SURVIVED ✓ LIVE', cls:'survived' } ] } },
+
+    { id:'leave', bay:'mantel', mark:'gs', t:'Why you left Fastway',
+      full:'Why are you leaving Fastway?', sub:'Through the door · Monday',
+      shields:['b','b'],
+      passes:[ { label:'Pass 2 · Wed',
+                 text:'Nothing went wrong. I fixed the same three objections for two years and then ran out of room to fix anything bigger — the next thing I could change was the conversation before the deal, and Fastway was never going to let support have that conversation.',
+                 reply:{ stamp:'pass', who:'Chris · Wed', quote:'Nothing went wrong',
+                         text:'signed — “nothing went wrong” first, every time. never open with the grievance.' } } ],
+      foot:{ tone:'door', text:'through the door Monday — he pushed twice and it held both times' },
+      push:{ mode:'open', head:'The pushback — both survived him live', tally:'2 of 2 survived',
+             obs:[ { q:'Two years and you’re bored. Why won’t you be bored here in two?', st:'SURVIVED ✓ LIVE', cls:'survived' },
+                   { q:'Did you ask them for the move first?', st:'SURVIVED ✓ LIVE', cls:'survived' } ] } }
+  ]
+};
+
+const BAYS = [ ['yours','Yours','YOURS'], ['chris','With Chris','CHRIS'], ['push','The pushback','PUSH'], ['ready','Ready','READY'] ];
+const SHIELD = { b:'brass', h:'held', s:'stale', e:'' };
+
+let S = structuredClone(seed);
+let openPass = {};                 // per-question folio cursor
+let undoState = null;
+let mobileBay = null;
+let mobileLayout = innerWidth <= 720;
+let whisperIndex = 0;
+let whisperPaused = false;
+
+const $ = id => document.getElementById(id);
+const esc = s => s;               // fixture copy is authored, not user input
+const words = t => t.trim() ? t.trim().split(/\s+/).length : 0;
+
+/* ---------------- render: the route ---------------- */
+function shieldHTML(arr){
+  if (!arr || !arr.length) return '';
+  return '<span class="shields">' + arr.map(k => `<i class="${SHIELD[k]}"></i>`).join('') + '</span>';
+}
+function updateBayCounts(){
+  document.querySelectorAll('.bay').forEach(bay => {
+    const count = bay.querySelectorAll('.stone').length;
+    bay.classList.toggle('empty', count === 0);
+    const out = bay.querySelector('.bay-count');
+    if (out) out.textContent = count;
+  });
+}
+function syncScrollFades(scroller){
+  const maxScroll = scroller.scrollHeight - scroller.clientHeight;
+  scroller.classList.toggle('can-scroll-up', maxScroll > 1 && scroller.scrollTop > 1);
+  scroller.classList.toggle('can-scroll-down', maxScroll > 1 && scroller.scrollTop < maxScroll - 1);
+}
+function watchScrollFades(scroller){
+  scroller.addEventListener('scroll', () => syncScrollFades(scroller), { passive:true });
+  syncScrollFades(scroller);
+  requestAnimationFrame(() => syncScrollFades(scroller));
+}
+function renderRoute(){
+  const route = $('route');
+  route.innerHTML = BAYS.map(([k, label, shortLabel]) => {
+    const stones = S.qs.filter(q => q.bay === k).map(q => {
+      // the lean is derived, never tacked on: everything at READY leans at the door
+      const cls = ['stone', q.id === S.sel ? 'sel' : '', q.blank ? 'blank' : '',
+                   q.live ? 'live' : '', q.bay === 'ready' ? 'leaning' : ''].filter(Boolean).join(' ');
+      return `<button class="${cls}" data-stone="${q.id}" type="button" aria-pressed="${q.id === S.sel}">
+        <span class="t">${q.t}</span>
+        <span class="m"><i class="mark ${q.mark}" aria-hidden="true"></i>${shieldHTML(q.shields)}</span>
+      </button>`;
+    }).join('');
+    const selected = S.qs.some(q => q.bay === k && q.id === S.sel);
+    const header = mobileLayout
+      ? `<button class="bay-k" id="bay-${k}-label" data-bay="${k}" type="button" aria-controls="stones-${k}" aria-expanded="${mobileBay === k}" aria-label="${label}">
+          <span class="bay-label">${shortLabel}</span><span class="bay-count" aria-label="items"></span>
+        </button>`
+      : `<h2 class="bay-k" id="bay-${k}-label"><span class="bay-label">${label}</span><span class="bay-count" aria-label="items"></span></h2>`;
+    return `<section class="bay b-${k} ${selected ? 'has-selected' : ''} ${mobileBay === k ? 'mobile-open' : ''}" data-bay-shell="${k}" aria-labelledby="bay-${k}-label">
+      ${header}<div class="stones" id="stones-${k}">${stones}</div></section>`;
+  }).join('') +
+  `<div class="doorbay"><span class="door-glyph" id="door-glyph" aria-hidden="true"></span><span class="dn">the door<br>Thursday 2:30</span></div>`;
+
+  const spines = S.qs.filter(q => q.bay === 'mantel');
+  const spineButtons = spines.map(q => `<button class="spine ${q.id === S.sel ? 'sel' : ''}" data-stone="${q.id}" type="button">${q.t}</button>`).join('');
+  const mantelOpen = mobileLayout && mobileBay === 'mantel';
+  const mantel = mobileLayout
+    ? `<aside class="mantel ${mantelOpen ? 'mobile-open' : ''}" id="mantel" aria-labelledby="mantel-label">
+        <button class="mantel-k" id="mantel-label" data-mantel type="button" aria-controls="spines-mantel" aria-expanded="${mantelOpen}" aria-label="Off book">
+          <span class="mantel-label">OFF BOOK</span><span class="count" aria-label="items">${spines.length}</span>
+        </button><div class="spines" id="spines-mantel">${spineButtons}</div></aside>`
+    : `<aside class="mantel" id="mantel" aria-label="Off book, ${spines.length}">
+        ${spineButtons}<span class="count">off book - ${spines.length}</span></aside>`;
+  route.insertAdjacentHTML('beforeend', mantel);
+  updateBayCounts();
+  const routewrap = route.closest('.routewrap');
+  routewrap.style.removeProperty('--mobile-sheet-height');
+  route.querySelectorAll('.stones').forEach(stack => {
+    const stones = [...stack.querySelectorAll('.stone')];
+    const mobileOpen = mobileLayout && stack.closest('.bay')?.classList.contains('mobile-open');
+    const isScrollable = mobileOpen || stones.length > 5;
+    stack.classList.toggle('is-scrollable', isScrollable);
+    if (isScrollable){
+      if (mobileOpen){
+        const mobileCap = Math.max(132, Math.min(280, innerHeight - 320));
+        stack.style.setProperty('--stack-cap', `${Math.ceil(mobileCap)}px`);
+        routewrap.style.setProperty('--mobile-sheet-height', `${Math.ceil(stack.getBoundingClientRect().height)}px`);
+        stack.scrollTop = 0;
+      } else {
+        const gap = parseFloat(getComputedStyle(stack).rowGap) || 0;
+        const firstFiveHeight = stones.slice(0, 5).reduce((height, stone) => height + stone.getBoundingClientRect().height, 0) + gap * 4;
+        stack.style.setProperty('--stack-cap', `${Math.ceil(firstFiveHeight)}px`);
+        stack.scrollTop = 0;   /* chapman-ruled 2026-08-14: a dense bay rests at its TOP — reading order runs down, and the bottom fade then honestly says "more below" */
+      }
+    } else {
+      stack.style.removeProperty('--stack-cap');
+      stack.scrollTop = 0;
+    }
+    watchScrollFades(stack);
+  });
+  const openSpines = route.querySelector('.mantel.mobile-open .spines');
+  if (openSpines){
+    const mobileCap = Math.max(132, Math.min(280, innerHeight - 320));
+    openSpines.style.setProperty('--stack-cap', `${Math.ceil(mobileCap)}px`);
+    routewrap.style.setProperty('--mobile-sheet-height', `${Math.ceil(openSpines.getBoundingClientRect().height)}px`);
+    openSpines.scrollTop = 0;
+    watchScrollFades(openSpines);
+  } else if (!mobileLayout) {
+    watchScrollFades($('mantel'));
+  }
+  route.querySelectorAll('[data-stone]').forEach(stone => {
+    stone.addEventListener('click', () => select(stone.dataset.stone, true));
+  });
+}
+
+/* ---------------- render: the reading stage ---------------- */
+function stateOf(q){
+  if (q.bay === 'mantel') return 'offbook';
+  if (q.bay === 'ready') return 'ready';
+  if (q.bay === 'push') return 'pushback';
+  if (q.bay === 'chris') return 'with-chris';
+  if (q.draft) return 'refine';
+  return 'drafting';
+}
+function anchorize(text, quote, id, interactive=true){
+  if (!quote || !text.includes(quote)) return text;
+  const attrs = interactive ? ` role="button" tabindex="0"` : '';
+  return text.replace(quote, `<span class="anchor-span${interactive ? '' : ' is-static'}" data-anchor="${id}"${attrs}>${quote}</span>`);
+}
+function noteHTML(note, anchorId){
+  if (!note) return '';
+  const stamp = note.stamp || 'note';
+  const label = stamp === 'pass' ? 'PASS ✓' : stamp === 'refine' ? 'REFINE' : 'CHRIS';
+  const chip = note.quote ? `<button class="quote-chip" data-anchor="${anchorId}" type="button">“${note.quote}”</button>` : '';
+  return `<div class="reply"><div class="rh"><span class="stamp s-${stamp === 'pass' ? 'pass' : 'refine'}">${label}</span><span>${note.who || 'Chris'}</span></div>${chip}<div class="rt">“${note.text}”</div></div>`;
+}
+function passBlock(q, p, i, withReply=true){
+  const anchorId = `${q.id}-pass-${i}`;
+  const quote = p.reply?.quote;
+  const dot = quote && p.text.includes(quote) ? `<i class="gutter-dot" data-dot="${anchorId}" aria-hidden="true"></i>` : '';
+  return `<div class="pass-row"><span class="gutter">${dot}</span><div class="passbody ${p.sent ? 'sent' : ''}"><span class="pl">${p.label}</span>${anchorize(p.text, quote, anchorId)}</div></div>${withReply && p.reply ? noteHTML(p.reply, anchorId) : ''}`;
+}
+function contextDetails(label, body, open=false){
+  return `<details class="context-section" ${open ? 'open' : ''}><summary>${label}</summary><div class="context-body">${body}</div></details>`;
+}
+function objectionsContext(q, skipOpen=false){
+  return q.push.obs.filter(o => !(skipOpen && o.open)).map(o =>
+    `<div class="context-folio"><b>${o.st}</b>${o.q}</div>`).join('') || '<span>Nothing else is waiting.</span>';
+}
+function passHistoryContext(q){
+  if (!q.passes?.length) return '<span>No passes yet.</span>';
+  return q.passes.map((p, i) => {
+    const id = `${q.id}-pass-${i}`;
+    const anchored = p.reply?.quote && p.text.includes(p.reply.quote);
+    const current = (openPass[q.id] ?? q.passes.length - 1) === i;
+    return `<button class="context-folio ${anchored ? 'has-anchor' : ''} ${current ? 'cur' : ''}" data-context-pass="${i}" type="button" aria-pressed="${current}">${anchored ? `<i class="rail-dot" data-rail-dot="${id}" aria-hidden="true"></i>` : ''}<b>${p.label}</b>${anchorize(p.text, p.reply?.quote, id, false)}</button>`;
+  }).join('');
+}
+function finalAnswer(q, i=openPass[q.id]){ return (Number.isInteger(i) ? q.passes?.[i]?.text : q.passes?.at(-1)?.text) || q.draft?.text || 'No answer filed yet.'; }
+function heldLines(q){
+  return q.push.obs.map(o => `<div class="held-line"><span>${o.q}</span><span class="state">${o.st}</span></div>`).join('');
+}
+function renderStage(){
+  const q = S.qs.find(x => x.id === S.sel);
+  const wrap = $('stagewrap');
+  const page = document.querySelector('.page');
+  page.classList.toggle('is-work', Boolean(q));
+  if (!q){
+    $('stage').innerHTML = `<div class="orient-prompt">Pick up the stone that already has your attention.</div>`;
+    return;
+  }
+
+  const state = stateOf(q);
+  const openIdx = q.push.obs.findIndex(o => o.open);
+  const openOb = openIdx >= 0 ? q.push.obs[openIdx] : null;
+  const passIndex = Math.min(openPass[q.id] ?? Math.max(0, (q.passes?.length || 1) - 1), Math.max(0, (q.passes?.length || 1) - 1));
+  const viewedPass = q.passes?.[passIndex];
+  let main = `<header class="work-head"><div class="work-head-row"><div><div class="st-title">${q.full}</div><div class="st-sub">${q.sub}</div></div><button class="close-work" id="close-work" type="button">stand up ↑</button></div></header>`;
+  const context = [];
+
+  if (state === 'refine'){
+    const sourceIndex = passIndex;
+    const source = q.passes?.[sourceIndex];
+    if (source?.reply) main += noteHTML(source.reply, `${q.id}-pass-${sourceIndex}`);
+    main += `<label class="field-label" for="draft-field">${q.draft.label}</label><textarea class="draft-field" id="draft-field">${q.draft.text}</textarea>`;
+    main += `<div class="field-foot"><span class="hint">Make the noticed thing impossible to miss.</span></div><button class="work-action" id="send-btn" type="button">${q.send}</button>`;
+    context.push(contextDetails('Pass history', passHistoryContext(q), true));
+    context.push(contextDetails('Waiting objections', objectionsContext(q)));
+  } else if (state === 'pushback'){
+    if (viewedPass) main += `<div data-reading-pass="${passIndex}">${passBlock(q, viewedPass, passIndex, true)}</div>`;
+    main += `<div class="push-head"><span>${q.push.head}</span><span class="tally">${q.push.tally || ''}</span></div>`;
+    if (openOb){
+      main += `<div class="read-only-line"><div class="ob-q">${openOb.q}</div></div>`;
+      if (openOb.why) main += noteHTML({ stamp:'refine', who:openOb.why.who, text:openOb.why.text }, `${q.id}-ob-${openIdx}`);
+      main += `<label class="field-label" for="parry-field">Your 60-word parry</label><textarea class="parry-field" id="parry-field" data-ob="${openIdx}">${openOb.parry || openOb.a || ''}</textarea>
+        <div class="field-foot"><span class="hint">Say it in one breath.</span><span class="wc" id="parry-count">${words(openOb.parry || openOb.a || '')} / 60 words</span></div>
+        <button class="work-action" id="hold-btn" data-ob="${openIdx}" type="button">HOLD IT →</button>`;
+    }
+    context.push(contextDetails('Answer', `<div class="context-answer">${finalAnswer(q)}</div>`));
+    context.push(contextDetails('Pass history', passHistoryContext(q), Number.isInteger(openPass[q.id])));
+    context.push(contextDetails('Other objections', objectionsContext(q, true), true));
+  } else if (state === 'with-chris'){
+    main += `<div class="thread">${q.passes.map((p, i) => passBlock(q, p, i, true)).join('')}${q.foot ? `<div class="footline plum"><i aria-hidden="true"></i>${q.foot.text}</div>` : ''}</div>`;
+    context.push(contextDetails('Held objections', objectionsContext(q), true));
+  } else if (state === 'ready' || state === 'offbook'){
+    const note = q.note?.quote ? q.note : viewedPass?.reply;
+    const anchorId = q.note?.quote ? `${q.id}-note` : `${q.id}-pass-${passIndex}`;
+    if (note) main += noteHTML(note, anchorId);
+    const answer = finalAnswer(q, passIndex), quote = note?.quote;
+    main += `<span class="field-label">Final answer</span><div class="pass-row"><span class="gutter">${quote && answer.includes(quote) ? `<i class="gutter-dot" data-dot="${anchorId}" aria-hidden="true"></i>` : ''}</span><div class="passbody">${anchorize(answer, quote, anchorId)}</div></div><div class="held-lines">${heldLines(q)}</div>`;
+    if (state === 'ready') main += `<button class="work-action brass" id="door-btn" type="button">TAKE IT THROUGH →</button>`;
+    context.push(contextDetails('Pass history', passHistoryContext(q), true));
+    context.push(contextDetails('Full objection file', objectionsContext(q)));
+  } else {
+    main += `<div class="work-prompt">${q.note?.text || 'Start with the true sentence. You can shape it after it exists.'}</div><label class="field-label" for="blank-field">Pass 1</label><textarea class="draft-field" id="blank-field" placeholder="Write the first honest version here."></textarea>`;
+    context.push(contextDetails('Waiting objections', objectionsContext(q), true));
+  }
+
+  $('stage').innerHTML = `<div class="workspace"><section class="work-column" tabindex="-1">${main}</section><aside class="context-rail"><div class="context-k">Context</div>${context.join('')}</aside></div>`;
+  requestAnimationFrame(positionGutterDots);
+}
+
+function renderWhisper(){
+  $('whisper').innerHTML = S.pointer.text;
+}
+function render(){ renderRoute(); renderStage(); renderWhisper(); requestAnimationFrame(() => { aimSight(); positionGutterDots(); }); }
+
+/* ---------------- the sightline: whisper phrase -> its bay header -------- */
+function aimSight(){
+  const svg = $('sight'), l = $('sight-l'), d = $('sight-d');
+  const tgt = document.querySelector('#whisper .tgt');
+  const q = S.qs.find(x => x.id === S.pointer.id);
+  const bayKey = q?.bay === 'mantel' ? null : q?.bay;
+  const header = bayKey ? document.querySelector(`[data-bay-shell="${bayKey}"] .bay-k`) : document.querySelector('.mantel .count');
+  if (!tgt || !header || innerWidth <= 720 || S.sel){
+    l.setAttribute('x1', 0); l.setAttribute('y1', 0); l.setAttribute('x2', 0); l.setAttribute('y2', 0);
+    d.setAttribute('r', 0); return;
+  }
+  const base = svg.getBoundingClientRect();
+  const a = tgt.getBoundingClientRect(), b = header.getBoundingClientRect();
+  const x1 = a.left + a.width / 2 - base.left, y1 = a.bottom - base.top + 3;
+  const x2 = b.left + b.width / 2 - base.left, y2 = b.bottom - base.top + 3;
+  l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+  l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+  d.setAttribute('cx', x2); d.setAttribute('cy', y2); d.setAttribute('r', 2.5);
+}
+function positionGutterDots(){
+  document.querySelectorAll('[data-dot]').forEach(dot => {
+    const anchor = document.querySelector(`.anchor-span[data-anchor="${dot.dataset.dot}"]`);
+    const row = dot.closest('.pass-row');
+    if (!anchor || !row) return;
+    dot.style.top = Math.max(8, anchor.getBoundingClientRect().top - row.getBoundingClientRect().top + 8) + 'px';
+  });
+  document.querySelectorAll('[data-rail-dot]').forEach(dot => {
+    const row = dot.closest('.context-folio');
+    // the rail's own copy of the quote — a document-wide lookup finds the stage's
+    // identically-keyed span first and lands the dot on the wrong line
+    const anchor = row?.querySelector(`.anchor-span[data-anchor="${dot.dataset.railDot}"]`);
+    if (!anchor || !row) return;
+    dot.style.top = Math.max(10, anchor.getBoundingClientRect().top - row.getBoundingClientRect().top + 6) + 'px';
+  });
+}
+function jumpAnchor(id, from){
+  const selector = from === 'chip' ? `.anchor-span:not(.is-static)[data-anchor="${id}"]` : `.quote-chip[data-anchor="${id}"]`;
+  let target = document.querySelector(selector);
+  if (!target && from === 'chip'){
+    target = document.querySelector(`.context-folio .anchor-span.is-static[data-anchor="${id}"]`);
+    if (target) target.tabIndex = -1;
+  }
+  if (!target) return;
+  const details = target.closest('details');
+  if (details && !details.open){
+    details.parentElement.querySelectorAll('details[open]').forEach(other => { if (other !== details) other.open = false; });
+    details.open = true;
+  }
+  requestAnimationFrame(() => {
+    target.scrollIntoView({ behavior:calm ? 'auto' : 'smooth', block:'center' });
+    target.focus({ preventScroll:true });
+    target.classList.remove('anchor-flash'); void target.offsetWidth; target.classList.add('anchor-flash');
+    positionGutterDots();
+  });
+}
+addEventListener('resize', () => {
+  const nextMobileLayout = innerWidth <= 720;
+  if (nextMobileLayout !== mobileLayout || (nextMobileLayout && mobileBay)){
+    mobileLayout = nextMobileLayout;
+    if (!mobileLayout) mobileBay = null;
+    renderRoute();
+  }
+  aimSight(); positionGutterDots();
+});
+
+/* ---------------- FLIP: a stone that changes bay actually travels ------- */
+function stoneRects(){
+  const m = {};
+  document.querySelectorAll('.stone').forEach(el => m[el.dataset.stone] = el.getBoundingClientRect());
+  return m;
+}
+function flipFrom(before, ids){
+  if (calm) return;
+  ids.forEach(id => {
+    const el = document.querySelector(`.stone[data-stone="${id}"]`);
+    const was = before[id];
+    if (!el || !was) return;
+    const now = el.getBoundingClientRect();
+    const dx = was.left - now.left, dy = was.top - now.top;
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+    // WAAPI, not inline styles: the travel must leave NO residue in the markup,
+    // because undo restores by re-rendering and has to land byte-identical.
+    const lean = el.classList.contains('leaning') ? ' translateX(9px) rotate(0.6deg)' : '';
+    el.animate(
+      [ { transform: `translate(${dx}px, ${dy}px)` + lean }, { transform: lean || 'none' } ],
+      { duration: 380, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+    );
+  });
+}
+function travelToken(text, from, to, via){
+  if (calm || !from || !to) return Promise.resolve();
+  const el = document.createElement('div');
+  el.className = 'travel-token'; el.textContent = text;
+  Object.assign(el.style, { left:from.left + 'px', top:from.top + 'px', width:Math.max(92, Math.min(170, from.width)) + 'px' });
+  document.body.appendChild(el);
+  const endX = to.left - from.left, endY = to.top - from.top;
+  const frames = via ? [
+    { transform:'translate(0,0) scale(1)', opacity:1 },
+    { transform:`translate(${via.left - from.left}px,${via.top - from.top}px) scale(.72)`, opacity:.92, offset:.58 },
+    { transform:`translate(${endX}px,${endY}px) scale(.48)`, opacity:.18 }
+  ] : [
+    { transform:'translate(0,0) scale(1)', opacity:1 },
+    { transform:`translate(${endX}px,${endY}px) scale(.56)`, opacity:.16 }
+  ];
+  return el.animate(frames, { duration:380, easing:'cubic-bezier(0.16, 1, 0.3, 1)', fill:'forwards' }).finished
+    .catch(() => {})
+    .finally(() => el.remove());
+}
+
+/* ---------------- the undo chip: one ceremony deep, byte-exact ---------- */
+const undoChip = $('undo-chip');
+function armUndo(label, snapshot){
+  undoState = snapshot;
+  undoChip.textContent = '↩ undo · ' + label;
+  undoChip.disabled = false;
+  undoChip.classList.remove('on'); void undoChip.offsetWidth; undoChip.classList.add('on');
+}
+/* the label is part of the state: leaving "· the held parry" on a disarmed chip is
+   the one thing that kept undo from landing byte-identical */
+function disarmUndo(){ undoState = null; undoChip.textContent = '↩ undo'; undoChip.disabled = true; undoChip.classList.remove('on'); }
+undoChip.addEventListener('click', () => {
+  if (!undoState) return;
+  const before = stoneRects();
+  const moved = undoState.moved;
+  S = structuredClone(undoState.S);
+  openPass = structuredClone(undoState.openPass);
+  disarmUndo();
+  render();
+  flipFrom(before, moved);
+  requestAnimationFrame(() => document.querySelector('.work-column')?.focus({ preventScroll:true }));
+});
+function snapshot(moved){ return { S: structuredClone(S), openPass: structuredClone(openPass), moved }; }
+
+/* ---------------- B1: pick a stone, the stage unfurls from it ----------- */
+function select(id, fromClick){
+  if (S.sel === id){ closeStone(); return; }
+  const was = S.sel;
+  S.lastSel = id;
+  S.sel = id;
+  mobileBay = null;
+  const stone = document.querySelector(`[data-stone="${id}"]`);
+  const wrap = $('stagewrap'), stage = $('stage');
+  if (stone){
+    const r = stone.getBoundingClientRect(), pr = wrap.getBoundingClientRect();
+    stage.style.setProperty('--ox', ((r.left + r.width / 2 - pr.left) / pr.width * 100) + '%');
+  }
+  const wasOpen = wrap.classList.contains('open');
+  renderRoute(); renderStage(); aimSight();
+  requestAnimationFrame(() => document.querySelector('.work-column')?.focus({ preventScroll:true }));
+  if (calm) return;
+  stage.classList.remove('play', 'glide'); void stage.offsetWidth;
+  // first open unfurls from the stone; a later pick glides sideways
+  if (!wasOpen || !was){ stage.classList.add('play'); }
+  else {
+    const dir = S.qs.findIndex(q => q.id === id) > S.qs.findIndex(q => q.id === was) ? 14 : -14;
+    stage.style.setProperty('--gx', dir + 'px');
+    stage.classList.add('glide');
+  }
+}
+function closeStone(){
+  if (!S.sel) return;
+  const closing = S.sel;
+  S.lastSel = closing;
+  S.sel = null;
+  mobileBay = null;
+  render();
+  requestAnimationFrame(() => document.querySelector(`[data-stone="${closing}"]`)?.focus({ preventScroll:true }));
+}
+
+/* ---------------- B2: hold the parry -------------------------------------
+   The claim lands, the stone warms, and if it was the last one the stone
+   TRAVELS to READY and leans toward the door. Gold, never brass: nothing
+   the student does on paper can reach Thursday's verdict. */
+function holdIt(obIdx){
+  const q = S.qs.find(x => x.id === S.sel);
+  const o = q.push.obs[obIdx];
+  if (!o || !o.open) return;
+  const snap = snapshot([q.id]);
+  const before = stoneRects();
+  const sourceRect = document.querySelector(`[data-bay-shell="${q.bay}"] .bay-k`)?.getBoundingClientRect();
+
+  o.open = false; o.cls = 'held'; o.st = 'HELD ON PAPER';
+  o.a = o.parry; delete o.parry;
+  q.shields = q.shields.map(s => s === 'e' ? 'h' : s);
+  const lastHold = !q.push.obs.some(x => x.open);
+  q.push.tally = 'all held';
+
+  if (lastHold && q.bay === 'push'){
+    q.bay = 'ready';
+    q.sub = 'Ready for live · all held on paper';
+    q.foot = { tone:'gold', text:'you’ve claimed every one of them — Thursday is where it stops being a claim' };
+    S.pointer = { id:'company', text:'<b class="tgt">Why work for our company</b> is the only thing still yours — pass 4 is written' };
+  }
+  render();
+  flipFrom(before, [q.id]);
+  const targetRect = document.querySelector(`[data-bay-shell="${q.bay}"] .bay-k`)?.getBoundingClientRect();
+  travelToken(q.t, sourceRect, targetRect);
+  const el = document.querySelector(`.stone[data-stone="${q.id}"]`);
+  if (el && !calm){
+    el.classList.add('warmed');
+    el.addEventListener('animationend', () => el.classList.remove('warmed'), { once:true });
+  }
+  armUndo('the held parry', snap);
+  requestAnimationFrame(() => $('door-btn')?.focus({ preventScroll:true }));
+}
+
+/* ---------------- B3: send the pass --------------------------------------
+   The draft folds into a narrow gold folio, the folio travels up to the
+   route, and the stone is handed into WITH CHRIS. The ball changes hands
+   and the color says so before the words do. */
+function sendPass(){
+  const q = S.qs.find(x => x.id === S.sel);
+  if (!q || !q.draft) return;
+  const field = $('draft-field');
+  if (field) q.draft.text = field.value.trim();
+  const snap = snapshot([q.id]);
+  const draftEl = $('draft-field');
+  const sourceRect = document.querySelector(`[data-bay-shell="${q.bay}"] .bay-k`)?.getBoundingClientRect();
+  const targetEl = document.querySelector('[data-bay-shell="chris"] .bay-k');
+
+  const commit = () => {
+    const before = stoneRects();
+    q.passes.push({ label:'Pass 4 · sent just now', sent:true, text:q.draft.text });
+    delete q.draft; delete q.send;
+    openPass[q.id] = q.passes.length - 1;
+    q.bay = 'chris';
+    q.sub = 'With Chris · pass 4 sent just now';
+    q.foot = { tone:'plum', text:'you moved it yourself — he owns the next move now' };
+    q.push.head = 'The pushback — waiting behind his PASS';
+    S.pointer = { id:'tech', text:'nothing is yours right now — <b class="tgt">Why tech sales</b> owes one parry before Thursday' };
+    render();
+    flipFrom(before, [q.id]);
+    const targetRect = document.querySelector('[data-bay-shell="chris"] .bay-k')?.getBoundingClientRect();
+    travelToken(q.t, sourceRect, targetRect);
+    armUndo('the sent pass', snap);
+    requestAnimationFrame(() => document.querySelector('.work-column')?.focus({ preventScroll:true }));
+  };
+
+  if (calm || !draftEl || !targetEl){ commit(); return; }
+
+  // the folio folds from the draft into WITH CHRIS before the route count changes
+  const a = draftEl.getBoundingClientRect(), b = targetEl.getBoundingClientRect();
+  const fly = document.createElement('div');
+  fly.className = 'flyer';
+  Object.assign(fly.style, { left:a.left + 'px', top:a.top + 'px', width:a.width + 'px', height:a.height + 'px', opacity:'0.85' });
+  document.body.appendChild(fly);
+  draftEl.style.transition = 'opacity 160ms var(--expo)'; draftEl.style.opacity = '0';
+  requestAnimationFrame(() => {
+    fly.style.transition = 'all 340ms var(--expo)';
+    Object.assign(fly.style, { left:(b.left + b.width / 2 - 3) + 'px', top:b.top + 'px', width:'6px', height:b.height + 'px', opacity:'0.25' });
+  });
+  setTimeout(() => { fly.remove(); commit(); }, 360);
+}
+
+/* ---------------- through the door: READY -> off book ------------------- */
+function throughDoor(){
+  const q = S.qs.find(x => x.id === S.sel);
+  if (!q || q.bay !== 'ready') return;
+  const snap = snapshot([q.id]);
+  const source = document.querySelector('[data-bay-shell="ready"] .bay-k')?.getBoundingClientRect();
+  const door = $('door-glyph')?.getBoundingClientRect();
+  const shelf = $('mantel')?.getBoundingClientRect();
+  const commit = () => {
+    q.bay = 'mantel'; q.live = false;
+    q.sub = 'Off book · held past the door';
+    q.foot = { tone:'door', text:'off book — reopen it to read, not to re-litigate' };
+    S.pointer = { id:'manager', text:'<b class="tgt">Your last manager calls me</b> is still waiting for a first honest line' };
+    render();
+    armUndo('through the door', snap);
+    requestAnimationFrame(() => document.querySelector('.work-column')?.focus({ preventScroll:true }));
+  };
+  if (calm){ commit(); return; }
+  travelToken(q.t, source, shelf, door).then(commit);
+}
+
+/* ---------------- one delegated listener; the DOM is disposable --------- */
+document.addEventListener('click', e => {
+  if (e.target.closest('#whisper-pause')){
+    whisperPaused = !whisperPaused;
+    const control = $('whisper-pause');
+    control.textContent = whisperPaused ? 'resume' : 'pause';
+    control.setAttribute('aria-pressed', String(whisperPaused));
+    return;
+  }
+  const quote = e.target.closest('.quote-chip');
+  if (quote){ jumpAnchor(quote.dataset.anchor, 'chip'); return; }
+  const anchor = e.target.closest('.anchor-span:not(.is-static)');
+  if (anchor){ jumpAnchor(anchor.dataset.anchor, 'span'); return; }
+  const contextPass = e.target.closest('[data-context-pass]');
+  if (contextPass){
+    const q = S.qs.find(x => x.id === S.sel), passIndex = +contextPass.dataset.contextPass;
+    if (!q?.passes?.[passIndex]) return;
+    openPass[q.id] = passIndex;
+    renderStage();
+    requestAnimationFrame(() => document.querySelector(`[data-context-pass="${passIndex}"]`)?.focus({ preventScroll:true }));
+    return;
+  }
+  if (e.target.closest('#close-work')){ closeStone(); return; }
+  const bay = e.target.closest('[data-bay]');
+  if (bay && innerWidth <= 720){
+    mobileBay = mobileBay === bay.dataset.bay ? null : bay.dataset.bay;
+    renderRoute(); aimSight(); return;
+  }
+  const mantel = e.target.closest('[data-mantel]');
+  if (mantel && innerWidth <= 720){
+    const opening = mobileBay !== 'mantel';
+    mobileBay = opening ? 'mantel' : null;
+    renderRoute(); aimSight();
+    const target = opening ? document.querySelector('.mantel.mobile-open .spine') : document.querySelector('[data-mantel]');
+    target?.focus({ preventScroll:true });
+    return;
+  }
+  const hold = e.target.closest('#hold-btn');
+  if (hold){ holdIt(+hold.dataset.ob); return; }
+  if (e.target.closest('#send-btn')){ sendPass(); return; }
+  if (e.target.closest('#door-btn')){ throughDoor(); }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'draft-field'){
+    const q = S.qs.find(x => x.id === S.sel); if (q?.draft) q.draft.text = e.target.value;
+  }
+  if (e.target.id === 'parry-field'){
+    const parts = e.target.value.trim().split(/\s+/).filter(Boolean);
+    if (parts.length > 60){ e.target.value = parts.slice(0,60).join(' '); }
+    const q = S.qs.find(x => x.id === S.sel), o = q?.push.obs[+e.target.dataset.ob];
+    if (o) o.parry = e.target.value;
+    const count = $('parry-count'); if (count) count.textContent = `${words(e.target.value)} / 60 words`;
+  }
+});
+document.addEventListener('toggle', e => {
+  const details = e.target.closest?.('.context-section');
+  if (!details?.open) return;
+  details.parentElement.querySelectorAll('.context-section[open]').forEach(other => { if (other !== details) other.open = false; });
+  requestAnimationFrame(positionGutterDots);
+}, true);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && S.sel){ closeStone(); return; }
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const anchor = e.target.closest?.('.anchor-span:not(.is-static)');
+  if (anchor){ e.preventDefault(); jumpAnchor(anchor.dataset.anchor, 'span'); }
+});
+
+/* ---------------- whisper rotation: orientation keeps one next move alive */
+function whisperChoices(){
+  const choices = [];
+  const tech = S.qs.find(q => q.id === 'tech');
+  const company = S.qs.find(q => q.id === 'company');
+  const manager = S.qs.find(q => q.id === 'manager');
+  if (tech?.push.obs.some(o => o.open)) choices.push({ id:'tech', text:'Chris dropped one on <b class="tgt">Why tech sales</b> Monday &mdash; it’s back open, and it’s 60 words' });
+  if (company?.bay === 'yours') choices.push({ id:'company', text:'<b class="tgt">Why work for our company</b> has a pass written and waiting to leave your hands' });
+  if (manager?.bay === 'yours') choices.push({ id:'manager', text:'<b class="tgt">Your last manager calls me</b> still needs its first honest sentence' });
+  return choices.length ? choices : [{ id:S.lastSel, text:'Everything on the route is held. Pick one stone and read it once.' }];
+}
+function rotateWhisper(){
+  if (calm || S.sel || document.hidden || whisperPaused) return;
+  const choices = whisperChoices();
+  whisperIndex = (whisperIndex + 1) % choices.length;
+  S.pointer = choices[whisperIndex]; renderWhisper(); aimSight();
+}
+
+/* ---------------- arrival: ORIENT first; sitting down is always chosen -- */
+render();
+if (!calm) setInterval(rotateWhisper, 7200);
+</script>
+</body>
+</html>

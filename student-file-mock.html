@@ -32,6 +32,7 @@
   --obs:      0.70 0.112 302;  /* PLUM  — Chris WATCHING. vitals accents, quiet whisper, door edge, return chrome. */
   --brass:    0.78 0.13 70;    /* BRASS — Marcus's own world. Door band + World View only. */
   --brass-bri:0.84 0.14 68;
+  --gold:     0.80 0.14 78;    /* the student's own metal — claimed, not yet survived (imported from the Bank for the two-tier held) */
   --brass-ink:0.18 0.04 70;
 
   /* hairlines: pure-neutral scrims, the LIT idiom */
@@ -361,17 +362,10 @@ a{ color:inherit; text-decoration:none; }
 .row.signed .act{ color: oklch(var(--brass-bri) / 0.85); }
 .row.signed .mark{ background: oklch(var(--brass-bri)); animation:none; }
 
-/* ---- HIS OTHER TWO ANSWERS: send it back, or sign with a condition.
-   Both live in the same act cluster. Sending back is his WATCHING
-   voice handing the pass over, so it is plum, not cyan; the go-ahead
-   is brass (his movement is unblocked) with a plum condition on it. ---- */
-.act button{
-  font:inherit; letter-spacing:inherit; color:inherit;
-  background:none; border:0; padding:0; cursor:pointer;
-}
-.act .alt{ color: oklch(var(--obs) / 0.95); }
-.act .alt:hover{ color: oklch(var(--obs)); }
-.row.signed .alt, .row.sent-back .alt{ display:none; }   /* one ceremony at a time, said in the row */
+/* ---- THE TWO OUTCOMES, said in the row after the stamp. REFINE is his
+   WATCHING voice handing the pass over, so it is plum, not cyan; PASS is
+   brass (his movement is unblocked) and opens the pushback. The stamps
+   themselves live in the reply box now — see 1a-2. ---- */
 .note-out{
   font-family:var(--hand); font-style:italic; font-size:16px; line-height:1.5;
   color: oklch(var(--obs) / 0.95); margin-top:10px; max-width:72ch;
@@ -401,6 +395,67 @@ a{ color:inherit; text-decoration:none; }
 .row.sent-back .mark{ background: oklch(var(--obs)); animation:none; }
 
 /* ============================================================
+   1a-2. THE CURSOR ROW — the one Chris is ON stands open. Read
+   the newest pass, type the reply, stamp: one gesture, one box.
+   The glance ladder does the opening; nothing new was invented.
+   ============================================================ */
+.row.is-live .glance{ grid-template-rows: 1fr; }
+.row.is-live .teaser{ opacity:0; height:0; margin:0; }
+/* the hand-off: one row settles, the next STANDS UP — its cyan
+   edge wipes down from the top as the cursor takes it */
+.row.taking::before{ transform-origin: top; animation: cursor-take 380ms var(--expo) both; }
+@keyframes cursor-take{ from{ transform:scaleY(0); opacity:0; } to{ transform:scaleY(1); opacity:1; } }
+
+.queue-note{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.04em; line-height:1.7;
+  color: oklch(var(--faint) / 0.85);
+  padding: 0 18px var(--s2) 26px; margin-top:-8px;
+}
+.queue-note b{ font-weight:400; color: oklch(var(--obs) / 0.9); }
+
+.reply{ margin-top:16px; max-width:70ch; }
+.reply-lab{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
+  color: oklch(var(--act) / 0.85);
+}
+.reply textarea{
+  display:block; width:100%; margin-top:8px; min-height:76px; resize:vertical;
+  font-family:var(--hand); font-style:italic; font-size:16.5px; line-height:1.55;
+  color: oklch(var(--text) / 0.92);
+  background: oklch(1 0 0 / 0.025);
+  border:1px solid oklch(var(--act) / 0.26); border-radius:12px; padding:12px 15px;
+  transition: border-color var(--dur) var(--expo), background var(--dur) var(--expo);
+}
+.reply textarea::placeholder{ font-family:var(--body); font-style:normal; font-size:13.5px; color: oklch(var(--faint) / 0.8); }
+.reply textarea:focus{ outline:none; border-color: oklch(var(--act) / 0.6); background: oklch(1 0 0 / 0.045); }
+.stamps{ display:flex; align-items:center; gap:12px; margin-top:12px; flex-wrap:wrap; }
+.stamp{
+  font-family:var(--mono); font-size:12px; letter-spacing:0.1em;
+  padding:9px 18px; border-radius:9px; cursor:pointer; background:none;
+  border:1px solid oklch(var(--act) / 0.45); color: oklch(var(--act));
+  transition: background var(--dur) var(--expo), opacity var(--dur) var(--expo);
+}
+.stamp:hover{ background: oklch(var(--act) / 0.12); }
+.stamp.refine{ border-color: oklch(var(--obs) / 0.45); color: oklch(var(--obs)); }  /* PLUM: handing the pass back */
+.stamp.refine:hover{ background: oklch(var(--obs) / 0.12); }
+.stamp[aria-disabled="true"]{ opacity:0.38; cursor:not-allowed; }
+.stamp[aria-disabled="true"]:hover{ background:none; }
+.row.signed .reply, .row.sent-back .reply{ display:none; }   /* one decision per pass — the box closes with the stamp */
+.needs{
+  font-family:var(--mono); font-size:11px; color: oklch(var(--obs) / 0.9);
+  transition: opacity var(--dur) var(--expo);
+}
+.needs.met{ opacity:0; }
+
+/* the drop that owes a reason — a QUEUE ROW, not a chip (C: every
+   actionable state has one named home, and this one's home is here) */
+.row.owed{ background: linear-gradient(90deg, oklch(var(--obs) / 0.07), transparent 60%); }
+.row.owed::before{ content:''; position:absolute; inset-block:0; left:0; width:1px; background: oklch(var(--obs) / 0.9); }
+.row.owed .q{ font-size: clamp(19px, 2.2vw, 24px); }
+.row.owed .act{ color: oklch(var(--obs) / 0.95); }
+.row.owed .mark{ background: oklch(var(--obs)); }
+
+/* ============================================================
    1b. ASSIGNED — what Chris picked FOR him. Everything here is a
    record of his own movement (brass shields, brass showtime) with
    Chris's margin voice in plum. The only cyan is the last row,
@@ -410,8 +465,10 @@ a{ color:inherit; text-decoration:none; }
 .assigned .row{ cursor:default; }
 .assigned .row .q{ font-size: clamp(18px, 2.2vw, 23px); }  /* records rank below The Work */
 .chris-note{
-  font-family:var(--hand); font-style:italic; font-size:16px; line-height:1.5;
-  color: oklch(var(--obs) / 0.95); margin-top:9px; max-width:72ch;
+  /* color carries the anchor (the plum tick), not the words (Mobbin mechanism 2026-08-13) */
+  font-family:var(--hand); font-style:normal; font-size:16.5px; line-height:1.62;
+  color: oklch(0.94 0.01 90); margin-top:9px; max-width:64ch;
+  border-left:2px solid oklch(var(--obs) / 0.6); padding-left:12px;
 }
 .shields{ display:inline-flex; gap:4px; margin-left:9px; vertical-align:-1px; }
 .shields i{
@@ -457,6 +514,94 @@ a{ color:inherit; text-decoration:none; }
   margin-top:16px; padding-top:12px; border-top:1px solid oklch(1 0 0 / 0.06);
 }
 .lands b{ font-weight:400; color: oklch(var(--obs) / 0.95); }
+
+/* ============================================================
+   1c. THE SESSION SHEET — Thursday's hour, as the surface Chris
+   SCORES on. Every tap is his (cyan). The claim he brought on
+   paper is dim metal; surviving the live push lights it to full
+   brass. Scoring lives here and only here (coach-write contract).
+   ============================================================ */
+.sheet-wrap{ margin-top: var(--s6); }
+.sec-head .live{ color: oklch(var(--act)); letter-spacing:0.08em; }
+.sec-head .live.done{ color: oklch(var(--brass-bri) / 0.95); }        /* SHOWTIME is HIS metal, not your cyan */
+.sec-head .live.done .pip{ background: oklch(var(--brass-bri)); animation:none; }
+.sec-head .live.owed{ color: oklch(var(--obs) / 0.95); }
+.sec-head .live.owed .pip{ background: oklch(var(--obs)); animation:none; }
+.sec-head .live .pip{
+  display:inline-block; width:6px; height:6px; border-radius:999px; margin-right:7px;
+  background: oklch(var(--act)); vertical-align:1px;
+  animation: mark-breathe 5.2s ease-in-out 2.2s infinite;
+}
+.sheet{ border-top: var(--rule); border-bottom: var(--rule); }
+.sheet-q{ padding: 20px 18px 24px 26px; border-top: var(--rule); }
+.sheet-q:first-child{ border-top:0; }
+.sheet-q .qt{
+  font-family:var(--display); font-weight:400;
+  font-size: clamp(19px, 2.3vw, 25px); line-height:1.14; letter-spacing:-0.02em;
+}
+.sheet-q .qm{ font-family:var(--mono); font-size:11.5px; color: oklch(var(--faint)); margin-top:6px; }
+.sheet-q .qm em{ font-style:normal; color: oklch(var(--brass-bri) / 0.9); }
+.obj{
+  display:grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px var(--s3); align-items:start;
+  margin-top:14px; padding:15px 17px; border-radius:12px;
+  border:1px solid oklch(1 0 0 / 0.08);
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.022), transparent);
+  transition: background var(--dur) var(--expo), border-color var(--dur) var(--expo);
+}
+.obj .push{ font-family:var(--hand); font-style:italic; font-size:16.5px; line-height:1.5; color: oklch(var(--obs) / 0.95); max-width:74ch; text-wrap:pretty; }
+.obj .push .sh{ display:inline-flex; gap:4px; margin-right:9px; vertical-align:1px; }
+.obj .push .sh i{
+  width:9px; height:11px; display:inline-block;
+  clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%);
+  background: oklch(var(--gold) / 0.85);           /* CLAIMED on paper — the student's gold, parity with the Bank */
+}
+.obj.scored .push .sh i{ background: oklch(var(--brass-bri)); }  /* SURVIVED live — the metal lights */
+.obj.dropped .push .sh i{ background: oklch(var(--obs) / 0.75); }
+.obj .held{
+  font-size:14.5px; line-height:1.62; color: oklch(var(--text) / 0.86);
+  margin-top:10px; border-left:2px solid oklch(var(--brass) / 0.45); padding-left:14px;
+  max-width:70ch; text-wrap:pretty;
+}
+.obj .held b{
+  display:block; font-family:var(--mono); font-weight:400; font-size:9.5px;
+  letter-spacing:0.16em; text-transform:uppercase; color: oklch(var(--brass) / 0.8); margin-bottom:5px;
+}
+.taps{ display:flex; align-items:center; gap:10px; justify-self:end; }
+.taps[hidden]{ display:none; }        /* a class selector outranks the UA [hidden] rule */
+.tap{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:0.09em;
+  padding:8px 15px; border-radius:8px; cursor:pointer; background:none;
+  border:1px solid oklch(var(--act) / 0.45); color: oklch(var(--act));
+  transition: background var(--dur) var(--expo);
+}
+.tap:hover{ background: oklch(var(--act) / 0.12); }
+.tap.drop{ border-color: oklch(var(--act) / 0.22); color: oklch(var(--act) / 0.72); }
+.tap.drop:hover{ background: oklch(var(--act) / 0.08); }
+.verdict{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:0.08em;
+  white-space:nowrap; justify-self:end; color: oklch(var(--faint));
+}
+.verdict.survived{ color: oklch(var(--brass-bri) / 0.95); }
+.verdict.pending{ color: oklch(var(--obs) / 0.95); }
+.obj.scored{ background: linear-gradient(90deg, oklch(var(--brass) / 0.06), transparent 62%); border-color: oklch(var(--brass) / 0.24); }
+.obj.dropped{ background: linear-gradient(90deg, oklch(var(--obs) / 0.07), transparent 62%); border-color: oklch(var(--obs) / 0.32); }
+.reason-owed{
+  grid-column:1 / -1; font-family:var(--mono); font-size:11.5px; line-height:1.7;
+  color: oklch(var(--obs) / 0.9);
+  border-top:1px solid oklch(1 0 0 / 0.07); padding-top:11px;
+}
+.reason-owed[hidden]{ display:none; }
+.reason-owed b{ font-weight:400; color: oklch(var(--faint)); }
+.sheet-note{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.04em; line-height:1.7;
+  color: oklch(var(--faint) / 0.85); padding: 0 18px var(--s2) 26px; margin-top:-8px;
+}
+.sheet-note b{ font-weight:400; color: oklch(var(--obs) / 0.9); }
+.sheet-foot{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em; line-height:1.8;
+  color: oklch(var(--faint) / 0.62); padding: 14px 18px 0 26px;
+}
+.sheet-foot em{ font-style:normal; color: oklch(var(--act) / 0.8); }
 
 /* ============================================================
    2. THE DOOR — the signature moment. Now it IS a door: his
@@ -788,6 +933,11 @@ a{ color:inherit; text-decoration:none; }
   .act{ justify-self:start; margin-top:10px; }
   .state{ justify-self:start; margin-top:10px; white-space:normal; }
   .after-work .sec-head{ flex-direction:column; align-items:flex-start; gap:6px; }
+  .sheet-wrap .sec-head{ flex-direction:column; align-items:flex-start; gap:6px; }
+  .sec-head, .queue-note, .sheet-note, .sheet-foot{ padding-left:20px; padding-right:14px; }
+  .sheet-q{ padding: 18px 14px 20px 20px; }
+  .obj{ grid-template-columns: minmax(0,1fr); padding:14px; }
+  .taps, .verdict{ justify-self:start; }
   .assign-preview{ grid-template-columns: minmax(0,1fr); }
   .his-line{ padding:14px 16px 6px; }
   .segs{ height:30px; }
@@ -911,42 +1061,67 @@ a{ color:inherit; text-decoration:none; }
     <div class="arrive" style="--d:180ms">
       <div class="sec-head">
         <span>The work</span>
-        <span class="count" id="with-you">3 with you</span>
+        <span class="count" id="with-you">3 need you</span>
       </div>
+      <div class="queue-note">queue frozen on entry — new arrivals are announced, the cursor never moves · <b>2 answers · 1 resume</b></div>
 
-      <div class="work">
-        <div class="row is-live" id="row-sign" tabindex="0">
+      <div class="work" id="work-queue">
+        <!-- STATE: latest-pass-undecided, CURSOR row (open: pass on top, reply, stamps) -->
+        <div class="row is-live" id="row-a" data-next="row-b" tabindex="0">
           <div>
             <div class="q">Why work for our company?</div>
-            <div class="meta">submitted <em>2d ago</em> · 240 words · third pass<span class="passes" aria-label="third pass"><i class="done"></i><i class="done"></i><i class="done"></i></span></div>
+            <div class="meta">submitted <em>2d ago</em> · 240 words · pass 3, newest on top<span class="passes" aria-label="third pass"><i class="done"></i><i class="done"></i><i class="done"></i></span></div>
             <div class="teaser">I spent two years in support watching the same three objections lose deals nobody was allowed to fix…</div>
-            <div class="note-out" id="sent-note" hidden><span class="who">YOUR NOTE · JUST NOW</span>"you're quoting their homepage back at them — find the thing YOU noticed that they didn't say, then send it again."</div>
-            <div class="go-out" id="go-cond" hidden><span class="go-mark">GO-AHEAD ✓</span><span class="cond">pushback required before Thursday</span></div>
+            <div class="note-out" hidden><span class="who">YOUR REPLY · JUST NOW</span>"you're quoting their homepage back at them — find the thing YOU noticed that they didn't say, then send it again."</div>
+            <div class="go-out" hidden><span class="go-mark">PUSHBACK OPEN</span><span class="cond">he holds every objection before Thursday</span></div>
           </div>
           <div class="act">
             <span class="mark" aria-hidden="true"></span>
-            <button class="act-label" id="btn-sign" type="button">SIGN OFF →</button>
-            <button class="alt" id="btn-back" type="button">SEND BACK ↩</button>
+            <span class="act-label">WAITING ON YOU</span>
           </div>
           <div class="glance"><div><div class="g-inner">
             <div class="excerpt">I spent two years in support watching the same three objections lose deals nobody was allowed to fix. Sales is where that gets fixed, and the ceiling is the part I want.</div>
             <div class="you-said">you said, pass 2: "name the objections — make it concrete"</div>
             <div class="changed">since pass 2: <b>+38 words</b> · objections now named · closing line rewritten</div>
+            <div class="reply">
+              <div class="reply-lab">Your reply to Marcus · rides the stamp</div>
+              <textarea rows="3" placeholder="write it to him, not about him — REFINE needs your words, PASS can ride on its own"></textarea>
+              <div class="stamps">
+                <button class="stamp pass" type="button">PASS →</button>
+                <button class="stamp refine" type="button" aria-disabled="true">REFINE ↩</button>
+                <span class="needs">REFINE needs your words</span>
+              </div>
+            </div>
           </div></div></div>
         </div>
 
-        <a class="row" href="#">
+        <!-- STATE: latest-pass-undecided, waiting BEHIND the cursor -->
+        <div class="row" id="row-b" data-next="" tabindex="0">
           <div>
             <div class="q">Walk me through your resume</div>
-            <div class="meta">submitted <em>4h ago</em> · 310 words · first pass<span class="passes" aria-label="first pass"><i class="done"></i><i></i><i></i></span></div>
+            <div class="meta">submitted <em>4h ago</em> · 310 words · pass 1, newest on top<span class="passes" aria-label="first pass"><i class="done"></i><i></i><i></i></span></div>
             <div class="teaser">Four years at Fastway Logistics, from night-shift dispatch to owning the routing stack nobody else would touch…</div>
+            <div class="note-out" hidden><span class="who">YOUR REPLY · JUST NOW</span>"the routing story is the whole pitch — open on it, and cut the first forty words."</div>
+            <div class="go-out" hidden><span class="go-mark">PUSHBACK OPEN</span><span class="cond">he holds every objection before Thursday</span></div>
           </div>
-          <div class="act"><span class="mark" aria-hidden="true"></span>REVIEW →</div>
+          <div class="act">
+            <span class="mark" aria-hidden="true"></span>
+            <span class="act-label">NEXT UP</span>
+          </div>
           <div class="glance"><div><div class="g-inner">
             <div class="excerpt">Four years at Fastway Logistics, from night-shift dispatch to owning the routing stack nobody else would touch. I fixed the part everyone routed around, and that is the story of most of my resume.</div>
             <div class="you-said">first pass — no notes from you yet</div>
+            <div class="reply">
+              <div class="reply-lab">Your reply to Marcus · rides the stamp</div>
+              <textarea rows="3" placeholder="write it to him, not about him — REFINE needs your words, PASS can ride on its own"></textarea>
+              <div class="stamps">
+                <button class="stamp pass" type="button">PASS →</button>
+                <button class="stamp refine" type="button" aria-disabled="true">REFINE ↩</button>
+                <span class="needs">REFINE needs your words</span>
+              </div>
+            </div>
           </div></div></div>
-        </a>
+        </div>
 
         <a class="row fresh" href="#">
           <div>
@@ -960,6 +1135,65 @@ a{ color:inherit; text-decoration:none; }
             <div class="you-said">you said, on v2: "cut it to a page — lead with the routing win"</div>
           </div></div></div>
         </a>
+      </div>
+    </div>
+
+    <!-- ========== 1c. THE SESSION SHEET ========== -->
+    <div class="arrive sheet-wrap" style="--d:200ms">
+      <div class="sec-head">
+        <span>Thursday's sheet — the hour, scored</span>
+        <span class="count live" id="sheet-count"><span class="pip" aria-hidden="true"></span>LIVE · 2 of 3 scored</span>
+      </div>
+      <div class="sheet-note">sheet frozen on open · resumes where it stopped · <b>you score the exact words he held</b></div>
+
+      <div class="sheet">
+        <!-- STATE: question with every attempt SURVIVED under the current pass -->
+        <div class="sheet-q">
+          <div class="qt">Sell me the product you supported.</div>
+          <div class="qm">2 objections · <em>both survived</em> · scored 2:07 and 2:11</div>
+
+          <div class="obj scored">
+            <div>
+              <div class="push"><span class="sh" aria-hidden="true"><i></i></span>"Everyone says they know the product. Name the one thing your best rep still got wrong about it."</div>
+              <div class="held"><b>held on paper · 44 words</b>Our own reps pitched the routing engine as a speed feature. It was a liability feature — the buyer cared about missed delivery windows, not minutes saved. I sat on the support queue that proved it, every week, for two years.</div>
+            </div>
+            <span class="verdict survived">SURVIVED ✦</span>
+          </div>
+
+          <div class="obj scored">
+            <div>
+              <div class="push"><span class="sh" aria-hidden="true"><i></i></span>"You supported it. You never sold it. Why would I pay you to close?"</div>
+              <div class="held"><b>held on paper · 31 words</b>I closed the renewals nobody logged. Every save call was a close with worse leverage — no discount to hand over, and a customer already angry when I picked up.</div>
+            </div>
+            <span class="verdict survived">SURVIVED ✦</span>
+          </div>
+        </div>
+
+        <!-- STATE: READY FOR LIVE item, unscored — the live taps -->
+        <div class="sheet-q">
+          <div class="qt">Why tech sales?</div>
+          <div class="qm">1 objection · held on paper Tue · <em>waiting on the room</em></div>
+
+          <div class="obj" id="obj-live">
+            <div>
+              <div class="push"><span class="sh" aria-hidden="true"><i></i></span>"Tech sales pays well. That's the real answer, isn't it?"</div>
+              <div class="held"><b>held on paper · 38 words</b>It pays well because it is hard to do. I am here for the ceiling and because the work is measurable — I spent four years somewhere nobody could tell whether I was good.</div>
+            </div>
+            <div class="taps" id="obj-taps">
+              <button class="tap" type="button" id="tap-survived">SURVIVED</button>
+              <button class="tap drop" type="button" id="tap-drop">DROP</button>
+            </div>
+            <span class="verdict" id="obj-verdict" hidden></span>
+            <div class="reason-owed" id="obj-reason" hidden>
+              dropped — <b>reason owed.</b> Type it or dictate it after the hour. Re-hold stays blocked until the reason lands; then the objection reopens carrying it.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-foot">
+        sheet states · READY FOR LIVE · <em>LIVE_IN_PROGRESS — you are here</em> · SHOWTIME<br>
+        published objections are immutable · scoring is online-only — if the room drops, the taps disable and the sheet keeps your place
       </div>
     </div>
 
@@ -1004,7 +1238,7 @@ a{ color:inherit; text-decoration:none; }
               <div class="slot">
                 <div class="n">2 · the objections</div>
                 <div class="what">Attach what you will push with.</div>
-                <div class="how">two or three — he has to hold every one</div>
+                <div class="how">two or three, in your pushing voice — he has to hold every one.<br>published is published — retract with a reason to change one</div>
                 <span class="shields" aria-hidden="true"><i></i><i></i><i></i></span>
               </div>
               <div class="slot">
@@ -1014,7 +1248,7 @@ a{ color:inherit; text-decoration:none; }
                 <div class="quill">because your last manager will</div>
               </div>
             </div>
-            <div class="lands">it lands in his bank under <b>From Chris</b>, your note on top — the pushback stays locked until you sign.</div>
+            <div class="lands">it lands in his bank under <b>From Chris</b>, your note on top — the objections are visible but locked until you <b>PASS</b>.</div>
           </div></div></div>
         </div>
       </div>
@@ -1099,7 +1333,22 @@ a{ color:inherit; text-decoration:none; }
         </div>
       </div>
 
-      <div class="foot">Comp · not production · direction pinned 2026-08-11 · revamp: the tab's room, one student deep · demo: click SIGN OFF or SEND BACK — undo appears by the whisper</div>
+      <div class="foot">Comp · not production · direction pinned 2026-08-11 · revamp: the tab's room, one student deep · demo: reply then PASS or REFINE (the cursor advances), or score Thursday's sheet — undo appears by the whisper, one at a time, comp-only theater
+      <!-- COACH-VISIBLE STATE LEDGER (freeze gate)
+           RENDERED: latest-pass-undecided (cursor + behind-cursor) · unreviewed resume ·
+             PASS settled · REFINE settled (reply required, affordance shown) ·
+             auto-advance / frozen queue · DROPPED_PENDING_REASON (chip + queue row + reason affordance) ·
+             LIVE_IN_PROGRESS (2 of 3) · SURVIVED / SHOWTIME · READY FOR LIVE · not started ·
+             assigned record · objection immutability · undo (single pending).
+           N/A IN COMP, WITH REASON:
+             loading / in-flight — the comp stamps optimistically and instantly; the spinner state is a
+               WO-DC contract item with no design decision left in it.
+             stale-decision (pass superseded after PASS) — needs a second student-side event mid-demo;
+               its home is this same queue and it renders with the .owed row treatment.
+             conflict / denied / offline — copy is stated in the sheet foot ("if the room drops, the taps
+               disable and the sheet keeps your place"); rendering them would require a fake network layer.
+             optimistic/partial — no partial fetch exists in a static comp. -->
+      </div>
     </div>
   </section>
 
@@ -1111,9 +1360,10 @@ a{ color:inherit; text-decoration:none; }
   // The whisper speaks HIS week, one line at a time — the band's own voice.
   const whispers = [
     'Marcus is showtime ready — the door is open',
-    'quiet 2 days on the resume line since you cleared the sign off',
+    'quiet 2 days on the resume line since you cleared the PASS',
     'resume v3 arrived yesterday — it replaces v2, unreviewed',
     'you assigned "your last manager calls me" 6 days ago — still not started',
+    'Thursday\'s sheet is open — 2 of 3 scored, it resumes where it stopped',
   ];
   let wi = 0;
   let pendingUndo = null;
@@ -1166,10 +1416,18 @@ a{ color:inherit; text-decoration:none; }
     io.observe(bank);
   } else { rollCounts(); }
 
-  // THE SIGN-OFF CEREMONY — earned calm, DOM-derived counts, visible undo.
+  // THE STAMP CEREMONY — read, reply, stamp; the queue hands you the next.
+  // Counts are DOM-derived (actionable_count: every row still owing Chris
+  // an action — undecided answers, the unreviewed resume, a drop owing a
+  // reason). One pending undo at a time; a new ceremony commits the last.
   const undoChip = document.getElementById('undo-chip');
-  const signRow = document.getElementById('row-sign');
   const withYou = document.getElementById('with-you');
+  const workQueue = document.getElementById('work-queue');
+  const esc = (s) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function renderCount(){
+    const n = workQueue.querySelectorAll('.row:not(.signed):not(.sent-back)').length;
+    withYou.textContent = n + ' need you';
+  }
   function showUndo(label, restore){
     pendingUndo = { restore };
     undoChip.textContent = '↩ undo · ' + label;
@@ -1183,53 +1441,152 @@ a{ color:inherit; text-decoration:none; }
     pendingUndo.restore();
     hideUndo();
   });
-  const goCond = document.getElementById('go-cond');
-  const sentNote = document.getElementById('sent-note');
-  const settled = () => signRow.classList.contains('signed') || signRow.classList.contains('sent-back');
+  // the hand-off: one row settles, the next STANDS UP inside the frozen
+  // snapshot. Arrivals are announced by the whisper; the cursor never moves
+  // on its own.
+  function moveCursor(from, to){
+    from.classList.remove('is-live');
+    if (!to) return;
+    to.classList.add('is-live');
+    if (!calm){ to.classList.add('taking'); setTimeout(() => to.classList.remove('taking'), 520); }
+    const lab = to.querySelector('.act-label');
+    if (lab) lab.textContent = 'WAITING ON YOU';
+  }
 
-  document.getElementById('btn-sign')?.addEventListener('click', () => {
-    if (settled()) return;
-    hideUndo();  // a new ceremony commits the previous one
-    const label = signRow.querySelector('.act-label');
-    const prev = { w: curWhisper, c: withYou.textContent, l: label.textContent };
-    signRow.classList.remove('is-live'); signRow.classList.add('signed');
-    label.textContent = 'SIGNED ✓';
-    goCond.hidden = false;            // the go-ahead carries its condition
-    const n = parseInt(withYou.textContent, 10);
-    withYou.textContent = (n - 1) + ' with you';
-    setWhisper('go-ahead — the pushback opens, he holds it before Thursday');
-    atmos?.classList.add('exhale');   // MOTION 2 — the room exhales with you
-    showUndo('the sign off', () => {
-      signRow.classList.add('is-live'); signRow.classList.remove('signed');
+  function stamp(row, kind, text){
+    hideUndo();                       // a new ceremony commits the previous one
+    const label = row.querySelector('.act-label');
+    const noteOut = row.querySelector('.note-out');
+    const goOut = row.querySelector('.go-out');
+    const q = row.querySelector('.q').textContent.trim();
+    const wasCursor = row.classList.contains('is-live');
+    const next = wasCursor ? document.getElementById(row.dataset.next || '') : null;
+    const nextLab = next?.querySelector('.act-label');
+    const prev = {
+      w: curWhisper, l: label.textContent,
+      note: noteOut.innerHTML, nl: nextLab?.textContent
+    };
+
+    if (kind === 'pass'){
+      row.classList.add('signed');
+      label.textContent = 'PASSED ✓';
+      if (text) noteOut.innerHTML = '<span class="who">YOUR REPLY · JUST NOW</span>"' + esc(text) + '"';
+      noteOut.hidden = !text;         // PASS rides alone when there are no words
+      goOut.hidden = false;
+      atmos?.classList.add('exhale'); // MOTION 2 — the room exhales with you
+    } else {
+      row.classList.add('sent-back');
+      label.textContent = 'REFINED ↩';
+      if (text) noteOut.innerHTML = '<span class="who">YOUR REPLY · JUST NOW</span>"' + esc(text) + '"';
+      noteOut.hidden = false;
+    }
+    moveCursor(row, next);
+    renderCount();
+    const verb = kind === 'pass' ? 'passed' : 'refined';
+    const tail = next
+      ? 'next: ' + next.querySelector('.q').textContent.trim()
+      : (kind === 'pass' ? 'the pushback opens — he holds it before Thursday' : 'pass 2 is Marcus’s now');
+    setWhisper(verb + ' “' + q + '” — ' + tail);
+
+    showUndo(kind === 'pass' ? 'the PASS' : 'the REFINE', () => {
+      row.classList.remove('signed', 'sent-back');
       label.textContent = prev.l;
-      goCond.hidden = true;
-      withYou.textContent = prev.c;
+      noteOut.innerHTML = prev.note; noteOut.hidden = true;
+      goOut.hidden = true;
+      if (next){ next.classList.remove('is-live', 'taking'); if (nextLab) nextLab.textContent = prev.nl; }
+      if (wasCursor) row.classList.add('is-live');
       atmos?.classList.remove('exhale');
+      renderCount();
       setWhisper(prev.w || whispers[wi]);
     });
-  });
+  }
 
-  // THE SEND-BACK — the other half of the loop. It leaves your side
-  // with your note on it; the pass becomes his.
-  document.getElementById('btn-back')?.addEventListener('click', () => {
-    if (settled()) return;
-    hideUndo();
-    const label = signRow.querySelector('.act-label');
-    const prev = { w: curWhisper, c: withYou.textContent, l: label.textContent };
-    signRow.classList.remove('is-live'); signRow.classList.add('sent-back');
-    label.textContent = 'SENT BACK ↩';
-    sentNote.hidden = false;
-    const n = parseInt(withYou.textContent, 10);
-    withYou.textContent = (n - 1) + ' with you';
-    setWhisper('sent back with a note — pass 4 is Marcus’s');
-    showUndo('the send back', () => {
-      signRow.classList.add('is-live'); signRow.classList.remove('sent-back');
-      label.textContent = prev.l;
-      sentNote.hidden = true;
-      withYou.textContent = prev.c;
-      setWhisper(prev.w || whispers[wi]);
+  workQueue?.querySelectorAll('.row').forEach(row => {
+    const ta = row.querySelector('.reply textarea');
+    if (!ta) return;
+    const passBtn = row.querySelector('.stamp.pass');
+    const refineBtn = row.querySelector('.stamp.refine');
+    const needs = row.querySelector('.needs');
+    const sync = () => {                       // REFINE cannot leave without words
+      const has = ta.value.trim().length > 0;
+      refineBtn.setAttribute('aria-disabled', String(!has));
+      needs.classList.toggle('met', has);
+    };
+    ta.addEventListener('input', sync); sync();
+    const settled = () => row.classList.contains('signed') || row.classList.contains('sent-back');
+    passBtn.addEventListener('click', () => { if (!settled()) stamp(row, 'pass', ta.value.trim()); });
+    refineBtn.addEventListener('click', () => {
+      if (settled()) return;
+      if (refineBtn.getAttribute('aria-disabled') === 'true'){ ta.focus(); return; }
+      stamp(row, 'refine', ta.value.trim());
     });
   });
+  renderCount();
+
+  // THE SESSION SHEET — one tap per objection, scored live. SURVIVED lights
+  // the metal; DROP closes the attempt and OWES a reason, which is a queue
+  // row in The Work, not a chip.
+  const objLive = document.getElementById('obj-live');
+  const objTaps = document.getElementById('obj-taps');
+  const objVerdict = document.getElementById('obj-verdict');
+  const objReason = document.getElementById('obj-reason');
+  const sheetCount = document.getElementById('sheet-count');
+  function renderSheet(){
+    const objs = document.querySelectorAll('.sheet .obj');
+    const closed = document.querySelectorAll('.sheet .obj.scored, .sheet .obj.dropped').length;
+    const dropped = document.querySelectorAll('.sheet .obj.dropped').length;
+    const showtime = closed === objs.length && dropped === 0;
+    sheetCount.classList.toggle('done', showtime);
+    sheetCount.classList.toggle('owed', dropped > 0);
+    sheetCount.innerHTML = '<span class="pip" aria-hidden="true"></span>' + (
+      showtime ? 'SHOWTIME ✦ — ' + closed + ' of ' + objs.length + ' survived'
+      : dropped ? 'LIVE · ' + closed + ' of ' + objs.length + ' · 1 reason owed'
+      : 'LIVE · ' + closed + ' of ' + objs.length + ' scored'
+    );
+  }
+  function owedRow(){
+    const r = document.createElement('div');
+    r.className = 'row owed'; r.id = 'row-owed';
+    r.innerHTML = '<div>'
+      + '<div class="q">Finish the drop — reason owed</div>'
+      + '<div class="meta">“Why tech sales?” · dropped <em>just now</em> · re-hold blocked until it lands</div>'
+      + '<div class="teaser">type it, or dictate it after the hour — the objection reopens carrying your reason…</div>'
+      + '</div>'
+      + '<div class="act"><span class="mark" aria-hidden="true"></span>WRITE THE REASON →</div>';
+    return r;
+  }
+  function score(kind){
+    hideUndo();
+    const prev = { w: curWhisper };
+    objTaps.hidden = true;
+    objVerdict.hidden = false;
+    if (kind === 'survived'){
+      objLive.classList.add('scored');
+      objVerdict.className = 'verdict survived';
+      objVerdict.textContent = 'SURVIVED ✦';
+      setWhisper('he held it live — Marcus is SHOWTIME on every published objection');
+    } else {
+      objLive.classList.add('dropped');
+      objVerdict.className = 'verdict pending';
+      objVerdict.textContent = 'DROPPED — REASON OWED';
+      objReason.hidden = false;
+      workQueue.appendChild(owedRow());
+      setWhisper('dropped in the room — the reason is owed before it can be re-held');
+    }
+    renderSheet(); renderCount();
+    showUndo(kind === 'survived' ? 'the SURVIVED' : 'the DROP', () => {
+      objLive.classList.remove('scored', 'dropped');
+      objTaps.hidden = false;
+      objVerdict.hidden = true; objVerdict.className = 'verdict'; objVerdict.textContent = '';
+      objReason.hidden = true;
+      document.getElementById('row-owed')?.remove();
+      renderSheet(); renderCount();
+      setWhisper(prev.w || whispers[wi]);
+    });
+  }
+  document.getElementById('tap-survived')?.addEventListener('click', () => score('survived'));
+  document.getElementById('tap-drop')?.addEventListener('click', () => score('drop'));
+  renderSheet();
 
   // PURPOSEFUL MOTION 1 — approach: his door lights the room as you near it.
   const atmos = document.querySelector('.atmos');
